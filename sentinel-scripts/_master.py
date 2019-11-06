@@ -14,7 +14,7 @@ import csv
 ## Master Script for CXL Camera Trap Control
 trigger = 'pir'     # 'pir' or 'ir'
 trigger_check = 'ir'    # 'ir' or 'paired_pir'
-trigger_sensitivity = '20'  #int between 1-100 (twenty being highest sensitivity)
+trigger_sensitivity = 10  #int between 1-100 (twenty being highest sensitivity)
 camera = 'PiCamera'
 t_background = ''   # int
 t_lorawan = ''  # int

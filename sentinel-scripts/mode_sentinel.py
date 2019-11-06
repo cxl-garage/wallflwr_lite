@@ -42,10 +42,12 @@ def user_selections():
 def main(trigger, trigger_check, trigger_sensitivity, image_burst, \
     model_type, results_directory):
     GPIO.setmode(GPIO.BCM)
+    GPIO.setup(4, GPIO.IN)
     trigger_count = 0
     camera = PiCamera.PiCamera()
+    j = 0
     # check if trigger exists, if it doesn't break this script and return to _master.py
-    if trigger :
+    if trigger != 'pir':
            print('No trigger is specified, moving forward with script')
     if trigger == 'pir':
         while True :
@@ -57,19 +59,22 @@ def main(trigger, trigger_check, trigger_sensitivity, image_burst, \
                     trigger_count = 0
     		#If motion detected by PIR sensor
                 if pir_status == 1:
-                    if trigger_count <= args.trigger_sensitivity:
+                    if trigger_count > trigger_sensitivity:
                          print('Motion Detected, awaiting confirmation')
                          time.sleep(0.5)
-                         j = j + 1
+                         j += 1
                          print(j)
                     else:
                          print('Motion Confirmed')
+                         break
     burst = 0
     print('Taking photo burst')
     while burst < image_burst:
          #t_now = datetime.datetime.now.strftime("%Y%m%d%H%M%S")
          file = '_Testing_%s.jpg' %(burst)
          camera.capture(file)
+         print('Pitcure Saved')
+         time.sleep(1)
          burst += 1
 
 if __name__ == "__main__":
