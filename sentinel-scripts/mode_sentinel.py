@@ -41,6 +41,7 @@ def user_selections():
 
 def main(trigger, trigger_check, trigger_sensitivity, image_burst, \
     model_type, results_directory):
+    GPIO.setmode(GPIO.BCM)
     trigger_count = 0
     camera = PiCamera.PiCamera()
     # check if trigger exists, if it doesn't break this script and return to _master.py
