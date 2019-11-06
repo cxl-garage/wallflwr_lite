@@ -1,18 +1,18 @@
 
-import sys 
-import subprocess 
-import os 
-import io 
-import pathlib as Path 
-import time 
+import sys
+import subprocess
+import os
+import io
+import pathlib as Path
+import time
 import mode_cnn
-import mode_sentinel  
-import numpy as np 
+import mode_sentinel
+import numpy as np
 import csv
 
 
 ## Master Script for CXL Camera Trap Control
-trigger = ''     # 'pir' or 'ir'
+trigger = 'pir'     # 'pir' or 'ir'
 trigger_check = 'ir'    # 'ir' or 'paired_pir'
 trigger_sensitivity = '20'  #int between 1-100 (twenty being highest sensitivity)
 camera = 'PiCamera'
