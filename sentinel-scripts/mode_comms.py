@@ -25,27 +25,33 @@ def main(primary_class, primary_confidence, secondary_class, secondary_confidenc
 
 		# Initialize Communication to The Things Network
 		if comms_backend == 'ttn'
-			# ttn setup
-			devaddr = bytearray([0x26, 0x02, 0x1B, 0xD9])
-			nwkey = bytearray([0xF0, 0x23, 0x39, 0x26, 0xEC, 0x19, 0x1B, 0x77,
-								0x8B, 0x23, 0xC8, 0x5D, 0x08, 0xA5, 0xDF, 0xDD])
-			app = bytearray([0xDD, 0x91, 0x7C, 0x2B, 0x6F, 0xE7, 0xA0, 0x17, 0x32,
-								0x5F, 0x50, 0x09, 0xE2, 0xBB, 0x4E, 0xBE])
-			ttn_config = TTN(devaddr, nwkey, app, country='US')
-			lora = TinyLoRa(spi, cs, irq, rst, ttn_config, channel=0)
+			# TTN device address
+			devaddr = bytearray([0x26, 0x02, 0x12, 0xD2])
 
-		# Encode payload as bytes
-		print('NOTE: Add Code to pull out correct data from the class/confidence vectors')
-		data = bytearray(4)
-	    data[0] = primary_class
-	    data[1] = primary_confidence
-	    data[2] = secondary_class
-	    data[3] = secondary_confidence
+			# TTN Network key
+			nwkey = bytearray([0x4D, 0x79, 0x70, 0xE0, 0xED, 0xDC, 0x3C, 0xA1, 0xF7, 0x5F,
+			0xE0, 0xF7, 0xD4, 0x15, 0x98, 0x8D])
+
+			# TTN Application key
+			app = bytearray([0x4F, 0x1B, 0xF2, 0x81, 0xCE, 0x85, 0xF1, 0xA8, 0xA6,
+			0x48, 0x31, 0xBF, 0xBF, 0x61, 0xDA, 0x57])
+
+			ttn_config = TTN(devaddr, nwkey, app, country='US')
+
+			lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
+
+		data = [primary_class, primary_confidence, secondary_class, secondary_confidence]
 		# Send Data
-		lora.send_data(data, len(data), lora.frame_counter)
-		print('Packet sent!')
-		lora.frame_counter += 1
-		return lora.frame_counter
+		print('Change logic to LoRa receipt confirmation (TTN downlink)')
+		while lora.frame_counter < 3:
+			print('Sending packet...')
+			lora.send_data(data, len(data), lora.frame_counter)
+			print(data)
+			print('Packet sent!')
+			lora.frame_counter += 1
+			time.sleep(4)
+
+		return 
 
 
 
