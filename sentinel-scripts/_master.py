@@ -162,5 +162,5 @@ while True:
         t_background = 0
     #if trigger_check == 0 and t_lorawan != 0 and time > t_lorawan :
     if comms_type != '':
-        mode_comms.main(cprimary_class, primary_confidence, secondary_class, secondary_confidence, device_identifier, comms_type, comms_backend)
+        mode_comms.main(primary_class, primary_confidence, secondary_class, secondary_confidence, device_identifier, comms_type, comms_backend)
         t_lorawan = 0
