@@ -139,14 +139,14 @@ def tflite_im(format,interpreter, input_width, input_height, data_directory,file
                 classes = obj.label_id
                 scores = obj.score
                 count  = 1
-                print('Need to add some code to allow multiple classes to be analyzed!')
+                #print('Need to add some code to allow multiple classes to be analyzed!')
                 meta = {'file': file_path, 'bounding_box': boxes, 'class_ide': classes, 'score': scores, 'time': clock}
                 thresh_classes = np.append(thresh_classes, classes)
                 thresh_scores =np.append(thresh_scores, scores)
                 #bb_crop(data_directory, file, boxes, meta, classes, results_directory, i)
-                print('Add code for bounding box crop function (issue with the format)')
+                #print('Add code for bounding box crop function (issue with the format)')
                 meta_array = np.append(meta_array, meta)
-                print(meta)
+                #print(meta)
                 i += 1
 
     else:
@@ -271,24 +271,27 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
 
 
     # Test Scenario (running algorithm on files presaved to data_directory)
+# take images from the initial burst triggered in mode_sentinel.py
+
     for file in os.listdir(data_directory):
         if max_files < files_checked :
             print('Checked all files')
             break
         filename = os.fsdecode(file)
-        if filename.endswith(".jpg") :
-            meta, n_classes, n_confidence = tflite_im(format, interpreter, input_width, input_height, \
-            data_directory,file, ai_sensitivity, results_directory)
-            #print(result)
-            meta_array = np.append(meta_array, meta)
-            classes = np.append(classes, n_classes)
-            confidence = np.append(confidence, n_confidence)
-            sum_confidence = sum_confidence + n_confidence
-            #print('Input to CNN:',image)
-        else:
-            print("All files Checked")
-            break
-        files_checked += 1
+        while sum_confidence < 1:
+            if filename.endswith(".jpg") or filename.endswith(".png") or filename.endswith(".jpeg"):
+                meta, n_classes, n_confidence = tflite_im(format, interpreter, input_width, input_height, \
+                data_directory,file, ai_sensitivity, results_directory)
+                #print(result)
+                meta_array = np.append(meta_array, meta)
+                classes = np.append(classes, n_classes)
+                confidence = np.append(confidence, n_confidence)
+                sum_confidence = sum_confidence + n_confidence
+                #print('Input to CNN:',image)
+            else:
+                print("All files Checked, failed to reach confidence threshold")
+                break
+            files_checked += 1
     if sys_mode == 'test' :
         print('Test Script Only, Camera Not Initialized...')
         return
@@ -297,7 +300,7 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
             if mcu != 'rpi0' :
                 sys.exit('Not ready for not RPi0 yet!')
             # take images directly from the camera buffer
-            if sum_confidence < 1 :
+            while sum_confidence < 1 :
                 if camera == 'PiCamera':
                     # Reconstruct the input resolution to include color channel
                     input_res = (resolution[0], resolution[1], 3)
@@ -334,6 +337,8 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
                     meta_array = np.append(meta_array, meta)
                     classes = np.append(classes, n_classes)
                     confidence = np.append(confidence, n_confidence)
+                    sum_confidence = sum_confidence + n_confidence
+                    files_checked += 1
                 else :
                     sys.exit('Need to have PiCamera, more camera functionality to come!')
 
@@ -361,17 +366,6 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
                     print("Cleaning up...")
                     camera.stop_recording()
                     camera.close()
-            # take images from the initial burst triggered in mode_sentinel.py
-            if confidence == 0 :
-                for file in os.listdir(data_directory):
-                    filename = os.fsdecode(file)
-                    if filename.endswith(".jpg") or filename.endswith(".png") or filename.endswith(".jpeg"):
-                        current_image = os.path.join(data_directory,file)
-                        #print('Current Image:', current_image)
-                        results = tflite_im(interpreter, input_width, input_height, current_image, ai_sensitivity)
-                    else:
-                        print("All Burst Files Checked")
-                        break
 
         if type == 'video' :
             print('Code for Video Recognition not Completed')
@@ -384,8 +378,10 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
         writer.writeheader()
         for data in meta_array :
             writer.writerow(data)
+    final_confidence = sum_confidence/files_checked
+    final_class = n_classes
 
-    return n_classes, sum_confidence
+    return final_class, final_confidence
 
 
 if __name__ == "__main__":
