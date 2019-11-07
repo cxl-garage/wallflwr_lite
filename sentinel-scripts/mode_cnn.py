@@ -378,8 +378,8 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
     #    writer.writeheader()
     #    for data in meta_array :
     #        writer.writerow(data)
-    final_confidence = sum_confidence/files_checked
-    final_class = n_classes
+    final_confidence = sum_confidence/files_checked*100
+    final_class = n_classes*100
 
     return final_class, final_confidence
 
