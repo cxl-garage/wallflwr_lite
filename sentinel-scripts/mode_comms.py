@@ -18,10 +18,11 @@ def main(primary_class, primary_confidence, secondary_class, secondary_confidenc
 		print('LoRa (rfm9x)')
 		# Set Pin Outs
 		i2c = busio.I2C(board.SCL, board.SDA)
+		spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
 		cs  = digitalio.DigitalInOut(board.D27)
 		rst = digitalio.DigitalInOut(board.D22)
 		irq = digitalio.DigitalInOut(board.D23) #16
-		en  = digitalio.DigitalInOut(board.D17) #16
+		#en  = digitalio.DigitalInOut(board.D17) #16
 		#spi=busio.SPI(board.SCK, MOSI= board.MOSI, MISO=board.MISO)
 		#rfm9x=adafruit_rfm9x.RFM9x(spi, cs, rst, 915.0)
 		#rfm9x.tx_power=23
