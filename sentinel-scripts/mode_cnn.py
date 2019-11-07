@@ -297,7 +297,7 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
             if mcu != 'rpi0' :
                 sys.exit('Not ready for not RPi0 yet!')
             # take images directly from the camera buffer
-            if confidence != 0 :
+            if sum_confidence < 1 :
                 if camera == 'PiCamera':
                     # Reconstruct the input resolution to include color channel
                     input_res = (resolution[0], resolution[1], 3)
