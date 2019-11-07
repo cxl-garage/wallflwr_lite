@@ -371,13 +371,13 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
             print('Code for Video Recognition not Completed')
 
     # Write Results to timestamped .CSV File
-    csv_file = '%s/_%s%s_%s%s%s.csv' %(results_directory,time.localtime()[1],time.localtime()[2],time.localtime()[3],time.localtime()[4],time.localtime()[5])
-    csv_columns = ['file', 'bounding_box','class_id','score','time']
-    with open(csv_file, 'w') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames = csv_columns)
-        writer.writeheader()
-        for data in meta_array :
-            writer.writerow(data)
+    #csv_file = '%s/_%s%s_%s%s%s.csv' %(results_directory,time.localtime()[1],time.localtime()[2],time.localtime()[3],time.localtime()[4],time.localtime()[5])
+    #csv_columns = ['file', 'bounding_box','class_id','score','time']
+    #with open(csv_file, 'w') as csvfile:
+    #    writer = csv.DictWriter(csvfile, fieldnames = csv_columns)
+    #    writer.writeheader()
+    #    for data in meta_array :
+    #        writer.writerow(data)
     final_confidence = sum_confidence/files_checked
     final_class = n_classes
 
