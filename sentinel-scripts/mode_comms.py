@@ -49,15 +49,14 @@ def main(primary_class, primary_confidence, secondary_class, secondary_confidenc
 		data = [int(primary_class), int(primary_confidence), int(secondary_class), int(secondary_confidence)]
 		# Send Data
 		#print('Change logic to LoRa receipt confirmation (TTN downlink)')
-		while lora.frame_counter < 10:
+		while lora.frame_counter < 1000:
 			print('Sending packet...')
 			lora.send_data(data, len(data), lora.frame_counter)
 			print(data)
 			print('Packet sent!')
 			lora.frame_counter += 1
-			time.sleep(4)
+			time.sleep(.1)
 
-		return
 
 
 
