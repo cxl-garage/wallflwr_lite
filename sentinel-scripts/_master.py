@@ -18,7 +18,7 @@ camera = '' #'PiCamera'
 t_background = ''   # int
 t_lorawan = ''  # int
 sys_mode = 'real' # 'real'
-max_images = 100 # number of images to run in test scenario
+max_images = 5 # number of images to run in test scenario
 save_cropped_im = 1
 reset_results = 1
 mcu = 'rpi0' # computer, rpi0
@@ -84,8 +84,8 @@ def user_selections():
 
 primary_labels = 'models/tflite/deer_binary_v0_2/dict.txt'
 primary_model = 'models/tflite/deer_binary_v0_2/model.tflite' #'models/tflite/spermwhale/spermwhale_edge_v0_1.tflite'
-primary_data_directory = '../data/test' #'/home/sam/AI_Training/deer_train'
-primary_results_directory = '../data/results'
+primary_data_directory = 'data/test' #'/home/sam/AI_Training/deer_train'
+primary_results_directory = 'data/results'
 secondary_labels = ''
 secondary_model = ''
 secondary_data_directory = ''
@@ -127,7 +127,7 @@ while True:
         # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
         print('Spinning up Primary Model', primary_model)
         #[primary_class, primary_confidence, primary_output_file] = ...
-        primary_class, primary_confidence = mode_cnn.cnn(sys_mode, mcu, primary_format, resolution,\
+        primary_class, primary_confidence = mode_cnn.cnn(sys_mode, mcu, primary_format, camera, resolution,\
         primary_type, primary_model, primary_labels, \
         primary_data_directory, primary_results_directory, \
         current_background, ai_sensitivity, max_images)
@@ -138,7 +138,7 @@ while True:
         # Run Secondary Model (if it exists)
         if secondary_model :
             #[secondary_class, secondary_confidence, secondary_output_file] = ...
-            secondary_class, secondary_confidence = mode_cnn.main(sys_mode, mcu, secondary_format, resolution,\
+            secondary_class, secondary_confidence = mode_cnn.main(sys_mode, mcu, secondary_format, camera, resolution,\
             secondary_type, secondary_model, secondary_labels,\
             primary_results_directory, secondary_results_directory,
         current_background, ai_sensitivity, max_images)
