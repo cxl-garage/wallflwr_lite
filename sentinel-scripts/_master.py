@@ -146,21 +146,19 @@ while True:
             secondary_class, secondary_confidence = mode_cnn.main(sys_mode, mcu, secondary_format, camera, resolution,\
             secondary_type, secondary_model, secondary_labels,\
             primary_results_directory, secondary_results_directory,
-        current_background, ai_sensitivity, max_images)
+            current_background, ai_sensitivity, max_images)
             print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
         # Run LoRa communication with outputs from primary algorithm
-        if comms_type != '':
-            lora_counter = mode_comms.main(primary_class, sum(primary_confidence), secondary_class, secondary_confidence,\
-            device_identifier, comms_type, comms_backend, lora_counter)
         if sys_mode == 'test':
             sys.exit('Completed Scenario')
         if sys_mode == 'real':
             triggered == 0
             print('System Reset')
-    if trigger_check == 0 and t_backgrond != 0 and time > t_backgrond :
-        current_background = mode_background.main()
-        t_background = 0
+    #if trigger_check == 0 and t_backgrond != 0 and time > t_backgrond :
+    #    current_background = mode_background.main()
+    #    t_background = 0
     #if trigger_check == 0 and t_lorawan != 0 and time > t_lorawan :
     if comms_type != '':
         mode_comms.main(primary_class, primary_confidence, secondary_class, secondary_confidence, device_identifier, comms_type, comms_backend)
         t_lorawan = 0
+    print('Complete')
