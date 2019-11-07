@@ -43,7 +43,7 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_burst, \
     trigger_count = 0
     j = 0
     # check if trigger exists, if it doesn't break this script and return to _master.py
-    while trigger_count < trigger_sensitivity : 
+    while trigger_count < trigger_sensitivity :
         if trigger != 'pir':
              trigger_count = 9999999999
              print('No trigger is specified, moving forward with script')
@@ -56,7 +56,7 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_burst, \
                   trigger_count = 0
     	     #If motion detected by PIR sensor
              if pir_status == 1:
-                  print('Motion Detected, awaiting confirmation')
+                  #print('Motion Detected, awaiting confirmation')
                   time.sleep(0.05)
                   trigger_count += 1
     print('Motion Confirmed')

@@ -6,6 +6,7 @@ import pathlib as Path
 import time
 import mode_cnn
 import mode_sentinel
+import mode_comm
 import numpy as np
 import csv
 
@@ -156,6 +157,6 @@ while True:
         current_background = mode_background.main()
         t_background = 0
     #if trigger_check == 0 and t_lorawan != 0 and time > t_lorawan :
-    if comms_type != '': 
+    if comms_type != '':
         mode_comms.main(comms_type, comms_backend)
         t_lorawan = 0
