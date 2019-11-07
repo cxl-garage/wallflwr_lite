@@ -373,7 +373,7 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
 
         if type == 'video' :
             print('Code for Video Recognition not Completed')
-  
+
     # Write Results to timestamped .CSV File
     csv_file = '%s/_%s%s_%s%s%s.csv' %(results_directory,time.localtime()[1],time.localtime()[2],time.localtime()[3],time.localtime()[4],time.localtime()[5])
     csv_columns = ['file', 'bounding_box','class_id','score','time']
@@ -382,7 +382,8 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
         writer.writeheader()
         for data in meta_array :
             writer.writerow(data)
-    return classes, confidence
+
+    return n_classes, n_confidence
 
 
 if __name__ == "__main__":
