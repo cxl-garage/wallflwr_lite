@@ -6,7 +6,7 @@ import pathlib as Path
 import time
 import mode_cnn
 import mode_sentinel
-import mode_comm
+import mode_comms
 import numpy as np
 import csv
 
