@@ -2,6 +2,7 @@
 from __future__ import print_function
 import argparse
 import busio
+import board
 import os
 import shutil
 import sys
