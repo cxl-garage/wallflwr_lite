@@ -47,6 +47,7 @@ def main(primary_class, primary_confidence, secondary_class, secondary_confidenc
 			lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
 
 		data = [int(primary_class), int(primary_confidence), int(secondary_class), int(secondary_confidence)]
+		print(data)
 		# Send Data
 		#print('Change logic to LoRa receipt confirmation (TTN downlink)')
 		while lora.frame_counter < 1000:
@@ -55,7 +56,7 @@ def main(primary_class, primary_confidence, secondary_class, secondary_confidenc
 			print(data)
 			print('Packet sent!')
 			lora.frame_counter += 1
-			time.sleep(.1)
+			time.sleep(5)
 
 
 
