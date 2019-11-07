@@ -1,4 +1,3 @@
-
 import sys
 import subprocess
 import os
@@ -15,7 +14,7 @@ import csv
 trigger = 'pir'     # 'pir' or 'ir'
 trigger_check = 'ir'    # 'ir' or 'paired_pir'
 trigger_sensitivity = 10  #int between 1-100 (twenty being highest sensitivity)
-camera = 'PiCamera'
+camera = '' #'PiCamera'
 t_background = ''   # int
 t_lorawan = ''  # int
 sys_mode = 'real' # 'real'
@@ -85,8 +84,8 @@ def user_selections():
 
 primary_labels = 'models/tflite/deer_binary_v0_2/dict.txt'
 primary_model = 'models/tflite/deer_binary_v0_2/model.tflite' #'models/tflite/spermwhale/spermwhale_edge_v0_1.tflite'
-primary_data_directory = 'data/test' #'/home/sam/AI_Training/deer_train'
-primary_results_directory = 'data/results'
+primary_data_directory = '../data/test' #'/home/sam/AI_Training/deer_train'
+primary_results_directory = '../data/results'
 secondary_labels = ''
 secondary_model = ''
 secondary_data_directory = ''
@@ -121,7 +120,7 @@ while True:
     if sys_mode == 'test': # Testing on system
         triggered = 1
     if sys_mode == 'real': # Actual camera scenario
-        triggered = mode_sentinel.main(trigger, trigger_check, \
+        triggered = mode_sentinel.main(camera, trigger, trigger_check, \
         trigger_sensitivity, image_burst, primary_type, primary_data_directory)
         #print("Event Detected")
     if triggered == 1 :

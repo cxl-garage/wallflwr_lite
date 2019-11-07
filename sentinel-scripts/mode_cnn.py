@@ -270,7 +270,7 @@ def cnn(sys_mode, mcu, format, type, resolution, \
 
     if type == 'image' or 'acoustic':
         if sys_mode == 'real' :
-            if mcu != rpi0 :
+            if mcu != 'rpi0' :
                 sys.exit('Not ready for this part yet!')
             # take images directly from the camera buffer
             if confidence != 0 :

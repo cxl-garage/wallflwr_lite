@@ -1,6 +1,3 @@
-
-
-
 ## Setup (Copy stable version into _master.py)
 
 ## Script (Copy stable version into a function in stable_modes.py)
@@ -39,43 +36,45 @@ def user_selections():
     args = parser.parse_args()
     return args
 
-def main(trigger, trigger_check, trigger_sensitivity, image_burst, \
+def main(camera, trigger, trigger_check, trigger_sensitivity, image_burst, \
     model_type, results_directory):
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(4, GPIO.IN)
     trigger_count = 0
-    camera = PiCamera.PiCamera()
     j = 0
     # check if trigger exists, if it doesn't break this script and return to _master.py
-    if trigger != 'pir':
-           print('No trigger is specified, moving forward with script')
-    if trigger == 'pir':
-        while True :
-    		#Take input from PIR sensor
-                pir_status = GPIO.input(4)
-    		#If no motion detected by PIR sensor
-                if pir_status == 0:
-                    print('No Motion')
-                    trigger_count = 0
-    		#If motion detected by PIR sensor
-                if pir_status == 1:
-                    if trigger_count > trigger_sensitivity:
-                         print('Motion Detected, awaiting confirmation')
-                         time.sleep(0.5)
-                         j += 1
-                         print(j)
-                    else:
-                         print('Motion Confirmed')
-                         break
-    burst = 0
-    print('Taking photo burst')
-    while burst < image_burst:
-         #t_now = datetime.datetime.now.strftime("%Y%m%d%H%M%S")
-         file = '_Testing_%s.jpg' %(burst)
-         camera.capture(file)
-         print('Pitcure Saved')
-         time.sleep(1)
-         burst += 1
+    while trigger_count < trigger_sensitivity : 
+        if trigger != 'pir':
+             trigger_count = 9999999999
+             print('No trigger is specified, moving forward with script')
+        if trigger == 'pir':
+    	     #Take input from PIR sensor
+             pir_status = GPIO.input(4)
+             #If no motion detected by PIR sensor
+             if pir_status == 0:
+                  print('No Motion')
+                  trigger_count = 0
+    	     #If motion detected by PIR sensor
+             if pir_status == 1:
+                  print('Motion Detected, awaiting confirmation')
+                  time.sleep(0.05)
+                  trigger_count += 1
+    print('Motion Confirmed')
+    if camera == PiCamera :
+         camera = PiCamera.PiCamera()
+         burst = 0
+         print('Taking photo burst')
+         camera.start_preview()
+         while burst < image_burst:
+             #t_now = datetime.datetime.now.strftime("%Y%m%d%H%M%S")
+             file = '_Testing_%s.jpg' %(burst)
+             file = os.path.join(results_directory, file)
+             camera.capture(file)
+             print('Pitcure Saved')
+             time.sleep(2)
+             burst += 1
+    print('Sentinel Armed and Ready to Rumble')
+    return 1
 
 if __name__ == "__main__":
     main()
