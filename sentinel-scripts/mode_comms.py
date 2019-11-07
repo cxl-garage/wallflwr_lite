@@ -7,6 +7,7 @@ import board
 import os
 import shutil
 import sys
+import time
 from adafruit_tinylora.adafruit_tinylora import TTN, TinyLoRa
 
 
