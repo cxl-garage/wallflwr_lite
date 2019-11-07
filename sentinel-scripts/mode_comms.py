@@ -11,7 +11,7 @@ from adafruit_tinylora.adafruit_tinylora import TTN, TinyLoRa
 def main(primary_class, primary_confidence, secondary_class, secondary_confidence, device_identifier, comms_type, comms_backend):
 
 
-	if comms_type == 'rfm9x':
+	if comms_type == 'lora_rfm9x':
 		print('LoRa (rfm9x)')
 		# Set Pin Outs
 		i2c = busio.I2C(board.SCL, board.SDA)
