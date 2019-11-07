@@ -207,7 +207,7 @@ def user_selections():
     return args
 
 # The main function script
-def cnn(sys_mode, mcu, format, type, resolution, \
+def cnn(sys_mode, mcu, format, type, camera, resolution, \
     model, labels, data_directory, results_directory, \
     current_background, ai_sensitivity, max_images):
     #import_model_type(format)
@@ -268,46 +268,76 @@ def cnn(sys_mode, mcu, format, type, resolution, \
         _, input_height, input_width, _ = interpreter.get_input_details()[0]['shape']
         print('Image Input Size... Height', input_height,'Width:',input_width)
 
-    if type == 'image' or 'acoustic':
-        if sys_mode == 'real' :
+
+    # Test Scenario (running algorithm on files presaved to data_directory)
+    for file in os.listdir(data_directory):
+        if max_files < files_checked :
+            print('Checked all files')
+            break
+        filename = os.fsdecode(file)
+        if filename.endswith(".jpg") :
+            meta, n_classes, n_confidence = tflite_im(format, interpreter, input_width, input_height, \
+            data_directory,file, ai_sensitivity, results_directory)
+            #print(result)
+            meta_array = np.append(meta_array, meta)
+            classes = np.append(classes, n_classes)
+            confidence = np.append(confidence, n_confidence)
+            #print('Input to CNN:',image)
+        else:
+            print("All files Checked")
+            break
+        files_checked += 1
+    if sys_mode == 'test' :
+        print('Test Script Initialized...')
+        return
+    if sys_mode == 'real':
+        if type == 'image' or 'acoustic':
             if mcu != 'rpi0' :
-                sys.exit('Not ready for this part yet!')
+                sys.exit('Not ready for not RPi0 yet!')
             # take images directly from the camera buffer
             if confidence != 0 :
-                # Reconstruct the input resolution to include color channel
-                input_res = (resolution[0], resolution[1], 3)
-                SINGLE_FRAME_SIZE_RGB = input_res[0] * input_res[1] * input_res[2]
+                if camera == 'PiCamera':
+                    # Reconstruct the input resolution to include color channel
+                    input_res = (resolution[0], resolution[1], 3)
+                    SINGLE_FRAME_SIZE_RGB = input_res[0] * input_res[1] * input_res[2]
 
-                # Initialize the camera, set the resolution and framerate
-                try:
-                    camera = picamera.PiCamera()
-                except picamera.exc.PiCameraMMALError:
-                    print("\nPiCamera failed to open, do you have another task using it "
-                          "in the background? Is your camera connected correctly?\n")
-                    sys.exit("Connect your camera and kill other tasks using it to run "
-                             "this sample.")
+                    # Initialize the camera, set the resolution and framerate
+                    try:
+                        camera = picamera.PiCamera()
+                    except picamera.exc.PiCameraMMALError:
+                        print("\nPiCamera failed to open, do you have another task using it "
+                              "in the background? Is your camera connected correctly?\n")
+                        sys.exit("Connect your camera and kill other tasks using it to run "
+                                 "this sample.")
 
-                # Initialize the buffer for picamera to hold the frame
-                # https://picamera.readthedocs.io/en/release-1.13/api_streams.html?highlight=PiCameraCircularIO
-                stream = picamera.PiCameraCircularIO(camera, size=SINGLE_FRAME_SIZE_RGB)
-                # All essential camera settings
-                camera.resolution = input_res[0:2]
-                camera.framerate = args.camera_frame_rate
-                camera.brightness = args.camera_brightness
-                camera.shutter_speed = args.camera_shutter_speed
-                camera.video_stabilization = args.camera_video_stablization
+                    # Initialize the buffer for picamera to hold the frame
+                    # https://picamera.readthedocs.io/en/release-1.13/api_streams.html?highlight=PiCameraCircularIO
+                    stream = picamera.PiCameraCircularIO(camera, size=SINGLE_FRAME_SIZE_RGB)
+                    # All essential camera settings
+                    camera.resolution = input_res[0:2]
+                    camera.framerate = args.camera_frame_rate
+                    camera.brightness = args.camera_brightness
+                    camera.shutter_speed = args.camera_shutter_speed
+                    camera.video_stabilization = args.camera_video_stablization
 
-                # Get the frame from the CircularIO buffer.
-                image = stream.getvalue()
-                # The camera has not written anything to the CircularIO yet, thus no frame is been captured
-                #if len(cam_buffer) != SINGLE_FRAME_SIZE_RGB:
-                #    continue
-                # Passing corresponding RGB
-                results = tflite_im(interpreter, image, ai_sensitivity)
-                #print(results)
+                    # Get the frame from the CircularIO buffer.
+                    image = stream.getvalue()
+                    # The camera has not written anything to the CircularIO yet, thus no frame is been captured
+                    #if len(cam_buffer) != SINGLE_FRAME_SIZE_RGB:
+                    #    continue
+                    # Passing corresponding RGB
+                    meta, n_classes, n_confidence = tflite_im(format, interpreter, input_width, input_height, \
+                    data_directory,file, ai_sensitivity, results_directory)
+                    #print(result)
+                    meta_array = np.append(meta_array, meta)
+                    classes = np.append(classes, n_classes)
+                    confidence = np.append(confidence, n_confidence)
+                else :
+                    sys.exit('Need to have PiCamera, more camera functionality to come!')
+
                 # If we already detected animal in this frame, we don't want to over count.
                 if local_animal_detected and not detected_this_frame:
-                    if animal_detected < args.detection_confidence:
+                    if animal_detected < detection_confidence:
                         # If we haven't confirmed, then increase our confidence.
                         if detected_last_frame:
                             animal_detected += 1
@@ -341,31 +371,9 @@ def cnn(sys_mode, mcu, format, type, resolution, \
                         print("All Burst Files Checked")
                         break
 
-        # Test Scenario (running algorithm on files presaved to data_directory)
-        if sys_mode == 'test' :
-            print('Test Script Initialized...')
-            for file in os.listdir(data_directory):
-                if max_files < files_checked :
-                    print('Checked all files')
-                    break
-                filename = os.fsdecode(file)
-                if filename.endswith(".jpg") :
-                    meta, n_classes, n_confidence = tflite_im(format, interpreter, input_width, input_height, \
-                    data_directory,file, ai_sensitivity, results_directory)
-                    #print(result)
-                    meta_array = np.append(meta_array, meta)
-                    classes = np.append(classes, n_classes)
-                    confidence = np.append(confidence, n_confidence)
-                    #print('Input to CNN:',image)
-                else:
-                    print("All files Checked")
-                    break
-                files_checked += 1
-
-
-    if type == 'video' :
-        print('Code for Video Recognition not Completed')
-
+        if type == 'video' :
+            print('Code for Video Recognition not Completed')
+  
     # Write Results to timestamped .CSV File
     csv_file = '%s/_%s%s_%s%s%s.csv' %(results_directory,time.localtime()[1],time.localtime()[2],time.localtime()[3],time.localtime()[4],time.localtime()[5])
     csv_columns = ['file', 'bounding_box','class_id','score','time']
