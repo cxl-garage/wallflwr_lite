@@ -25,7 +25,7 @@ def main(primary_class, primary_confidence, secondary_class, secondary_confidenc
 		prev_packet=None
 
 		# Initialize Communication to The Things Network
-		if comms_backend == 'ttn'
+		if comms_backend == 'ttn':
 			# TTN device address
 			devaddr = bytearray([0x26, 0x02, 0x12, 0xD2])
 
@@ -44,7 +44,7 @@ def main(primary_class, primary_confidence, secondary_class, secondary_confidenc
 		data = [primary_class, primary_confidence, secondary_class, secondary_confidence]
 		# Send Data
 		print('Change logic to LoRa receipt confirmation (TTN downlink)')
-		while lora.frame_counter < 3:
+		while lora.frame_counter < 10:
 			print('Sending packet...')
 			lora.send_data(data, len(data), lora.frame_counter)
 			print(data)
