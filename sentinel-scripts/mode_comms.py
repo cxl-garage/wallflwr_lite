@@ -2,6 +2,7 @@
 from __future__ import print_function
 import argparse
 import busio
+import digitalio
 import board
 import os
 import shutil
@@ -17,14 +18,14 @@ def main(primary_class, primary_confidence, secondary_class, secondary_confidenc
 		print('LoRa (rfm9x)')
 		# Set Pin Outs
 		i2c = busio.I2C(board.SCL, board.SDA)
-		cs  = DigitalInOut(board.D27)
-		rst = DigitalInOut(board.D22)
-		irq = DigitalInOut(board.D23) #16
-		en  = DigitalInOut(board.D17) #16
-		spi=busio.SPI(board.SCK, MOSI= board.MOSI, MISO=board.MISO)
-		rfm9x=adafruit_rfm9x.RFM9x(spi, cs, rst, 915.0)
-		rfm9x.tx_power=23
-		prev_packet=None
+		cs  = digitalio.DigitalInOut(board.D27)
+		rst = digitalio.DigitalInOut(board.D22)
+		irq = digitalio.DigitalInOut(board.D23) #16
+		en  = digitalio.DigitalInOut(board.D17) #16
+		#spi=busio.SPI(board.SCK, MOSI= board.MOSI, MISO=board.MISO)
+		#rfm9x=adafruit_rfm9x.RFM9x(spi, cs, rst, 915.0)
+		#rfm9x.tx_power=23
+		#prev_packet=None
 
 		# Initialize Communication to The Things Network
 		if comms_backend == 'ttn':
