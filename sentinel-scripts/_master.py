@@ -149,7 +149,7 @@ while True:
             device_identifier, comms_type, comms_backend, lora_counter)
         if sys_mode == 'test':
             sys.exit('Completed Scenario')
-        if syst_mode == 'real':
+        if sys_mode == 'real':
             triggered == 0
             print('System Reset')
     if trigger_check == 0 and t_backgrond != 0 and time > t_backgrond :
