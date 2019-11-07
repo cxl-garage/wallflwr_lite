@@ -1,6 +1,7 @@
 ## Setup (Copy stable version into _master.py)
 from __future__ import print_function
 import argparse
+import busio
 import os
 import shutil
 import sys
