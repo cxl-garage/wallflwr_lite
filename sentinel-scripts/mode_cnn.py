@@ -222,6 +222,7 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
     meta_array = []
     files_checked = 0
     confidence = []
+    sum_confidence = 0
     k = 1
     prev_class = 0
     prev_confidence = 0
@@ -282,13 +283,14 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
             meta_array = np.append(meta_array, meta)
             classes = np.append(classes, n_classes)
             confidence = np.append(confidence, n_confidence)
+            sum_confidence = sum_confidence + n_confidence
             #print('Input to CNN:',image)
         else:
             print("All files Checked")
             break
         files_checked += 1
     if sys_mode == 'test' :
-        print('Test Script Initialized...')
+        print('Test Script Only, Camera Not Initialized...')
         return
     if sys_mode == 'real':
         if type == 'image' or 'acoustic':
@@ -383,7 +385,7 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
         for data in meta_array :
             writer.writerow(data)
 
-    return n_classes, n_confidence
+    return n_classes, sum_confidence
 
 
 if __name__ == "__main__":
