@@ -238,11 +238,11 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
     print("Labels File:",labels)
 
     # Sort out File Path
-    if mcu == 'rpi0':
-        model  = os.path.join('../', model)
-        labels = os.path.join('../',labels)
-        data_directory = os.path.join('../',data_directory)
-        results_directory = os.path.join('../',results_directory)
+#    if mcu == 'rpi0':
+#        model  = os.path.join('../', model)
+#        labels = os.path.join('../',labels)
+#        data_directory = os.path.join('../',data_directory)
+#        results_directory = os.path.join('../',results_directory)
 
     #if reset_results == 1:
     #    import os, shutil

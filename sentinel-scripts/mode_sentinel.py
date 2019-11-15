@@ -9,8 +9,8 @@ import sys
 import RPi.GPIO as GPIO
 import time
 import picamera as PiCamera
-import datetime
-
+from datetime import datetime
+from time import strftime
 
 def save_data(image,results,path,ext='jpeg'):
     tag = '%010d' % int(time.monotonic()*1000)
@@ -60,20 +60,19 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_burst, \
                   time.sleep(0.05)
                   trigger_count += 1
     print('Motion Confirmed')
-    if camera == PiCamera :
+    if camera == 'PiCamera':
          camera = PiCamera.PiCamera()
          burst = 0
          print('Taking photo burst')
          camera.start_preview()
          while burst < image_burst:
-             #t_now = datetime.datetime.now.strftime("%Y%m%d%H%M%S")
-             file = '_Testing_%s.jpg' %(burst)
+             t_now = datetime.now().strftime("%Y%m%d%H%M%S%f")
+             file = '_%s.jpg' %(t_now)
              file = os.path.join(results_directory, file)
              camera.capture(file)
              print('Pitcure Saved')
-             time.sleep(2)
+             time.sleep(0.05)
              burst += 1
-    print('Sentinel Armed and Ready to Rumble')
     return 1
 
 if __name__ == "__main__":

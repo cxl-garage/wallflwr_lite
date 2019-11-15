@@ -13,7 +13,7 @@ import csv
 
 ## Master Script for CXL Camera Trap Control
 trigger = 'pir'     # 'pir' or 'ir'
-trigger_check = 'ir'    # 'ir' or 'paired_pir'
+trigger_check = '' #'ir'    # 'ir' or 'paired_pir'
 trigger_sensitivity = 10  #int between 1-100 (twenty being highest sensitivity)
 camera = 'PiCamera'
 t_background = ''   # int
@@ -32,13 +32,13 @@ comms_type = 'lora_rfm9x'#'lora_rfm9x' #'lora_rfm9x'
 comms_backend = 'ttn'
 background_subtraction = ''
 current_background = ''
-resolution = [300,300,4]
-ai_sensitivity = 0.6
+resolution = 300
+ai_sensitivity = 0.4
 lora_counter = 0
 image_burst = 5
-primary_class = 0
+primary_class = 99
 primary_confidence = 0
-secondary_class = 0
+secondary_class = 99
 secondary_confidence = 0
 
 
@@ -86,7 +86,6 @@ def user_selections():
 
 ## Initialization
 
-
 primary_labels = 'models/tflite/deer_binary_v0_2/dict.txt'
 primary_model = 'models/tflite/deer_binary_v0_2/model.tflite' #'models/tflite/spermwhale/spermwhale_edge_v0_1.tflite'
 primary_data_directory = 'data/test' #'/home/sam/AI_Training/deer_train'
@@ -103,6 +102,14 @@ if sys_mode == 'real':
     if mcu == 'computer':
         print('Cannot run "real" mode from mcu/vpu = computer')
     if mcu == 'rpi0':
+        primary_labels = os.path.join('../',primary_labels)
+        primary_model  = os.path.join('../',primary_model)
+        primary_data_directory = os.path.join('../', primary_data_directory)
+        primary_results_directory = os.path.join('../', primary_results_directory)
+        secondary_labels = os.path.join('../', secondary_labels)
+        secondary_labels = os.path.join('../',secondary_model)
+        secondary_data_directory = os.path.join('../', secondary_data_directory)
+        secondary_results_directory = os.path.join('../', secondary_results_directory)
         #primary_format = args.primary_format
         #secondary_format = args.secondary_format
         #primary_type = args.primary_type
