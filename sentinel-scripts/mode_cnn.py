@@ -1,3 +1,4 @@
+
 import argparse
 import time
 import numpy as np
@@ -5,6 +6,9 @@ import os
 from PIL import Image
 import csv
 import re
+import datetime as dt
+import sys
+import picamera
 
 from edgetpu.detection.engine import DetectionEngine
 #from tflite_runtime.interpreter import Interpreter
@@ -234,7 +238,7 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
     reset_results = 1
 
     print('Model Format:', format)
-    print('Files being checked:', max_files)
+    #print('Files being checked:', max_files)
     print("Labels File:",labels)
 
     # Sort out File Path
@@ -272,25 +276,24 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
 
     # Test Scenario (running algorithm on files presaved to data_directory)
 # take images from the initial burst triggered in mode_sentinel.py
-
+    now = dt.datetime.now()
+    ago = now-dt.timedelta(minutes=1)
     for file in os.listdir(data_directory):
-        if max_files < files_checked :
-            print('Checked all files')
-            break
-        filename = os.fsdecode(file)
-        while sum_confidence < 1:
-            if filename.endswith(".jpg") or filename.endswith(".png") or filename.endswith(".jpeg"):
+        while sum_confidence < 1 and max_files < files_checked:
+            filename = os.fsdecode(file)
+            path = os.path.join(data_directory,file)
+            st = os.stat(path)
+            mtime = dt.datetime.fromtimestamp(st.st_mtime)
+            if filename.endswith(".jpg"):  # and mtime > ago:
                 meta, n_classes, n_confidence = tflite_im(format, interpreter, input_width, input_height, \
                 data_directory,file, ai_sensitivity, results_directory)
                 #print(result)
                 meta_array = np.append(meta_array, meta)
                 classes = np.append(classes, n_classes)
                 confidence = np.append(confidence, n_confidence)
-                sum_confidence = sum_confidence + n_confidence
-                #print('Input to CNN:',image)
-            else:
-                print("All files Checked, failed to reach confidence threshold")
-                break
+                print(n_confidence)
+                sum_confidence = sum_confidence + sum(n_confidence)
+                print('Input to CNN:',image)
             files_checked += 1
     if sys_mode == 'test' :
         print('Test Script Only, Camera Not Initialized...')
@@ -300,11 +303,12 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
             if mcu != 'rpi0' :
                 sys.exit('Not ready for not RPi0 yet!')
             # take images directly from the camera buffer
-            while sum_confidence < 1 :
-                if camera == 'PiCamera':
+            while sum_confidence < 1:
+                print('Checked all burst files, failed to reach confidence, checking buffer...')
+                if camera :
                     # Reconstruct the input resolution to include color channel
                     input_res = (resolution[0], resolution[1], 3)
-                    SINGLE_FRAME_SIZE_RGB = input_res[0] * input_res[1] * input_res[2]
+                    SINGLE_FRAME_SIZE_RGB = 300 * 400 * 3
 
                     # Initialize the camera, set the resolution and framerate
                     try:
@@ -319,11 +323,11 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
                     # https://picamera.readthedocs.io/en/release-1.13/api_streams.html?highlight=PiCameraCircularIO
                     stream = picamera.PiCameraCircularIO(camera, size=SINGLE_FRAME_SIZE_RGB)
                     # All essential camera settings
-                    camera.resolution = input_res[0:2]
-                    camera.framerate = args.camera_frame_rate
-                    camera.brightness = args.camera_brightness
-                    camera.shutter_speed = args.camera_shutter_speed
-                    camera.video_stabilization = args.camera_video_stablization
+                    camera.resolution = (800,600)
+                    camera.framerate = 15 #args.camera_frame_rate
+                    #camera.brightness = args.camera_brightness
+                    #camera.shutter_speed = args.camera_shutter_speed
+                    #camera.video_stabilization = args.camera_video_stablization
 
                     # Get the frame from the CircularIO buffer.
                     image = stream.getvalue()
@@ -337,35 +341,35 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
                     meta_array = np.append(meta_array, meta)
                     classes = np.append(classes, n_classes)
                     confidence = np.append(confidence, n_confidence)
-                    sum_confidence = sum_confidence + n_confidence
+                    sum_confidence = sum_confidence + sum(n_confidence)
                     files_checked += 1
                 else :
                     sys.exit('Need to have PiCamera, more camera functionality to come!')
 
                 # If we already detected animal in this frame, we don't want to over count.
-                if local_animal_detected and not detected_this_frame:
-                    if animal_detected < detection_confidence:
+                #if local_animal_detected and not detected_this_frame:
+                #    if animal_detected < detection_confidence:
                         # If we haven't confirmed, then increase our confidence.
-                        if detected_last_frame:
-                            animal_detected += 1
+                #        if detected_last_frame:
+                #            animal_detected += 1
                         # If we didn't confirm last frame but we detected in this frame, we want to reset our confidence.
-                        else:
-                            animal_detected = 1
+                #        else:
+                #            animal_detected = 1
                 # We detected an animal in this frame
-                if local_animal_detected:
-                    detected_this_frame = True
+                #if local_animal_detected:
+                #    detected_this_frame = True
                     # Update the history
-                    detected_last_frame = detected_this_frame
+                #    detected_last_frame = detected_this_frame
                     # Draw Bounding Box
-                    bounding_boxes.append(result.rectangle)
-                else:
-                    print("Checking...")
-                    false_positive += 1
-                    save_data()
-                if false_positive_threshold >= false_positive :
-                    print("Cleaning up...")
-                    camera.stop_recording()
-                    camera.close()
+                #    bounding_boxes.append(result.rectangle)
+                #else:
+                #    print("Checking...")
+                #    false_positive += 1
+                #    save_data()
+                #if false_positive_threshold >= false_positive :
+                print("Cleaning up...")
+                #camera.stop_recording()
+                camera.close()
 
         if type == 'video' :
             print('Code for Video Recognition not Completed')

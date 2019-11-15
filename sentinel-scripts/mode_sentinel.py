@@ -73,6 +73,7 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_burst, \
              print('Pitcure Saved')
              time.sleep(0.05)
              burst += 1
+         camera.close()
     return 1
 
 if __name__ == "__main__":
