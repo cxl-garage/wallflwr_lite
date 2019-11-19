@@ -12,6 +12,18 @@ import csv
 
 
 ## Master Script for CXL Camera Trap Control
+
+## Initialization
+
+primary_labels = 'models/tflite/deer_binary_v0_2/dict.txt'
+primary_model = 'models/tflite/deer_binary_v0_2/model.tflite' #'models/tflite/spermwhale/spermwhale_edge_v0_1.tflite'
+primary_data_directory = 'data/test' #'/home/sam/AI_Training/deer_train'
+primary_results_directory = 'data/results'
+secondary_labels = ''
+secondary_model = ''
+secondary_data_directory = ''
+secondary_results_directory = ''
+
 trigger = 'pir'     # 'pir' or 'ir'
 trigger_check = '' #'ir'    # 'ir' or 'paired_pir'
 trigger_sensitivity = 10  #int between 1-100 (twenty being highest sensitivity)
@@ -32,7 +44,10 @@ comms_type = 'lora_rfm9x'
 comms_backend = 'ttn'
 background_subtraction = ''
 current_background = ''
-rgb_resolution = (300,400)
+primary_resolution = (300,400)
+secondary_resolution = (300,400)
+primary_model_resolution = (300,400)
+secondary_model_resolution = (300,400)
 ai_sensitivity = 0.2
 lora_counter = 0
 image_burst = 5
@@ -83,17 +98,6 @@ def user_selections():
     args = parser.parse_args()
     return args
 
-## Initialization
-
-primary_labels = 'models/tflite/deer_binary_v0_2/dict.txt'
-primary_model = 'models/tflite/deer_binary_v0_2/model.tflite' #'models/tflite/spermwhale/spermwhale_edge_v0_1.tflite'
-primary_data_directory = 'data/test' #'/home/sam/AI_Training/deer_train'
-primary_results_directory = 'data/results'
-secondary_labels = ''
-secondary_model = ''
-secondary_data_directory = ''
-secondary_results_directory = ''
-
 if sys_mode == 'test':
     print('Mode: Test')
 if sys_mode == 'real':
@@ -139,8 +143,8 @@ while True:
         print('Spinning up Primary Model', primary_model)
         #[primary_class, primary_confidence, primary_output_file] = ...
         primary_class, primary_confidence = mode_cnn.cnn(sys_mode, mcu, \
-        primary_format, camera, rgb_resolution, \
-        primary_type, primary_model, primary_labels, \
+        primary_format, camera, primary_resolution, \
+        primary_type, primary_model_resolution, primary_model, primary_labels, \
         primary_data_directory, primary_results_directory, \
         current_background, ai_sensitivity, max_images)
         print('Model Complete')
@@ -152,7 +156,7 @@ while True:
             #[secondary_class, secondary_confidence, secondary_output_file] = ...
             secondary_class, secondary_confidence = mode_cnn.main(sys_mode, mcu, \
             secondary_format, camera, secondary_resolution,\
-            secondary_type, secondary_model, secondary_labels,\
+            secondary_type, secondary_model_resolution, secondary_model, secondary_labels,\
             primary_results_directory, secondary_results_directory,
             current_background, ai_sensitivity, max_images)
             print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)

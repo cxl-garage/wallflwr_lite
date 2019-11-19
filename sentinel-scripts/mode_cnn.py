@@ -137,7 +137,7 @@ def tflite_im(format,interpreter, input_width, input_height, data_directory,file
 
 # The main function script
 def cnn(sys_mode, mcu, format, camera, im_resolution, \
-    type, model, labels, data_directory, results_directory, \
+    type, model_resolution, model, labels, data_directory, results_directory, \
     current_background, ai_sensitivity, max_images):
     directory = os.fsencode(data_directory)
     animal_detected = 0             # Initialize Animal Detector Counter (Confidence)
@@ -159,8 +159,8 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
     print(im_resolution)
     im_w  = int(im_resolution[0])
     im_h  = int(im_resolution[1])
-    cnn_w = 300
-    cnn_h = 400
+    cnn_w = int(model_resolution[0])
+    cnn_h = int(model_resolution[1])
     reset_results = 1
 
     print('Model Format:', format)
