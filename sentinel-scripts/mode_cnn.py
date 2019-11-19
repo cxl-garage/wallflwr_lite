@@ -112,7 +112,7 @@ def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, 
     clock = toc - tic
     speed = 1/clock
     print('File Checked:', file)
-    print('Speed (Hz):',speed)
+    print('Speed (Hz):',clock)
     count = ''
 
 
