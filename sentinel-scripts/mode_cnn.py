@@ -277,7 +277,7 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
     # Test Scenario (running algorithm on files presaved to data_directory)
     # take images from the initial burst triggered in mode_sentinel.py
     now = dt.datetime.now()
-    ago = nowdt.timedelta(minutes=1)
+    ago = now-dt.timedelta(minutes=1)
     for file in os.listdir(data_directory):
         while sum_confidence < 1 and max_files < files_checked:
             filename = os.fsdecode(file)
