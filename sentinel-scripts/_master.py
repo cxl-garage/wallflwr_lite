@@ -32,9 +32,7 @@ comms_type = 'lora_rfm9x'
 comms_backend = 'ttn'
 background_subtraction = ''
 current_background = ''
-resolution = (300,400)
-print(int(resolution(0)))
-print(int(resolution(1)))
+rgb_resolution = (300,400)
 ai_sensitivity = 0.2
 lora_counter = 0
 image_burst = 5
@@ -142,7 +140,7 @@ while True:
         print('Spinning up Primary Model', primary_model)
         #[primary_class, primary_confidence, primary_output_file] = ...
         primary_class, primary_confidence = mode_cnn.cnn(sys_mode, mcu, \
-        primary_format, camera, resolution, \
+        primary_format, camera, rgb_resolution, \
         primary_type, primary_model, primary_labels, \
         primary_data_directory, primary_results_directory, \
         current_background, ai_sensitivity, max_images)
@@ -153,7 +151,8 @@ while True:
         # Run Secondary Model (if it exists)
         if secondary_model :
             #[secondary_class, secondary_confidence, secondary_output_file] = ...
-            secondary_class, secondary_confidence = mode_cnn.main(sys_mode, mcu, secondary_format, camera, resolution,\
+            secondary_class, secondary_confidence = mode_cnn.main(sys_mode, mcu, \
+            secondary_format, camera, secondary_resolution,\
             secondary_type, secondary_model, secondary_labels,\
             primary_results_directory, secondary_results_directory,
             current_background, ai_sensitivity, max_images)
