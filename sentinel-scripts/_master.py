@@ -177,7 +177,7 @@ while True:
         primary_data_files = os.listdir(primary_data_directory)
         n_primary_data_folder = os.path.join(primary_data_directory,t_now)
         os.mkdir(n_primary_data_folder)
-        for f in primary_data)_files :
+        for f in primary_data_files :
             shutil.move(primary_data_directory+f,n_primary_folder)
 
         primary_results_files = os.listdir(primary_results_directory)
