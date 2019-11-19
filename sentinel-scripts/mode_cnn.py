@@ -156,6 +156,7 @@ def cnn(sys_mode, mcu, format, type, camera, im_resolution, \
     max_files = max_images
     classes = []
     cropped_image_counter = 1
+    print(im_resolution[0])
     im_w  = int(im_resolution[0])
     im_h  = int(im_resolution[1])
     cnn_w = 300
