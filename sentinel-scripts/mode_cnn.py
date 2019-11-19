@@ -326,9 +326,9 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
 
                     # Initialize the buffer for picamera to hold the frame
                     # https://picamera.readthedocs.io/en/release-1.13/api_streams.html?highlight=PiCameraCircularIO
-                    stream = picamera.PiCameraCircularIO(camera, size=SINGLE_FRAME_SIZE_RGB)
+                    stream = picamera.PiCameraCircularIO(camera)
                     # All essential camera settings
-                    camera.resolution = (800,600)
+                    camera.resolution = resolution#(800,600)
                     camera.framerate = 15 #args.camera_frame_rate
                     #camera.brightness = args.camera_brightness
                     #camera.shutter_speed = args.camera_shutter_speed
