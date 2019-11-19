@@ -181,7 +181,7 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
         while sum_confidence < 1 and files_checked < len(directory_list):#and max_files < files_checked:
             if filename.endswith(".jpg"): #and mtime < ago:
                 meta, n_classes, n_confidence = tflite_im(format, interpreter, \
-                input_width, input_height, \
+                cnn_w, cnn_h, \
                 data_directory,file, ai_sensitivity, results_directory)
                 meta_array = np.append(meta_array, meta)
                 classes = np.append(classes, n_classes)
