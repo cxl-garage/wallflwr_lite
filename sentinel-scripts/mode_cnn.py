@@ -233,8 +233,10 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
     max_files = max_images
     classes = []
     cropped_image_counter = 1
-    input_width = 100
-    input_height = 100
+    im_w  = int(resolution(0))
+    im_h  = int(resolution(1))
+    cnn_w = 300
+    cnn_h = 400
     reset_results = 1
 
     print('Model Format:', format)
@@ -313,7 +315,7 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
                 if camera :
                     # Reconstruct the input resolution to include color channel
                     #input_res = (resolution[0], resolution[1], 3)
-                    SINGLE_FRAME_SIZE_RGB = resolution(0) * resolution(1) *3
+                    SINGLE_FRAME_SIZE_RGB = im_w * im_h * 3
 
                     # Initialize the camera, set the resolution and framerate
                     try:
@@ -328,7 +330,7 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
                     # https://picamera.readthedocs.io/en/release-1.13/api_streams.html?highlight=PiCameraCircularIO
                     stream = picamera.PiCameraCircularIO(camera)
                     # All essential camera settings
-                    camera.resolution = resolution#(800,600)
+                    camera.resolution = (im_w, im_h) #(800,600)
                     camera.framerate = 15 #args.camera_frame_rate
                     #camera.brightness = args.camera_brightness
                     #camera.shutter_speed = args.camera_shutter_speed
