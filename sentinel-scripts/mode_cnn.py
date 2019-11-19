@@ -9,6 +9,7 @@ import re
 import datetime as dt
 import sys
 import picamera
+import shutil
 from edgetpu.detection.engine import DetectionEngine
 #print('Loaded: Coral Accelerator')
 
@@ -75,7 +76,7 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
     file_path = os.path.join(data_directory,file)
     im = Image.open(file_path)
     # save size of original (full-res) pic
-    im_height, im_width = im.size
+    im_width, im_height = im.size
     #print('Image Width', im_width)
     #print('Image Height', im_height)
     # make sure bounding boxes are within bounds of image
@@ -219,7 +220,7 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
                 if camera :
                     # Reconstruct the input resolution to include color channel
                     #input_res = (resolution[0], resolution[1], 3)
-                    SINGLE_FRAME_SIZE_RGB = im_w * im_h * 3
+                    SINGLE_FRAME_SIZE_RGB = im_w * im_h #* 3
 
                     camera = picamera.PiCamera()
                     stream = picamera.PiCameraCircularIO(camera, size=SINGLE_FRAME_SIZE_RGB)
