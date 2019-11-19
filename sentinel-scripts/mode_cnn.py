@@ -109,7 +109,8 @@ def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, 
     thresh_classes = []
     thresh_scores = []
     toc = time.process_time()
-    speed = 1/(toc - tic)
+    clock = toc - tic
+    speed = 1/clock
     print('File Checked:', file)
     print('Speed (Hz):',speed)
     count = ''
