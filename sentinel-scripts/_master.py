@@ -32,7 +32,7 @@ comms_type = 'lora_rfm9x'
 comms_backend = 'ttn'
 background_subtraction = ''
 current_background = ''
-resolution = [300,400]
+resolution = (300,400)
 print(int(resolution(0)))
 print(int(resolution(1)))
 ai_sensitivity = 0.2
