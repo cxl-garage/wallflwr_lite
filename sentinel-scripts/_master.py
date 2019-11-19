@@ -61,7 +61,6 @@ def import_peripherals():
                      "this sample.")
 
     if trigger == 'pir':
-        import mode_sentinel
         GPIO.setwarnings(False)
         GPIO.setup(4, GPIO.IN)
         print('Loaded: PIR')
