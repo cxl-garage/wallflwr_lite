@@ -136,7 +136,7 @@ def tflite_im(format,interpreter, input_width, input_height, data_directory,file
     return meta_array, thresh_classes, thresh_scores
 
 # The main function script
-def cnn(sys_mode, mcu, format, type, camera, im_resolution, \
+def cnn(sys_mode, mcu, format, camera, im_resolution, \
     model, labels, data_directory, results_directory, \
     current_background, ai_sensitivity, max_images):
     directory = os.fsencode(data_directory)
