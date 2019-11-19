@@ -132,10 +132,10 @@ def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, 
             meta = {'file': file_path, 'bounding_box': boxes, 'class_ide': classes, 'score': scores, 'time': clock}
             thresh_classes = np.append(thresh_classes, classes)
             thresh_scores =np.append(thresh_scores, scores)
-            #bb_crop(data_directory, file, boxes, meta, classes, results_directory, i)
+            bb_crop(data_directory, file, boxes, meta, classes, results_directory, i)
             #print('Add code for bounding box crop function (issue with the format)')
             meta_array = np.append(meta_array, meta)
-            #print(meta)
+            print(meta)
             i += 1
 
     return meta_array, thresh_classes, thresh_scores
