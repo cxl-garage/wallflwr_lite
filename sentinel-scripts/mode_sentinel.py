@@ -71,7 +71,7 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_burst, \
              file = '_%s.jpg' %(t_now)
              file = os.path.join(results_directory, file)
              camera.capture(file)
-             print('Pitcure Saved')
+             print('Pic Saved')
              time.sleep(0.05)
              burst += 1
          camera.close()
