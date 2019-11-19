@@ -173,7 +173,6 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
 
 
     directory_list = os.listdir(data_directory)
-    print(directory_list)
     while sum_confidence < 1 and files_checked < len(directory_list): #and max_files < files_checked:
         for file in directory_list:
             filename = os.fsdecode(file)
@@ -193,7 +192,8 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
                 confidence = np.append(confidence, n_confidence)
                 print(n_confidence)
                 sum_confidence = sum_confidence + sum(n_confidence)
-            if sum_confidence < 1:
+                print(sum_confidence)
+            if sum_confidence > 1:
                 break
             files_checked += 1
     if sys_mode == 'test' :
