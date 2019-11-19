@@ -69,21 +69,22 @@ def get_output_tensor(interpreter, index):
   tensor = np.squeeze(interpreter.get_tensor(output_details['index']))
   return tensor
 # Function to Save Cropped Images
-def bb_crop(data_directory,file, aoi, result, classes, results_directory, i):
+def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
     crop_buffer = .15
     # open image
     file_path = os.path.join(data_directory,file)
     im = Image.open(file_path)
     # save size of original (full-res) pic
     im_width, im_height = im.size
-    #print('Image Width', im_width)
-    #print('Image Height', im_height)
+    print('Image Width', im_width)
+    print('Image Height', im_height)
     # make sure bounding boxes are within bounds of image
     for j in range(0,4) :
+        print(aoi[j])
         if aoi[j] >= .50 :
-            aoi[j] = aoi[j]+crop_buffer
+            aoi[j] = aoi[j] + crop_buffer
         else :
-            aoi[j] = aoi[j]-crop_buffer
+            aoi[j] = aoi[j] - crop_buffer
         aoi[j] = max(min(aoi[j],1),0)
     #print('Area of Interest (fixed)',aoi)
     # pull coordinates and convert to correct of original (full-res) pic
