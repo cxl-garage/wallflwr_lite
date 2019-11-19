@@ -158,6 +158,8 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
     cropped_image_counter = 1
     im_w  = int(resolution(0))
     im_h  = int(resolution(1))
+    print(im_w)
+    print(im_h)
     cnn_w = 300
     cnn_h = 400
     reset_results = 1
