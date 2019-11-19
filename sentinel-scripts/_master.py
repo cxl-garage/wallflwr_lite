@@ -17,8 +17,8 @@ import csv
 
 primary_labels = 'models/tflite/deer_binary_v0_2/dict.txt'
 primary_model = 'models/tflite/deer_binary_v0_2/model.tflite' #'models/tflite/spermwhale/spermwhale_edge_v0_1.tflite'
-primary_data_directory = 'data/test' #'/home/sam/AI_Training/deer_train'
-primary_results_directory = 'data/results'
+primary_data_directory = 'data/rgb' #'/home/sam/AI_Training/deer_train'
+primary_results_directory = 'data/rgb_cropped'
 secondary_labels = ''
 secondary_model = ''
 secondary_data_directory = ''
