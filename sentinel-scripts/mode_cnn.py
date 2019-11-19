@@ -176,7 +176,6 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
     ago = now-dt.timedelta(minutes=1)
     directory_list = os.listdir(data_directory)
     print(directory_list)
-    sys.exit()
     while sum_confidence < 1 and files_checked < len(directory_list): #and max_files < files_checked:
         for file in directory_list:
             filename = os.fsdecode(file)
