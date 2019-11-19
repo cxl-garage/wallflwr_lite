@@ -313,7 +313,7 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
                 if camera :
                     # Reconstruct the input resolution to include color channel
                     #input_res = (resolution[0], resolution[1], 3)
-                    #SINGLE_FRAME_SIZE_RGB = 300 * 400 * 3
+                    SINGLE_FRAME_SIZE_RGB = resolution(0) * resolution(1) *3
 
                     # Initialize the camera, set the resolution and framerate
                     try:
