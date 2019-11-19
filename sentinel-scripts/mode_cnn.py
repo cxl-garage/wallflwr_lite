@@ -75,7 +75,7 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
     file_path = os.path.join(data_directory,file)
     im = Image.open(file_path)
     # save size of original (full-res) pic
-    im_width, im_height = im.size
+    im_height, im_width = im.size
     print('Image Width', im_width)
     print('Image Height', im_height)
     # make sure bounding boxes are within bounds of image
