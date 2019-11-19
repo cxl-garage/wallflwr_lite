@@ -108,11 +108,6 @@ def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, 
     meta_array = []
     thresh_classes = []
     thresh_scores = []
-    toc = time.process_time()
-    clock = toc - tic
-    speed = 1/clock
-    print('File Checked:', file)
-    print('Speed (Hz):',clock)
     count = ''
 
 
@@ -135,6 +130,11 @@ def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, 
             meta_array = np.append(meta_array, meta)
             #print(meta)
             i += 1
+    toc = time.process_time()
+    clock = toc - tic
+    speed = 1/clock
+    print('File Checked:', file)
+    print('Speed (Hz):',clock)
 
     return meta_array, thresh_classes, thresh_scores
 
@@ -172,14 +172,16 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
 
     now = dt.datetime.now()
     ago = now-dt.timedelta(minutes=1)
-    for file in os.listdir(data_directory):
-        while sum_confidence < 1 and max_files < files_checked:
-            filename = os.fsdecode(file)
-            path = os.path.join(data_directory,file)
-            st = os.stat(path)
-            mtime = dt.datetime.fromtimestamp(st.st_mtime)
-            if filename.endswith(".jpg") and mtime < ago:
-                meta, n_classes, n_confidence = tflite_im(format, interpreter, input_width, input_height, \
+    directory_list = os.listdir(data_directory)
+    for file in directory_list:
+        filename = os.fsdecode(file)
+        path = os.path.join(data_directory,file)
+        st = os.stat(path)
+        mtime = dt.datetime.fromtimestamp(st.st_mtime)
+        while sum_confidence < 1 and files_checked < len(directory_list):#and max_files < files_checked:
+            if filename.endswith(".jpg"): #and mtime < ago:
+                meta, n_classes, n_confidence = tflite_im(format, interpreter, \
+                input_width, input_height, \
                 data_directory,file, ai_sensitivity, results_directory)
                 meta_array = np.append(meta_array, meta)
                 classes = np.append(classes, n_classes)
