@@ -177,12 +177,13 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
     directory_list = os.listdir(data_directory)
     print(directory_list)
     sys.exit()
-    for file in directory_list:
-        filename = os.fsdecode(file)
-        path = os.path.join(data_directory,file)
-        st = os.stat(path)
-        mtime = dt.datetime.fromtimestamp(st.st_mtime)
-        while sum_confidence < 1 and files_checked < len(directory_list):#and max_files < files_checked:
+    while sum_confidence < 1 and files_checked < len(directory_list): #and max_files < files_checked:
+        for file in directory_list:
+            filename = os.fsdecode(file)
+            path = os.path.join(data_directory,file)
+            st = os.stat(path)
+            mtime = dt.datetime.fromtimestamp(st.st_mtime)
+            print(mtime)
             if filename.endswith(".jpg"): #and mtime < ago:
                 meta, n_classes, n_confidence = tflite_im(format, interpreter, \
                 cnn_w, cnn_h, \
