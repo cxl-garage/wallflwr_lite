@@ -10,7 +10,7 @@ import datetime as dt
 import sys
 import picamera
 from edgetpu.detection.engine import DetectionEngine
-print('Loaded: Coral Accelerator')
+#print('Loaded: Coral Accelerator')
 
 
 # Allows for localized training
@@ -172,8 +172,6 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
     interpreter = DetectionEngine(model)
 
 
-    now = dt.datetime.now()
-    ago = now-dt.timedelta(minutes=1)
     directory_list = os.listdir(data_directory)
     print(directory_list)
     while sum_confidence < 1 and files_checked < len(directory_list): #and max_files < files_checked:
@@ -182,8 +180,11 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
             path = os.path.join(data_directory,file)
             st = os.stat(path)
             mtime = dt.datetime.fromtimestamp(st.st_mtime)
+            now = dt.datetime.now()
+            ago = now-dt.timedelta(minutes=1)
             print(mtime)
-            if filename.endswith(".jpg"): #and mtime < ago:
+            print(ago)
+            if filename.endswith(".jpg") and mtime < ago:
                 meta, n_classes, n_confidence = tflite_im(format, interpreter, \
                 cnn_w, cnn_h, \
                 data_directory,file, ai_sensitivity, results_directory)

@@ -78,7 +78,7 @@ def import_peripherals():
     if trigger == 'pir':
         GPIO.setwarnings(False)
         GPIO.setup(4, GPIO.IN)
-        print('Loaded: PIR')
+        #print('Loaded: PIR')
 
 # Defines the inputs to the script
 def user_selections():
@@ -117,7 +117,7 @@ if sys_mode == 'real':
         #secondary_format = args.secondary_format
         #primary_type = args.primary_type
         #secondary_type = args.secondary_type
-        print('Real Scenario running on RPi Zero')
+        #print('Real Scenario running on RPi Zero')
 
 
 if sys.version_info[0] < 3:
@@ -127,7 +127,7 @@ if sys.version_info[0] < 3:
 time = 0
 primary_result = []
 primary_result_array = []
-print("Successful Setup")
+#print("Successful Setup")
 
 
 # Loop to run consistently run on RasPi
@@ -140,16 +140,16 @@ while True:
         #print("Event Detected")
     if triggered == 1 :
         # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
-        print('Spinning up Primary Model', primary_model)
+        #print('Spinning up Primary Model', primary_model)
         #[primary_class, primary_confidence, primary_output_file] = ...
         primary_class, primary_confidence = mode_cnn.cnn(sys_mode, mcu, \
         primary_format, camera, primary_resolution, \
         primary_type, primary_model_resolution, primary_model, primary_labels, \
         primary_data_directory, primary_results_directory, \
         current_background, ai_sensitivity, max_images)
-        print('Model Complete')
-        print('Insert Code to Save Array in way that can be parsed for LoRa')
-        print('NOTE: CROPPED IMAGES AND .CSV RESULTS FILE ARE SAVED IN /DATA/RESULTS FOLDER ')
+        #print('Model Complete')
+        #print('Insert Code to Save Array in way that can be parsed for LoRa')
+        #print('NOTE: CROPPED IMAGES AND .CSV RESULTS FILE ARE SAVED IN /DATA/RESULTS FOLDER ')
 
         # Run Secondary Model (if it exists)
         if secondary_model :
