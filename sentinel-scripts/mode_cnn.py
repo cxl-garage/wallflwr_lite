@@ -104,11 +104,6 @@ def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, 
       (cnn_h, cnn_w), Image.ANTIALIAS)
     tic = time.process_time()
 
-    meta = []
-    meta_array = []
-    thresh_classes = []
-    thresh_scores = []
-    count = ''
 
 
     #print('Coral Accelerator!')
@@ -119,9 +114,14 @@ def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, 
     clock = toc - tic
     speed = 1/clock
     print('File Checked:', file)
-    print('Speed (Hz):',clock)
+    #print('Speed (Hz):',clock)
 
     i = 0
+    meta = []
+    meta_array = []
+    thresh_classes = []
+    thresh_scores = []
+    count = ''
     if ans:
         for obj in ans:
             boxes = obj.bounding_box
@@ -167,7 +167,7 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
     cnn_h = int(model_resolution[1])
     reset_results = 1
 
-    print('Model Format:', format)
+    #print('Model Format:', format)
     print("Labels File:",labels)
     interpreter = DetectionEngine(model)
 
@@ -181,9 +181,9 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
             mtime = dt.datetime.fromtimestamp(st.st_mtime)
             now = dt.datetime.now()
             ago = now-dt.timedelta(minutes=1)
-            print(mtime)
-            print(ago)
-            if filename.endswith(".jpg") and mtime < ago:
+            #print(mtime)
+            #print(ago)
+            if filename.endswith(".jpg"):# and mtime < ago:
                 meta, n_classes, n_confidence = tflite_im(format, interpreter, \
                 cnn_w, cnn_h, \
                 data_directory,file, ai_sensitivity, results_directory)
