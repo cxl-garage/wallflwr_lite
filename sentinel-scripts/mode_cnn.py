@@ -136,7 +136,7 @@ def tflite_im(format,interpreter, input_width, input_height, data_directory,file
     return meta_array, thresh_classes, thresh_scores
 
 # The main function script
-def cnn(sys_mode, mcu, format, type, camera, resolution, \
+def cnn(sys_mode, mcu, format, type, camera, im_resolution, \
     model, labels, data_directory, results_directory, \
     current_background, ai_sensitivity, max_images):
     directory = os.fsencode(data_directory)
@@ -156,8 +156,8 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
     max_files = max_images
     classes = []
     cropped_image_counter = 1
-    im_w  = int(resolution[0])
-    im_h  = int(resolution[1])
+    im_w  = int(im_resolution[0])
+    im_h  = int(im_resolution[1])
     cnn_w = 300
     cnn_h = 400
     reset_results = 1
