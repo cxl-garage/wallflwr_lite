@@ -28,7 +28,7 @@ primary_type = 'image'
 secondary_format = ''
 secondary_type = ''
 device_identifier = ''
-comms_type = 'lora_rfm9x'#'lora_rfm9x' #'lora_rfm9x'
+comms_type = 'lora_rfm9x'
 comms_backend = 'ttn'
 background_subtraction = ''
 current_background = ''
@@ -139,7 +139,7 @@ while True:
         # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
         print('Spinning up Primary Model', primary_model)
         #[primary_class, primary_confidence, primary_output_file] = ...
-        primary_class, primary_confidence = mode_cnn.cnn(sys_mode, mcu, primary_format, camera, resolution,\
+        primary_class, primary_confidence = mode_cnn.cnn(sys_mode, mcu, primary_format, camera, resolution, \
         primary_type, primary_model, primary_labels, \
         primary_data_directory, primary_results_directory, \
         current_background, ai_sensitivity, max_images)
