@@ -156,7 +156,6 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
     max_files = max_images
     classes = []
     cropped_image_counter = 1
-    print(im_resolution)
     im_w  = int(im_resolution[0])
     im_h  = int(im_resolution[1])
     cnn_w = int(model_resolution[0])
@@ -221,7 +220,7 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
                     #if len(cam_buffer) != SINGLE_FRAME_SIZE_RGB:
                     #    continue
                     # Passing corresponding RGB
-                    meta, n_classes, n_confidence = tflite_im(format, interpreter, input_width, input_height, \
+                    meta, n_classes, n_confidence = tflite_im(format, interpreter, cnn_w, cnn_h, \
                     data_directory,file, ai_sensitivity, results_directory)
                     #print(result)
                     meta_array = np.append(meta_array, meta)
