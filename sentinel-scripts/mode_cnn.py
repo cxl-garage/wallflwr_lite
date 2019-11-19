@@ -275,16 +275,16 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
 
 
     # Test Scenario (running algorithm on files presaved to data_directory)
-# take images from the initial burst triggered in mode_sentinel.py
+    # take images from the initial burst triggered in mode_sentinel.py
     now = dt.datetime.now()
-    ago = now-dt.timedelta(minutes=1)
+    ago = nowdt.timedelta(minutes=1)
     for file in os.listdir(data_directory):
         while sum_confidence < 1 and max_files < files_checked:
             filename = os.fsdecode(file)
             path = os.path.join(data_directory,file)
             st = os.stat(path)
             mtime = dt.datetime.fromtimestamp(st.st_mtime)
-            if filename.endswith(".jpg"):  # and mtime > ago:
+            if filename.endswith(".jpg") and mtime < ago:
                 meta, n_classes, n_confidence = tflite_im(format, interpreter, input_width, input_height, \
                 data_directory,file, ai_sensitivity, results_directory)
                 #print(result)
@@ -303,12 +303,17 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
             if mcu != 'rpi0' :
                 sys.exit('Not ready for not RPi0 yet!')
             # take images directly from the camera buffer
-            while sum_confidence < 1:
+            max_buffer_time = 0
+            tic = 0
+            while sum_confidence < 1 and max_buffer_time < 30:
+                toc = time.process_time()
+                max_buffer_time = max_buffer_time + (toc - tic)
+                tic = time.process_time()
                 print('Checked all burst files, failed to reach confidence, checking buffer...')
                 if camera :
                     # Reconstruct the input resolution to include color channel
-                    input_res = (resolution[0], resolution[1], 3)
-                    SINGLE_FRAME_SIZE_RGB = 300 * 400 * 3
+                    #input_res = (resolution[0], resolution[1], 3)
+                    #SINGLE_FRAME_SIZE_RGB = 300 * 400 * 3
 
                     # Initialize the camera, set the resolution and framerate
                     try:
@@ -342,7 +347,6 @@ def cnn(sys_mode, mcu, format, type, camera, resolution, \
                     classes = np.append(classes, n_classes)
                     confidence = np.append(confidence, n_confidence)
                     sum_confidence = sum_confidence + sum(n_confidence)
-                    files_checked += 1
                 else :
                     sys.exit('Need to have PiCamera, more camera functionality to come!')
 
