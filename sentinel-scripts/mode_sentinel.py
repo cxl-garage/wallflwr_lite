@@ -65,6 +65,7 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_burst, \
          burst = 0
          print('Taking photo burst')
          camera.start_preview()
+         camera.vflip = True
          while burst < image_burst:
              t_now = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
              file = '_%s.jpg' %(t_now)

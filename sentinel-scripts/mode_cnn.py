@@ -175,6 +175,8 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
     now = dt.datetime.now()
     ago = now-dt.timedelta(minutes=1)
     directory_list = os.listdir(data_directory)
+    print(directory_list)
+    sys.exit()
     for file in directory_list:
         filename = os.fsdecode(file)
         path = os.path.join(data_directory,file)
