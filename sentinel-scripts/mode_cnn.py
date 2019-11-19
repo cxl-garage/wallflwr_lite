@@ -76,8 +76,8 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
     im = Image.open(file_path)
     # save size of original (full-res) pic
     im_height, im_width = im.size
-    print('Image Width', im_width)
-    print('Image Height', im_height)
+    #print('Image Width', im_width)
+    #print('Image Height', im_height)
     # make sure bounding boxes are within bounds of image
     for j in range(0,4) :
         print(aoi[j])
@@ -173,7 +173,7 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
     reset_results = 1
 
     #print('Model Format:', format)
-    print("Labels File:",labels)
+    #print("Labels File:",labels)
     interpreter = DetectionEngine(model)
 
 
