@@ -33,6 +33,8 @@ comms_backend = 'ttn'
 background_subtraction = ''
 current_background = ''
 resolution = [300,400]
+print(int(resolution(0)))
+print(int(resolution(1)))
 ai_sensitivity = 0.2
 lora_counter = 0
 image_burst = 5
