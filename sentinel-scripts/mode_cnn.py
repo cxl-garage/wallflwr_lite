@@ -125,7 +125,7 @@ def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, 
     count = ''
     if ans:
         for obj in ans:
-            boxes = obj.bounding_box
+            boxes = obj.bounding_box.flatten()
             print(boxes)
             print(type(boxes))
             classes = obj.label_id
