@@ -206,7 +206,7 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
                     #input_res = (resolution[0], resolution[1], 3)
                     SINGLE_FRAME_SIZE_RGB = im_w * im_h * 3
 
-                    #camera = picamera.PiCamera()
+                    camera = picamera.PiCamera()
                     stream = picamera.PiCameraCircularIO(camera, size=SINGLE_FRAME_SIZE_RGB)
                     # All essential camera settings
                     camera.resolution = (im_w, im_h)
