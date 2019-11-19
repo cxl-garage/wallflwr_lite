@@ -114,6 +114,13 @@ def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, 
     #print('Coral Accelerator!')
     ans = interpreter.DetectWithImage(current_file,threshold=threshold,\
     keep_aspect_ratio =True, relative_coord=True,top_k=1)
+
+    toc = time.process_time()
+    clock = toc - tic
+    speed = 1/clock
+    print('File Checked:', file)
+    print('Speed (Hz):',clock)
+
     i = 0
     if ans:
         for obj in ans:
@@ -130,11 +137,6 @@ def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, 
             meta_array = np.append(meta_array, meta)
             #print(meta)
             i += 1
-    toc = time.process_time()
-    clock = toc - tic
-    speed = 1/clock
-    print('File Checked:', file)
-    print('Speed (Hz):',clock)
 
     return meta_array, thresh_classes, thresh_scores
 
