@@ -190,7 +190,6 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
                 confidence = np.append(confidence, n_confidence)
                 print(n_confidence)
                 sum_confidence = sum_confidence + sum(n_confidence)
-                print('Input to CNN:',image)
             files_checked += 1
     if sys_mode == 'test' :
         print('Test Script Only, Camera Not Initialized...')
