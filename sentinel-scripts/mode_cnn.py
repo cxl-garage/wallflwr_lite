@@ -126,15 +126,15 @@ def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, 
     if ans:
         for obj in ans:
             boxes = obj.bounding_box.flatten()
-            print(boxes)
-            print(type(boxes))
+            #print(boxes)
+            #print(type(boxes))
             classes = obj.label_id
             scores = obj.score
             count  = 1
             #print('Need to add some code to allow multiple classes to be analyzed!')
             meta = {'file': file_path, 'bounding_box': boxes, 'class_ide': classes, 'score': scores, 'time': clock}
             #meta = {file_path, boxes, classes, scores, clock}
-            print(meta)
+            #print(meta)
             thresh_classes = np.append(thresh_classes, classes)
             thresh_scores =np.append(thresh_scores, scores)
             bb_crop(data_directory, file, boxes, meta, classes, results_directory, i)
