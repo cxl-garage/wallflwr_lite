@@ -24,7 +24,7 @@ primary_data_directory = 'data/rgb' #'/home/sam/AI_Training/deer_train'
 primary_results_directory = 'data/rgb_cropped'
 secondary_labels = ''
 secondary_model = ''
-secondary_data_directory = ''
+secondary_data_directory = 'data/flir'
 secondary_results_directory = ''
 
 trigger = 'pir'     # 'pir' or 'ir'
@@ -199,14 +199,14 @@ while True:
         for f in primary_results_files :
             path = os.path.join(primary_results_directory, f)
             shutil.move(path,n_primary_results_folder)
-
-        secondary_data_files = os.listdir(secondary_data_directory)
-        n_secondary_data_folder = os.path.join(primary_data_directory,t_now)
-        if not os.path.exists(n_secondary_data_folder):
-            os.mkdir(n_secondary_data_folder)
-        for f in secondary_data_files :
-            path = os.path.join(secondary_data_directory, f)
-            shutil.move(path,n_secondary_data_folder)
+        if secondary_model != '':
+            secondary_data_files = os.listdir(secondary_data_directory)
+            n_secondary_data_folder = os.path.join(primary_data_directory,t_now)
+            if not os.path.exists(n_secondary_data_folder):
+                os.mkdir(n_secondary_data_folder)
+            for f in secondary_data_files :
+                path = os.path.join(secondary_data_directory, f)
+                shutil.move(path,n_secondary_data_folder)
 
     #if trigger_check == 0 and t_backgrond != 0 and time > t_backgrond :
     #    current_background = mode_background.main()
