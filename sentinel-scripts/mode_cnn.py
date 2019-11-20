@@ -95,6 +95,7 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
     top = int(aoi[1] * im_height)
     right = int(aoi[2] * im_width)
     bottom = int(aoi[3] * im_height)
+    print(left,top,right,bottom)
     cropped_im = im.crop((left, top, right, bottom))
     filename = '%s/%s-%s' %(results_directory,str(i),file)
     #print('Saving Cropped Image as:',filename)
