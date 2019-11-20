@@ -86,7 +86,7 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
         else :
             aoi[j] = aoi[j] - crop_buffer
         aoi[j] = max(min(aoi[j],1),0)
-        print(aoi[j])
+        #print(aoi[j])
     #print('Area of Interest (fixed)',aoi)
     # pull coordinates and convert to correct of original (full-res) pic
     left = int(aoi[0] * im_width)
