@@ -80,7 +80,8 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
     #print('Image Width', im_width)
     #print('Image Height', im_height)
     # make sure bounding boxes are within bounds of image
-    for j in range(0,3) :
+    print(aoi)
+    for j in range(0,4) :
         #print(aoi[j])
         if aoi[j] >= .50 :
             aoi[j] = aoi[j] + crop_buffer
