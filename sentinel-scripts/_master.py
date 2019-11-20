@@ -123,6 +123,14 @@ if sys_mode == 'real':
         #primary_type = args.primary_type
         #secondary_type = args.secondary_type
         #print('Real Scenario running on RPi Zero')
+if not os.path.exists(primary_data_directory):
+    os.mkdir(primary_data_directory)
+if not os.path.exists(primary_results_directory):
+    os.mkdir(primary_results_directory)
+if not os.path.exists(secondary_data_directory):
+    os.mkdir(secondary_data_directory)
+if not os.path.exists(secondary_results_directory):
+    os.mkdir(secondary_results_directory)
 
 
 if sys.version_info[0] < 3:
