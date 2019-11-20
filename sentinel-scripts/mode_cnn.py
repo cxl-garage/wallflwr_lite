@@ -80,19 +80,20 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
     #print('Image Width', im_width)
     #print('Image Height', im_height)
     # make sure bounding boxes are within bounds of image
-    for j in range(0,4) :
-        print(aoi[j])
+    for j in range(0,3) :
+        #print(aoi[j])
         if aoi[j] >= .50 :
             aoi[j] = aoi[j] + crop_buffer
         else :
             aoi[j] = aoi[j] - crop_buffer
         aoi[j] = max(min(aoi[j],1),0)
+        print(aoi[j])
     #print('Area of Interest (fixed)',aoi)
     # pull coordinates and convert to correct of original (full-res) pic
     left = int(aoi[0] * im_width)
+    top = int(aoi[1] * im_height)
     right = int(aoi[2] * im_width)
     bottom = int(aoi[3] * im_height)
-    top = int(aoi[1] * im_height)
     cropped_im = im.crop((left, top, right, bottom))
     filename = '%s/%s-%s' %(results_directory,str(i),file)
     #print('Saving Cropped Image as:',filename)
