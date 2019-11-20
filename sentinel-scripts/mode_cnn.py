@@ -85,7 +85,7 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
             aoi[j] = aoi[j] + crop_buffer
         else :
             aoi[j] = aoi[j] - crop_buffer
-        aoi[j] = max(min(aoi[j],0.95),0.05)
+        aoi[j] = max(min(aoi[j],1),0)
         print(aoi[j])
     #print('Area of Interest (fixed)',aoi)
     # pull coordinates and convert to correct of original (full-res) pic
@@ -93,13 +93,16 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
     top = int(aoi[1] * im_height)
     right = int(aoi[2] * im_width)
     bottom = int(aoi[3] * im_height)
-    print('Image Width', im_width)
-    print('Image Height', im_height)
-    print(left,top,right,bottom)
-    cropped_im = im.crop((left, top, right, bottom))
-    filename = '%s/%s-%s' %(results_directory,str(i),file)
-    #print('Saving Cropped Image as:',filename)
-    cropped_im = cropped_im.save(filename)
+    if right-left > 15 and bottom -top > 15 :
+        print('Image Width', im_width)
+        print('Image Height', im_height)
+        print(left,top,right,bottom)
+        cropped_im = im.crop((left, top, right, bottom))
+        filename = '%s/%s-%s' %(results_directory,str(i),file)
+        #print('Saving Cropped Image as:',filename)
+        cropped_im = cropped_im.save(filename)
+    else :
+        print('ERROR: Wierd 0 pixel wide/tall bounding box')
 
 def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, results_directory):
     """Returns a list of detection results, each a dictionary of object info."""
