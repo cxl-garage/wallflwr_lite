@@ -194,5 +194,5 @@ while True:
     if comms_type != '':
         mode_comms.main(primary_class, primary_confidence, secondary_class, secondary_confidence, device_identifier, comms_type, comms_backend)
         t_lorawan = 0
+    time,sleep(10)
     print('Complete')
-    time.sleep(10)
