@@ -9,7 +9,7 @@ import mode_sentinel
 import mode_comms
 import numpy as np
 import csv
-import shutii
+import shutil
 
 
 ## Master Script for CXL Camera Trap Control
