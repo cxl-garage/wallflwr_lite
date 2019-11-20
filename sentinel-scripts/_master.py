@@ -112,12 +112,12 @@ if sys_mode == 'real':
     if mcu == 'rpi0':
         primary_labels = os.path.join('../',primary_labels)
         primary_model  = os.path.join('../',primary_model)
-        primary_data_directory = os.path.join('../', primary_data_directory,'/')
-        primary_results_directory = os.path.join('../', primary_results_directory,'/')
+        primary_data_directory = os.path.join('../', primary_data_directory)
+        primary_results_directory = os.path.join('../', primary_results_directory)
         secondary_labels = os.path.join('../', secondary_labels)
         secondary_labels = os.path.join('../',secondary_model)
-        secondary_data_directory = os.path.join('../', secondary_data_directory, '/')
-        secondary_results_directory = os.path.join('../', secondary_results_directory, '/')
+        secondary_data_directory = os.path.join('../', secondary_data_directory)
+        secondary_results_directory = os.path.join('../', secondary_results_directory)
         #primary_format = args.primary_format
         #secondary_format = args.secondary_format
         #primary_type = args.primary_type
