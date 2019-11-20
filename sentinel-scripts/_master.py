@@ -191,7 +191,7 @@ while True:
         for f in primary_data_files :
             path = os.path.join(primary_data_directory, f)
             shutil.move(path,n_primary_data_folder)
-            os.remove(path)
+            #os.remove(path)
 
         primary_results_files = os.listdir(primary_results_directory)
         n_primary_results_folder = os.path.join(primary_results_directory,t_now)
