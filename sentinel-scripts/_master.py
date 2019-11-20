@@ -27,6 +27,8 @@ secondary_model = ''
 secondary_data_directory = 'data/flir'
 secondary_results_directory = ''
 
+
+
 trigger = 'pir'     # 'pir' or 'ir'
 trigger_check = '' #'ir'    # 'ir' or 'paired_pir'
 trigger_sensitivity = 10  #int between 1-100 (twenty being highest sensitivity)
@@ -47,9 +49,9 @@ comms_type = 'lora_rfm9x'
 comms_backend = 'ttn'
 background_subtraction = ''
 current_background = ''
-primary_resolution = (300,400)
+primary_resolution = (2592,1944)
 secondary_resolution = (300,400)
-primary_model_resolution = (300,400)
+primary_model_resolution = (432,324)
 secondary_model_resolution = (300,400)
 ai_sensitivity = 0.3
 lora_counter = 0
@@ -60,48 +62,25 @@ secondary_class = 99
 secondary_confidence = 0
 clear_directories = 1
 
-
-
-if mcu == 'computer':
-    import mode_cnn_computer as mode_cnn
-if mcu == 'rpi0':
-    import mode_cnn
-
-def import_peripherals():
-
-    if camera == 'PiCamera':
-        import picamera
-        # Initialize the camera, set the resolution and framerate
-        try:
-            camera = picamera.PiCamera()
-        except picamera.exc.PiCameraMMALError:
-            print("\nPiCamera failed to open, do you have another task using it "
-                  "in the background? Is your camera connected correctly?\n")
-            sys.exit("Connect your camera and kill other tasks using it to run "
-                     "this sample.")
-
-    if trigger == 'pir':
-        GPIO.setwarnings(False)
-        GPIO.setup(4, GPIO.IN)
-        #print('Loaded: PIR')
-
 # Defines the inputs to the script
 def user_selections():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--sys_mode', required=True,
-                        help='Test or Real')
-    parser.add_argument('--mcu', required=False, default='rpi0',
-                        help='Type of Microcontroller')
-    parser.add_argument('--primary_format', required=False, default='coral',
-                        help='What format is the model in?')
-    parser.add_argument('--secondary_format', required=False, default='coral',
-                        help='What format is the model in?')
+    parser.add_argument('--sensitivity', required=False, default=ai_sensitivity, \
+                        help='What is the minimum CNN confidence?')
+    parser.add_argument('--rgb_res', required=False, default=primary_resolution, \
+                        help='Image Resolution of RGB saved photos')
+    parser.add_argument('--pcnn_res', required=False, default=primary_model_resolution, \
+                        help='Resolution passed through to primary CNN')
+    parser.add_argument('--scnn_res', required=False, default=secondary_model_resolution, \
+                        help='Resolution passed through to primary CNN')
     parser.add_argument('--primary_type', required=False, default='image',
                         help='Image, Video, Acoustics, Motion')
     parser.add_argument('--secondary_type', required=False, default='image',
                         help='Image, Video, Acoustics, Motion')
     args = parser.parse_args()
     return args
+
+
 
 if sys_mode == 'test':
     print('Mode: Test')
@@ -149,17 +128,17 @@ while True:
         triggered = 1
     if sys_mode == 'real': # Actual camera scenario
         triggered = mode_sentinel.main(camera, trigger, trigger_check, \
-        trigger_sensitivity, image_burst, primary_type, primary_data_directory)
+        trigger_sensitivity, args.rgb_res,image_burst, primary_type, primary_data_directory)
         #print("Event Detected")
     if triggered == 1 :
         # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
         #print('Spinning up Primary Model', primary_model)
         #[primary_class, primary_confidence, primary_output_file] = ...
         primary_class, primary_confidence = mode_cnn.cnn(sys_mode, mcu, \
-        primary_format, camera, primary_resolution, \
-        primary_type, primary_model_resolution, primary_model, primary_labels, \
+        primary_format, camera, args.rgb_res, \
+        primary_type, args.pcnn_res, primary_model, primary_labels, \
         primary_data_directory, primary_results_directory, \
-        current_background, ai_sensitivity, max_images)
+        current_background, args.sensitivity, max_images)
         #print('Model Complete')
         #print('Insert Code to Save Array in way that can be parsed for LoRa')
         #print('NOTE: CROPPED IMAGES AND .CSV RESULTS FILE ARE SAVED IN /DATA/RESULTS FOLDER ')
@@ -168,10 +147,10 @@ while True:
         if secondary_model :
             #[secondary_class, secondary_confidence, secondary_output_file] = ...
             secondary_class, secondary_confidence = mode_cnn.main(sys_mode, mcu, \
-            secondary_format, camera, secondary_resolution,\
-            secondary_type, secondary_model_resolution, secondary_model, secondary_labels,\
+            secondary_format, camera, args.rgb_res,\
+            secondary_type, args.scnn_res, secondary_model_resolution, secondary_model, secondary_labels,\
             primary_results_directory, secondary_results_directory,
-            current_background, ai_sensitivity, max_images)
+            current_background, args.sensitivity, max_images)
             print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
         # Run LoRa communication with outputs from primary algorithm
         if sys_mode == 'test':
@@ -217,3 +196,4 @@ while True:
         mode_comms.main(primary_class, primary_confidence, secondary_class, secondary_confidence, device_identifier, comms_type, comms_backend)
         t_lorawan = 0
     print('Complete')
+    time.sleep(10)

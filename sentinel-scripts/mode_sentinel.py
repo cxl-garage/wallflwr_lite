@@ -36,7 +36,7 @@ def user_selections():
     args = parser.parse_args()
     return args
 
-def main(camera, trigger, trigger_check, trigger_sensitivity, image_burst, \
+def main(camera, trigger, trigger_check, trigger_sensitivity, image_resolution, image_burst, \
     model_type, results_directory):
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(4, GPIO.IN)
@@ -63,6 +63,7 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_burst, \
     if camera == 'PiCamera':
          camera = PiCamera.PiCamera()
          burst = 0
+         camera.resolution = image_resolution
          print('Taking photo burst')
          camera.start_preview()
          camera.vflip = True
