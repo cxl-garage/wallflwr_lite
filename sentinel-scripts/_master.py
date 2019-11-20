@@ -112,12 +112,12 @@ if sys_mode == 'real':
     if mcu == 'rpi0':
         primary_labels = os.path.join('../',primary_labels)
         primary_model  = os.path.join('../',primary_model)
-        primary_data_directory = os.path.join('../', primary_data_directory)
-        primary_results_directory = os.path.join('../', primary_results_directory)
+        primary_data_directory = os.path.join('../', primary_data_directory,'/')
+        primary_results_directory = os.path.join('../', primary_results_directory,'/')
         secondary_labels = os.path.join('../', secondary_labels)
         secondary_labels = os.path.join('../',secondary_model)
-        secondary_data_directory = os.path.join('../', secondary_data_directory)
-        secondary_results_directory = os.path.join('../', secondary_results_directory)
+        secondary_data_directory = os.path.join('../', secondary_data_directory, '/')
+        secondary_results_directory = os.path.join('../', secondary_results_directory, '/')
         #primary_format = args.primary_format
         #secondary_format = args.secondary_format
         #primary_type = args.primary_type
@@ -188,19 +188,19 @@ while True:
         n_primary_data_folder = os.path.join(primary_data_directory,t_now)
         os.mkdir(n_primary_data_folder)
         for f in primary_data_files :
-            shutil.move(primary_data_directory+/f,n_primary_data_folder)
+            shutil.move(primary_data_directory+f,n_primary_data_folder)
 
         primary_results_files = os.listdir(primary_results_directory)
         n_primary_results_folder = os.path.join(primary_results_directory,t_now)
         os.mkdir(n_primary_results_folder)
         for f in primary_results_files :
-            shutil.move(primary_results_directory+/f,n_primary_results_folder)
+            shutil.move(primary_results_directory+f,n_primary_results_folder)
 
         secondary_data_files = os.listdir(secondary_data_directory)
         n_secondary_data_folder = os.path.join(primary_data_directory,t_now)
         os.mkdir(n_secondary_data_folder)
         for f in secondary_data_files :
-            shutil.move(secondary_data_directory+/f,n_secondary_data_folder)
+            shutil.move(secondary_data_directory+f,n_secondary_data_folder)
 
     #if trigger_check == 0 and t_backgrond != 0 and time > t_backgrond :
     #    current_background = mode_background.main()
