@@ -10,6 +10,8 @@ import mode_comms
 import numpy as np
 import csv
 import shutil
+from datetime import datetime
+from time import strftime
 
 
 ## Master Script for CXL Camera Trap Control
