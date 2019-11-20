@@ -102,7 +102,7 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
         #print('Saving Cropped Image as:',filename)
         cropped_im = cropped_im.save(filename)
     else :
-        print('ERROR: Wierd 0 pixel wide/tall bounding box')
+        print('ERROR: Weird 0 pixel wide/tall bounding box')
 
 def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, results_directory):
     """Returns a list of detection results, each a dictionary of object info."""
