@@ -12,6 +12,7 @@ import csv
 import shutil
 from datetime import datetime
 from time import strftime
+import argparse
 
 
 ## Master Script for CXL Camera Trap Control
