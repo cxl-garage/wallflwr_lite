@@ -78,7 +78,7 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
     # save size of original (full-res) pic
     im_width, im_height = im.size
     # make sure bounding boxes are within bounds of image
-    print(aoi)
+    #print(aoi)
     for j in range(0,4) :
         #print(aoi[j])
         if aoi[j] >= .50 :
@@ -94,9 +94,9 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
     right = int(aoi[2] * im_width)
     bottom = int(aoi[3] * im_height)
     if right-left > 15 and bottom -top > 15 :
-        print('Image Width', im_width)
-        print('Image Height', im_height)
-        print(left,top,right,bottom)
+        #print('Image Width', im_width)
+        #print('Image Height', im_height)
+        #print(left,top,right,bottom)
         cropped_im = im.crop((left, top, right, bottom))
         filename = '%s/%s-%s' %(results_directory,str(i),file)
         #print('Saving Cropped Image as:',filename)
@@ -202,9 +202,9 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
                 meta_array = np.append(meta_array, meta)
                 classes = np.append(classes, n_classes)
                 confidence = np.append(confidence, n_confidence)
-                print(n_confidence)
+                #print(n_confidence)
                 sum_confidence = sum_confidence + sum(n_confidence)
-                print(sum_confidence)
+                #print(sum_confidence)
             if sum_confidence > 1:
                 break
             files_checked += 1
