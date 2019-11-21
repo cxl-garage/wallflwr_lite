@@ -56,8 +56,8 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_resolution, 
                   trigger_count = 0
     	     #If motion detected by PIR sensor
              if pir_status == 1:
-                  #print('Motion Detected, awaiting confirmation')
-                  time.sleep(0.05)
+                  print('Motion Detected, awaiting confirmation')
+                  time.sleep(0.2)
                   trigger_count += 1
     print('Motion Confirmed')
     if camera == 'PiCamera':

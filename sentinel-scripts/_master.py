@@ -62,6 +62,10 @@ primary_confidence = 0
 secondary_class = 99
 secondary_confidence = 0
 clear_directories = 1
+delete_directories = 1
+
+if delete_directories == 1:
+
 
 
 parser = argparse.ArgumentParser()
