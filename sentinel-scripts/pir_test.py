@@ -9,4 +9,4 @@ while 1:
          print('No Motion')
     if pir_status == 1:
        print('Motion Detected, awaiting confirmation')
-   time.sleep(1)
+    time.sleep(1)
