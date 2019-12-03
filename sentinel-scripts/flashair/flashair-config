@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+
+import logging
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+from tfatool import config, command, cgi, info
+from requests import RequestException
+
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, style="{",
+                    format="{asctime} | {levelname} | {name} | {message}")
+logging.getLogger("requests").setLevel(logging.WARNING)
+
+
+parser = ArgumentParser()
+parser.add_argument("-m", "--mastercode", default="BEEFBEEFBEEF",
+                    help="12-digit hex mastercode to enable configuration "
+                         "of the FlashAir device")
+parser.add_argument("-v", "--verbose", action="store_true")
+
+wifi = parser.add_argument_group("WiFi settings")
+wifi.add_argument("-t", "--wifi-timeout", help="set WiFi timeout of device",
+                  type=float)
+wifi.add_argument("-w", "--wifi-mode", help="set WiFi mode of device",
+                  choices=[mode.name for mode in info.WifiMode])
+wifi.add_argument("-W", "--wifi-mode-on-boot", action="store_true",
+                  help="set the WiFi mode on next boot, not immediately")
+wifi.add_argument("-k", "--wifi-key", help="set WiFi security key")
+wifi.add_argument("-K", "--passthrough-key",
+                  help="set internet passthrough security key")
+wifi.add_argument("-s", "--wifi-ssid", help="set WiFi SSID")
+wifi.add_argument("-S", "--passthrough-ssid",
+                  help="set internet passthrough SSID")
+
+other = parser.add_argument_group("Misc settings")
+other.add_argument("--app-info", help="set application-specific info")
+other.add_argument("--bootscreen-path", help="set path to boot screen image")
+other.add_argument("-M", "--clear-mastercode", action="store_true")
+other.add_argument("--timezone", type=int,
+                   help="set timezone in hours offset (e.g. -8)")
+other.add_argument("-d", "--drive-mode", help="set WebDAV drive mode",
+                   choices=[mode.name for mode in info.DriveMode])
+
+show = parser.add_argument_group("Show configuration parameters")
+show.add_argument("--show-wifi-ssid", action="store_true")
+show.add_argument("--show-wifi-key", action="store_true")
+show.add_argument("--show-mac", action="store_true")
+show.add_argument("--show-fw-version", action="store_true")
+show.add_argument("--show-wifi-mode", action="store_true")
+
+
+def run():
+    args = parser.parse_args()
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+
+    params = ((param, getattr(args, param.name))
+              for param in config.Config
+              if getattr(args, param.name) not in (False, None))
+    params = dict(params)
+    if args.wifi_mode_on_boot:
+        if args.wifi_mode:
+            params[info.Config.wifi_mode] = (
+                info.WifiModeOnBoot[args.wifi_mode])
+        else:
+            parser.error("-W doesn't make sense without -w option")
+    elif args.wifi_mode:
+        params[info.Config.wifi_mode] = (
+                info.WifiMode[args.wifi_mode])
+
+    # set config params with a POST
+    cgi_params = config.config(params)
+    if len(list(cgi_params.keys())) > 1:
+        logger.info("CGI params: {}".format(cgi_params))
+        response = config.post(cgi_params)
+        logger.info("Response: {}".format(response.status_code))
+
+    # show config params with a GET
+    if args.show_wifi_ssid:
+        print("SSID: {}".format(command.get_ssid()))
+    if args.show_wifi_key:
+        print("WiFi key: {}".format(command.get_password()))
+    if args.show_mac:
+        print("MAC address: {}".format(command.get_mac()))
+    if args.show_fw_version:
+        print("Firmware version: {}".format(command.get_fw_version()))
+    if args.show_wifi_mode:
+        mode = command.get_wifi_mode()
+        print("WiFi mode: {} ({:d})".format(mode.name, mode.value))
+
+if __name__ == "__main__":
+    with cgi.session:
+        try:
+            run()
+        except RequestException as e:
+            print("\nHTTP request exception: {}".format(e))
+
