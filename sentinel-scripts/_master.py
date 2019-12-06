@@ -7,6 +7,7 @@ import time
 import mode_cnn
 import mode_sentinel
 import mode_comms
+import desmodus_draculae
 import numpy as np
 import csv
 import shutil
@@ -133,6 +134,9 @@ while True:
         triggered = mode_sentinel.main(camera, trigger, trigger_check, \
         trigger_sensitivity, args.rgb_res,image_burst, primary_type, primary_data_directory)
         #print("Event Detected")
+    if sys_mode == 'desmodus_draculae':
+        desmodus_draculae.main(primary_type, primary_data_directory)
+        triggered = 1
     if triggered == 1 :
         # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
         #print('Spinning up Primary Model', primary_model)
