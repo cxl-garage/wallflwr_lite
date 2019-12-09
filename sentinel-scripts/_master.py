@@ -66,23 +66,20 @@ clear_directories = 1
 delete_directories = 1
 
 if delete_directories == 1:
-
-
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--sensitivity', required=False, default=ai_sensitivity, \
-                    help='What is the minimum CNN confidence?')
-parser.add_argument('--rgb_res', required=False, default=primary_resolution, \
-                    help='Image Resolution of RGB saved photos')
-parser.add_argument('--pcnn_res', required=False, default=primary_model_resolution, \
-                    help='Resolution passed through to primary CNN')
-parser.add_argument('--scnn_res', required=False, default=secondary_model_resolution, \
-                    help='Resolution passed through to primary CNN')
-parser.add_argument('--primary_type', required=False, default='image',
-                    help='Image, Video, Acoustics, Motion')
-parser.add_argument('--secondary_type', required=False, default='image',
-                    help='Image, Video, Acoustics, Motion')
-args = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--sensitivity', required=False, default=ai_sensitivity, \
+                        help='What is the minimum CNN confidence?')
+    parser.add_argument('--rgb_res', required=False, default=primary_resolution, \
+                        help='Image Resolution of RGB saved photos')
+    parser.add_argument('--pcnn_res', required=False, default=primary_model_resolution, \
+                        help='Resolution passed through to primary CNN')
+    parser.add_argument('--scnn_res', required=False, default=secondary_model_resolution, \
+                        help='Resolution passed through to primary CNN')
+    parser.add_argument('--primary_type', required=False, default='image',
+                        help='Image, Video, Acoustics, Motion')
+    parser.add_argument('--secondary_type', required=False, default='image',
+                        help='Image, Video, Acoustics, Motion')
+    args = parser.parse_args()
 
 
 
