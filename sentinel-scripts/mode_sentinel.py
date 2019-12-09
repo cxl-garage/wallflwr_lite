@@ -41,6 +41,7 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_resolution, 
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(4, GPIO.IN)
     trigger_count = 0
+    exit_check = 0
     j = 0
     # check if trigger exists, if it doesn't break this script and return to _master.py
     while trigger_count < trigger_sensitivity :
@@ -51,32 +52,37 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_resolution, 
     	     #Take input from PIR sensor
              pir_status = GPIO.input(4)
              #If no motion detected by PIR sensor
-             if pir_status == 0:
+             if pir_status == 0 :
                   print('No Motion')
                   trigger_count = 0
-                  time.sleep(0.2)
+                  exit_check += 1
+                  time.sleep(0.6)
+             if exit_check > 30:
+                  break
     	     #If motion detected by PIR sensor
              if pir_status == 1:
                   print('Motion Detected, awaiting confirmation')
                   time.sleep(0.2)
                   trigger_count += 1
-    print('Motion Confirmed')
-    if camera == 'PiCamera':
-         camera = PiCamera.PiCamera()
-         burst = 0
-         camera.resolution = image_resolution
-         print('Taking photo burst')
-         camera.start_preview()
-         camera.vflip = True
-         while burst < image_burst:
-             t_now = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-             file = '_%s.jpg' %(t_now)
-             file = os.path.join(results_directory, file)
-             camera.capture(file)
-             print('Pic Saved')
-             time.sleep(0.05)
-             burst += 1
-         camera.close()
+                  exit_check = 0
+    if trigger_check == trigger_sensitivity :
+        print('Motion Confirmed')
+        if camera == 'PiCamera':
+             camera = PiCamera.PiCamera()
+             burst = 0
+             camera.resolution = image_resolution
+             print('Taking photo burst')
+             camera.start_preview()
+             camera.vflip = True
+             while burst < image_burst:
+                 t_now = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+                 file = '_%s.jpg' %(t_now)
+                 file = os.path.join(results_directory, file)
+                 camera.capture(file)
+                 print('Pic Saved')
+                 time.sleep(0.05)
+                 burst += 1
+             camera.close()
     return 1
 
 if __name__ == "__main__":
