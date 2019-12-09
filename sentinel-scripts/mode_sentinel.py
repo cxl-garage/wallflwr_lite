@@ -84,7 +84,7 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_resolution, 
                  burst += 1
              camera.close()
         return 1
-     else
+    else :
         return 0
 
 if __name__ == "__main__":
