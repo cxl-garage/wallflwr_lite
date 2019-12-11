@@ -115,7 +115,7 @@ def main(primary_type, data_directory):
     Connect(SSID, PW)
     ## Pull all relevant photos from SD clear directories
     time = 0
-    flashair_cmd = "sudo flashair-util -s -d %s --only-%s %s" (data_directory, file_type)
+    flashair_cmd = "sudo flashair-util -s -d {} --only-{}".format(data_directory, file_type)
     os.system(flashair_cmd)
     print('Collecting Files from FlashAir')
     ## Disconnect from FlashAir WiFi
