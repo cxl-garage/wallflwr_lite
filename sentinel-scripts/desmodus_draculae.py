@@ -100,6 +100,8 @@ def main(primary_type, data_directory):
     print('Connecting...')
     time.sleep(10)
     if connection_status == 0:
+        h = Search()
+        print(h)
         print("Sentinel Connection Unsuccessful, trying again...")
         connection_status = Connect(SSID, PW)
         print('Connecting...')
