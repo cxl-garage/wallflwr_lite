@@ -4,82 +4,8 @@ import os
 from wireless import Wireless
 wireless = Wireless()
 
-# -*- coding: utf-8 -*-
 
-import wifi
-
-
-def Search():
-    wifilist = []
-    cells = wifi.Cell.all('wlan0')
-    for cell in cells:
-        wifilist.append(cell)
-    return wifilist
-
-def FindFromSearchList(ssid):
-    wifilist = Search()
-    for cell in wifilist:
-        if cell.ssid == ssid:
-            return cell
-    return False
-
-def FindFromSavedList(ssid):
-    cell = wifi.Scheme.find('wlan0', ssid)
-    if cell:
-        return cell
-    return False
-
-def Connect(ssid, password=None):
-    cell = FindFromSearchList(ssid)
-    if cell:
-        savedcell = FindFromSavedList(cell.ssid)
-
-        # Already Saved from Setting
-        if savedcell:
-            savedcell.activate()
-            return cell
-        # First time to conenct
-        else:
-            if cell.encrypted:
-                if password:
-                    scheme = Add(cell, password)
-
-                    try:
-                        scheme.activate()
-                    # Wrong Password
-                    except wifi.exceptions.ConnectionError:
-                        Delete(ssid)
-                        return False
-                    return cell
-                else:
-                    return False
-            else:
-                scheme = Add(cell)
-                try:
-                    scheme.activate()
-                except wifi.exceptions.ConnectionError:
-                    Delete(ssid)
-                    return False
-                return cell
-    return False
-
-def Add(cell, password=None):
-    if not cell:
-        return False
-    scheme = wifi.Scheme.for_cell('wlan0', cell.ssid, cell, password)
-    scheme.save()
-    return scheme
-
-def Delete(ssid):
-    if not ssid:
-        return False
-    cell = FindFromSavedList(ssid)
-    if cell:
-        cell.delete()
-        return True
-    return False
-
-def main(primary_type, data_directory):
+def main(primary_type, data_directory, local_network, global_network):
     import time
     import_type = 0
     if primary_type == 'image':
@@ -94,23 +20,16 @@ def main(primary_type, data_directory):
     ## Connect to FlashAir
     h = wireless.current()
     print(h)
-    SSID = "sentinel_retrofit"
-    PW   = "WhalesRule!!"
-    wireless.connect(ssid=SSID,password=PW)
+    if local_network == 'sentinel_retrofit':
+        PW_Local  = "WhalesRule!!"
+    wireless.connect(ssid=local_network,password=PW_Local)
     h = wireless.current()
-    print(h)
-    # Connect WiFi with password & without password
-    #print Connect(SSID)
-    #connection_status = Connect(SSID, PW)
-    #os.system()
-    print('Connecting...')
-    #print(connection_status)
-    time.sleep(2)
-    #if connection_status == 0:
-        #h = Search()
-    print("Sentinel Connection Successful")
-    ## Pull all relevant photos from SD clear directories
-    time = 0
+    if h == local_network:
+        print("Local Connection Successful")
+    else:
+        print("Connection Unsuccessful")
+        ## Pull all relevant photos from SD clear directories
+        time = 0
     if import_type == 0:
         flashair_cmd = "sudo flashair-util -s -d {} --only-{}".format(data_directory, file_type)
     else:
@@ -119,7 +38,13 @@ def main(primary_type, data_directory):
     os.system(flashair_cmd)
     print('Collecting Files from FlashAir')
     ## Disconnect from FlashAir WiFi
-    #Search()
+    if global_network == 'CXL'
+        PW_Global  = "WhalesRule!!"
+    wireless.connect(ssid=global_network,password=PW_Global)
+    h = wireless.current()
+    h == global_network:
+        print("Global Reconnection Successful")
+
     #Connect("CXL", "lemursrule")
     return
 
