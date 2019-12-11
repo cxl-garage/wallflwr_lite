@@ -66,6 +66,8 @@ secondary_confidence = 0
 clear_directories = 1
 delete_directories = 1
 draculae_freq = 0
+global_network = 'CXL'
+local_network = 'sentinel_retrofit'
 
 if delete_directories == 1:
     parser = argparse.ArgumentParser()
@@ -138,7 +140,7 @@ while True:
     toc = process_time()
     draculae_timer = toc - tic
     if draculae_timer > draculae_freq:
-        desmodus_draculae.main(primary_type, primary_data_directory)
+        desmodus_draculae.main(primary_type, primary_data_directory, local_network, global_network)
         tic = process_time()
     if triggered == 1 :
         # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
