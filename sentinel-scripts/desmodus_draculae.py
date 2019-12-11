@@ -110,7 +110,7 @@ def main(primary_type, data_directory):
     Search()
     print('Add functionality to check for existence of sentinel_retro')
     ## Connect to FlashAir
-    SSID = "sentinel_retro"
+    SSID = "sentinel_retrofit"
     PW   = "WhalesRule!!"
     # Connect WiFi with password & without password
     #print Connect(SSID)
