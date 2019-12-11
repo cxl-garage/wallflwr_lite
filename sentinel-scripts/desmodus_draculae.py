@@ -38,12 +38,16 @@ def main(primary_type, data_directory, local_network, global_network):
     os.system(flashair_cmd)
     print('Collecting Files from FlashAir')
     ## Disconnect from FlashAir WiFi
-    if global_network == 'CXL'
+    if global_network == 'CXL':
         PW_Global  = "WhalesRule!!"
     wireless.connect(ssid=global_network,password=PW_Global)
     h = wireless.current()
-    h == global_network:
-        print("Global Reconnection Successful")
+    while h != global_network:
+        print('Waiting for Global Network Reconnection...')
+        wireless.connect(ssid=global_network,password=PW_Global)
+        h = wireless.current()
+        time.sleep(1)
+    print("Global Reconnection Successful")
 
     #Connect("CXL", "lemursrule")
     return
