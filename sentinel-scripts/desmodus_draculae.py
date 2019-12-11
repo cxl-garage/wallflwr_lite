@@ -27,6 +27,7 @@ def main(primary_type, data_directory, local_network, global_network):
         if x > 5:
             print("Connection Unsuccessful")
             break
+        x += 1
     if current_network == local_network:
         print("Local Connection Successful")
         flashair_cmd = "sudo flashair-util -S -all -T 1999"
