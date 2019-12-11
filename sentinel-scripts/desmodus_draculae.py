@@ -38,7 +38,7 @@ def main(primary_type, data_directory, local_network, global_network):
         print('Collecting Files from FlashAir')
     ## Disconnect from FlashAir WiFi
     if global_network == 'CXL':
-        PW_Global  = "WhalesRule!!"
+        PW_Global  = "lemursrule"
     current_network = wireless.current()
     while current_network != global_network:
         print('Waiting for Global Network Reconnection...')
