@@ -27,7 +27,7 @@ def main(primary_type, data_directory, local_network, global_network):
         if x > 5:
             print("Connection Unsuccessful")
             break
-    if current_network == local_network
+    if current_network == local_network:
         print("Local Connection Successful")
         if import_type == 0:
             flashair_cmd = "sudo flashair-util -s -d ../data/rgb --only-jpg" #.format(str(data_directory), file_type)
