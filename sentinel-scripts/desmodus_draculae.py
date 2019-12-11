@@ -1,7 +1,8 @@
 
 import wifi
 import os
-
+import Wireless
+wireless = Wireless()
 
 # -*- coding: utf-8 -*-
 
@@ -89,25 +90,24 @@ def main(primary_type, data_directory):
 
     data_directory = os.fsencode(data_directory)
     # Search WiFi and return WiFi list
-    h = Search()
-    print(h)
+    #h = Search()
     ## Connect to FlashAir
+    h = wireless.current()
+    print(h)
     SSID = "sentinel_retrofit"
     PW   = "WhalesRule!!"
+    wireless.connect(ssid=SSID,password=PW)
+    h = wireless.current()
+    print(h)
     # Connect WiFi with password & without password
     #print Connect(SSID)
-    connection_status = Connect(SSID, PW)
+    #connection_status = Connect(SSID, PW)
+    #os.system()
     print('Connecting...')
-    print(connection_status)
+    #print(connection_status)
     time.sleep(2)
-    if connection_status == 0:
-        h = Search()
-        print(h)
-        print("Sentinel Connection Unsuccessful, trying again...")
-        connection_status = Connect(SSID, PW)
-        print('Connecting...')
-        print(connection_status)
-        time.sleep(2)
+    #if connection_status == 0:
+        #h = Search()
     else:
         print("Sentinel Connection Successful")
         ## Pull all relevant photos from SD clear directories
