@@ -156,7 +156,7 @@ def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, 
 def cnn(sys_mode, mcu, format, camera, im_resolution, \
     type, model_resolution, model, labels, data_directory, results_directory, \
     current_background, ai_sensitivity, max_images):
-    directory = os.fsencode(data_directory)
+    directory_directory = os.fsencode(data_directory)
     animal_detected = 0             # Initialize Animal Detector Counter (Confidence)
     detected_last_frame = False     # Initialize Detection Status
     bounding_boxes = []             #
