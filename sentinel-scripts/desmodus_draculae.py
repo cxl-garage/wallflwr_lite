@@ -31,7 +31,7 @@ def main(primary_type, data_directory, local_network, global_network):
         ## Pull all relevant photos from SD clear directories
         time = 0
     if import_type == 0:
-        flashair_cmd = "sudo flashair-util -s -d {} --only-{}".format(data_directory, file_type)
+        flashair_cmd = "sudo flashair-util -s -d {} --only-{}".format(str(data_directory), file_type)
     else:
         flashair_cmd = "sudo flashair-util -S -all -t 1999"
     print(flashair_cmd)
@@ -46,7 +46,6 @@ def main(primary_type, data_directory, local_network, global_network):
         print('Waiting for Global Network Reconnection...')
         wireless.connect(ssid=global_network,password=PW_Global)
         h = wireless.current()
-        time.sleep(1)
     print("Global Reconnection Successful")
 
     #Connect("CXL", "lemursrule")
