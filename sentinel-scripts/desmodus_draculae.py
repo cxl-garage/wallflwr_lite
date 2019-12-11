@@ -81,7 +81,7 @@ def Delete(ssid):
 
 def main(primary_type, data_directory):
     import time
-    import_type = 1
+    import_type = 0
     if primary_type == 'image':
         file_type = 'jpg'
     else:
@@ -119,8 +119,8 @@ def main(primary_type, data_directory):
     os.system(flashair_cmd)
     print('Collecting Files from FlashAir')
     ## Disconnect from FlashAir WiFi
-    Search()
-    Connect("CXL", "lemursrule")
+    #Search()
+    #Connect("CXL", "lemursrule")
     return
 
 if __name__ == "__main__":
