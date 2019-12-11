@@ -1,7 +1,7 @@
 
 import wifi
 import os
-import Wireless
+from wireless import Wireless
 wireless = Wireless()
 
 # -*- coding: utf-8 -*-
