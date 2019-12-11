@@ -1,7 +1,6 @@
 
 import wifi
 import os
-import time
 
 
 # -*- coding: utf-8 -*-
@@ -98,6 +97,7 @@ def Delete(ssid):
     return False
 
 def main(primary_type, data_directory):
+    import time
     import_type = 1
     if primary_type == 'image':
         file_type = 'jpg'
