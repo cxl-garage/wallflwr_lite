@@ -108,20 +108,19 @@ def main(primary_type, data_directory):
     time.sleep(2)
     #if connection_status == 0:
         #h = Search()
+    print("Sentinel Connection Successful")
+    ## Pull all relevant photos from SD clear directories
+    time = 0
+    if import_type == 0:
+        flashair_cmd = "sudo flashair-util -s -d {} --only-{}".format(data_directory, file_type)
     else:
-        print("Sentinel Connection Successful")
-        ## Pull all relevant photos from SD clear directories
-        time = 0
-        if import_type == 0:
-            flashair_cmd = "sudo flashair-util -s -d {} --only-{}".format(data_directory, file_type)
-        else:
-            flashair_cmd = "sudo flashair-util -S -all -t 1999"
-        print(flashair_cmd)
-        os.system(flashair_cmd)
-        print('Collecting Files from FlashAir')
-        ## Disconnect from FlashAir WiFi
-        Search()
-        Connect("CXL", "lemursrule")
+        flashair_cmd = "sudo flashair-util -S -all -t 1999"
+    print(flashair_cmd)
+    os.system(flashair_cmd)
+    print('Collecting Files from FlashAir')
+    ## Disconnect from FlashAir WiFi
+    Search()
+    Connect("CXL", "lemursrule")
     return
 
 if __name__ == "__main__":
