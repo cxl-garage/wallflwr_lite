@@ -98,14 +98,16 @@ def main(primary_type, data_directory):
     #print Connect(SSID)
     connection_status = Connect(SSID, PW)
     print('Connecting...')
-    time.sleep(10)
+    print(connection_status)
+    time.sleep(2)
     if connection_status == 0:
         h = Search()
         print(h)
         print("Sentinel Connection Unsuccessful, trying again...")
         connection_status = Connect(SSID, PW)
         print('Connecting...')
-        time.sleep(10)
+        print(connection_status)
+        time.sleep(2)
     else:
         print("Sentinel Connection Successful")
         ## Pull all relevant photos from SD clear directories
