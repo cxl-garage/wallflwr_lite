@@ -116,7 +116,7 @@ def main(primary_type, data_directory):
     connection_status = Connect(SSID, PW)
     print('Connecting...')
     time.sleep(10)
-    if connection_status == 0
+    if connection_status == 0:
         print("Sentinel Connection Unsuccessful")
     else:
         print("Sentinel Connection Successful")
