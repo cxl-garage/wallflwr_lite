@@ -31,10 +31,13 @@ def main(primary_type, data_directory, local_network, global_network):
     if current_network == local_network:
         print("Local Connection Successful")
 
-        flashair_cmd = "sudo flashair-util --list-files --only-jpg"#"sudo flashair-util -S -all -T 1999"
-        print(flashair_cmd)
-        os.system(flashair_cmd)
-        print('Collecting Files from FlashAir')
+        flashair_list = "sudo flashair-util --list-files --only-jpg"#"sudo flashair-util -S -all -T 1999"
+        #print(flashair_cmd)
+        os.system(flashair_list)
+        flashair_grab = "sudo flashair-util -j -k "IMG_.+" -S all -d ../rgb"#"sudo flashair-util -S -all -T 1999"
+        print(flashair_grab)
+        os.system(flashair_grab)
+        #print('Collecting Files from FlashAir')
     ## Disconnect from FlashAir WiFi
     if global_network == 'CXL':
         PW_Global  = "lemursrule"
