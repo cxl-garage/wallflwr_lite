@@ -22,7 +22,9 @@ def main(primary_type, data_directory, local_network, global_network):
     while current_network != local_network :
         wireless.connect(ssid=local_network,password=PW_Local)
         current_network = wireless.current()
-        if x > 1:
+        print('Waiting for Local Network Connection...')
+        print(current_network)
+        if x > 5:
             print("Connection Unsuccessful")
             break()
     if current_network == local_network
@@ -42,6 +44,7 @@ def main(primary_type, data_directory, local_network, global_network):
         print('Waiting for Global Network Reconnection...')
         wireless.connect(ssid=global_network,password=PW_Global)
         current_network = wireless.current()
+        print(current_network)
     print("Global Reconnection Successful")
 
     #Connect("CXL", "lemursrule")
