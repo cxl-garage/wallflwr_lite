@@ -10,34 +10,26 @@ import wifi
 
 def Search():
     wifilist = []
-
     cells = wifi.Cell.all('wlan0')
-
     for cell in cells:
         wifilist.append(cell)
-
     return wifilist
 
 def FindFromSearchList(ssid):
     wifilist = Search()
-
     for cell in wifilist:
         if cell.ssid == ssid:
             return cell
-
     return False
 
 def FindFromSavedList(ssid):
     cell = wifi.Scheme.find('wlan0', ssid)
-
     if cell:
         return cell
-
     return False
 
 def Connect(ssid, password=None):
     cell = FindFromSearchList(ssid)
-
     if cell:
         savedcell = FindFromSavedList(cell.ssid)
 
@@ -45,7 +37,6 @@ def Connect(ssid, password=None):
         if savedcell:
             savedcell.activate()
             return cell
-
         # First time to conenct
         else:
             if cell.encrypted:
@@ -54,32 +45,26 @@ def Connect(ssid, password=None):
 
                     try:
                         scheme.activate()
-
                     # Wrong Password
                     except wifi.exceptions.ConnectionError:
                         Delete(ssid)
                         return False
-
                     return cell
                 else:
                     return False
             else:
                 scheme = Add(cell)
-
                 try:
                     scheme.activate()
                 except wifi.exceptions.ConnectionError:
                     Delete(ssid)
                     return False
-
                 return cell
-
     return False
 
 def Add(cell, password=None):
     if not cell:
         return False
-
     scheme = wifi.Scheme.for_cell('wlan0', cell.ssid, cell, password)
     scheme.save()
     return scheme
@@ -87,13 +72,10 @@ def Add(cell, password=None):
 def Delete(ssid):
     if not ssid:
         return False
-
     cell = FindFromSavedList(ssid)
-
     if cell:
         cell.delete()
         return True
-
     return False
 
 def main(primary_type, data_directory):
@@ -107,8 +89,8 @@ def main(primary_type, data_directory):
 
     data_directory = os.fsencode(data_directory)
     # Search WiFi and return WiFi list
-    Search()
-    print('Add functionality to check for existence of sentinel_retro')
+    h = Search()
+    print(h)
     ## Connect to FlashAir
     SSID = "sentinel_retrofit"
     PW   = "WhalesRule!!"
@@ -118,7 +100,10 @@ def main(primary_type, data_directory):
     print('Connecting...')
     time.sleep(10)
     if connection_status == 0:
-        print("Sentinel Connection Unsuccessful")
+        print("Sentinel Connection Unsuccessful, trying again...")
+        connection_status = Connect(SSID, PW)
+        print('Connecting...')
+        time.sleep(10)
     else:
         print("Sentinel Connection Successful")
         ## Pull all relevant photos from SD clear directories
