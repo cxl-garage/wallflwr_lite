@@ -7,7 +7,7 @@ wireless = Wireless()
 
 def main(primary_type, data_directory, local_network, global_network):
     import time
-    import_type = 0
+    import_type = 1
     if primary_type == 'image':
         file_type = 'jpg'
     else:
@@ -29,10 +29,7 @@ def main(primary_type, data_directory, local_network, global_network):
             break
     if current_network == local_network:
         print("Local Connection Successful")
-        if import_type == 0:
-            flashair_cmd = "sudo flashair-util -s -d ../data/rgb --only-jpg" #.format(str(data_directory), file_type)
-        else:
-            flashair_cmd = "sudo flashair-util -S -all -t 1999"
+        flashair_cmd = "sudo flashair-util -S -all -t 1999"
         print(flashair_cmd)
         os.system(flashair_cmd)
         print('Collecting Files from FlashAir')
