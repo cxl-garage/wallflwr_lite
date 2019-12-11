@@ -122,7 +122,7 @@ time = 0
 primary_result = []
 primary_result_array = []
 #print("Successful Setup")
-time_checker = time.time()
+time_checker = time.process_time()
 
 
 
@@ -134,9 +134,9 @@ while True:
         triggered = mode_sentinel.main(camera, trigger, trigger_check, \
         trigger_sensitivity, args.rgb_res,image_burst, primary_type, primary_data_directory)
         #print("Event Detected")
-    if time_checker > draculae_freq:
+    if (time.process_time - time_checker) > draculae_freq:
         desmodus_draculae.main(primary_type, primary_data_directory)
-        time_checker = time.time()
+        time_checker = time.process_time()
     if triggered == 1 :
         # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
         #print('Spinning up Primary Model', primary_model)
