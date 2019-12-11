@@ -97,8 +97,9 @@ def Delete(ssid):
     return False
 
 def main(primary_type, data_directory):
+    import_type = 1
     if primary_type == 'image':
-        file_type = 'jpeg'
+        file_type = 'jpg'
     else:
         sys.exit("Draculae Functionality only available on images")
     print('Desmodus Draculae')
@@ -115,12 +116,16 @@ def main(primary_type, data_directory):
     Connect(SSID, PW)
     ## Pull all relevant photos from SD clear directories
     time = 0
-    flashair_cmd = "sudo flashair-util -s -d {} --only-{}".format(data_directory, file_type)
+    if import_type == 0
+        flashair_cmd = "sudo flashair-util -s -d {} --only-{}".format(data_directory, file_type)
+    else:
+        flashair_cmd = "sudo flashair-util -S -all -t 1999"
+    print(flashair_cmd)
     os.system(flashair_cmd)
     print('Collecting Files from FlashAir')
     ## Disconnect from FlashAir WiFi
     Search()
-    Connect(CXL)
+    Connect("CXL", "lemursrule")
     return
 
 if __name__ == "__main__":
