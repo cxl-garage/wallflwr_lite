@@ -129,6 +129,7 @@ tic = process_time()
 
 # Loop to run consistently run on RasPi
 while True:
+    print(primary_data_directory)
     if sys_mode == 'test': # Testing on system
         triggered = 1
     if sys_mode == 'real': # Actual camera scenario
