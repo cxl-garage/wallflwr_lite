@@ -15,37 +15,33 @@ def main(primary_type, data_directory, local_network, global_network):
     print('Desmodus Draculae')
 
     data_directory = os.fsencode(data_directory)
-    # Search WiFi and return WiFi list
-    #h = Search()
-    ## Connect to FlashAir
-    h = wireless.current()
-    print(h)
     if local_network == 'sentinel_retrofit':
         PW_Local  = "WhalesRule!!"
-    wireless.connect(ssid=local_network,password=PW_Local)
-    h = wireless.current()
-    if h == local_network:
+    x = 0
+    current_network = wireless.current()
+    while current_network != local_network :
+        wireless.connect(ssid=local_network,password=PW_Local)
+        current_network = wireless.current()
+        if x > 1:
+            print("Connection Unsuccessful")
+            break()
+    if current_network == local_network
         print("Local Connection Successful")
-    else:
-        print("Connection Unsuccessful")
-        ## Pull all relevant photos from SD clear directories
-        time = 0
-    if import_type == 0:
-        flashair_cmd = "sudo flashair-util -s -d {} --only-{}".format(str(data_directory), file_type)
-    else:
-        flashair_cmd = "sudo flashair-util -S -all -t 1999"
-    print(flashair_cmd)
-    os.system(flashair_cmd)
-    print('Collecting Files from FlashAir')
+        if import_type == 0:
+            flashair_cmd = "sudo flashair-util -s -d ../data/rgb --only-jpg" #.format(str(data_directory), file_type)
+        else:
+            flashair_cmd = "sudo flashair-util -S -all -t 1999"
+        print(flashair_cmd)
+        os.system(flashair_cmd)
+        print('Collecting Files from FlashAir')
     ## Disconnect from FlashAir WiFi
     if global_network == 'CXL':
         PW_Global  = "WhalesRule!!"
-    wireless.connect(ssid=global_network,password=PW_Global)
-    h = wireless.current()
-    while h != global_network:
+    current_network = wireless.current()
+    while current_network != global_network:
         print('Waiting for Global Network Reconnection...')
         wireless.connect(ssid=global_network,password=PW_Global)
-        h = wireless.current()
+        current_network = wireless.current()
     print("Global Reconnection Successful")
 
     #Connect("CXL", "lemursrule")
