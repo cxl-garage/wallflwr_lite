@@ -101,6 +101,7 @@ def main(primary_type, data_directory):
         file_type = 'jpeg'
     else:
         sys.exit("Draculae Functionality only available on images")
+    print('Desmodus Draculae')
 
     data_directory = os.fsencode(data_directory)
     # Search WiFi and return WiFi list
@@ -118,4 +119,9 @@ def main(primary_type, data_directory):
     os.system(flashair_cmd)
     print('Collecting Files from FlashAir')
     ## Disconnect from FlashAir WiFi
-    return 
+    Search()
+    Connect(CXL)
+    return
+
+if __name__ == "__main__":
+    main()

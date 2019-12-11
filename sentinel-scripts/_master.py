@@ -65,7 +65,7 @@ secondary_class = 99
 secondary_confidence = 0
 clear_directories = 1
 delete_directories = 1
-draculae_freq = 30
+draculae_freq = 0
 
 if delete_directories == 1:
     parser = argparse.ArgumentParser()
@@ -129,7 +129,6 @@ tic = process_time()
 
 # Loop to run consistently run on RasPi
 while True:
-    print(primary_data_directory)
     if sys_mode == 'test': # Testing on system
         triggered = 1
     if sys_mode == 'real': # Actual camera scenario
