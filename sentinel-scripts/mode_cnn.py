@@ -243,7 +243,8 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
                     #if len(cam_buffer) != SINGLE_FRAME_SIZE_RGB:
                     #    continue
                     # Passing corresponding RGB
-                    print(primary_data_directory)
+                    print(data_directory)
+                    print(results_directory)
                     meta, n_classes, n_confidence = tflite_im(format, interpreter, cnn_w, cnn_h, \
                     data_directory,file, ai_sensitivity, results_directory)
                     #print(result)
