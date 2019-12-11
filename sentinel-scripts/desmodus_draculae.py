@@ -116,7 +116,7 @@ def main(primary_type, data_directory):
     Connect(SSID, PW)
     ## Pull all relevant photos from SD clear directories
     time = 0
-    if import_type == 0
+    if import_type == 0:
         flashair_cmd = "sudo flashair-util -s -d {} --only-{}".format(data_directory, file_type)
     else:
         flashair_cmd = "sudo flashair-util -S -all -t 1999"
