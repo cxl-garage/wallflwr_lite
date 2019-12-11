@@ -33,7 +33,7 @@ secondary_results_directory = ''
 
 trigger = 'pir'     # 'pir' or 'ir'
 trigger_check = '' #'ir'    # 'ir' or 'paired_pir'
-trigger_sensitivity = 10  #int between 1-100 (twenty being highest sensitivity)
+trigger_sensitivity = 6  #int between 1-100 (twenty being highest sensitivity)
 camera = 'PiCamera'
 t_background = ''   # int
 t_lorawan = ''  # int
@@ -57,13 +57,14 @@ primary_model_resolution = (432,324)
 secondary_model_resolution = (300,400)
 ai_sensitivity = 0.3
 lora_counter = 0
-image_burst = 5
+image_burst = 1
 primary_class = 99
 primary_confidence = 0
 secondary_class = 99
 secondary_confidence = 0
 clear_directories = 1
 delete_directories = 1
+draculae_freq = 30
 
 if delete_directories == 1:
     parser = argparse.ArgumentParser()
@@ -121,6 +122,8 @@ time = 0
 primary_result = []
 primary_result_array = []
 #print("Successful Setup")
+time_checker = time.time()
+
 
 
 # Loop to run consistently run on RasPi
@@ -131,9 +134,9 @@ while True:
         triggered = mode_sentinel.main(camera, trigger, trigger_check, \
         trigger_sensitivity, args.rgb_res,image_burst, primary_type, primary_data_directory)
         #print("Event Detected")
-    if sys_mode == 'desmodus_draculae':
+    if time_checker > draculae_freq:
         desmodus_draculae.main(primary_type, primary_data_directory)
-        triggered = 1
+        time_checker = time.time()
     if triggered == 1 :
         # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
         #print('Spinning up Primary Model', primary_model)
@@ -196,8 +199,9 @@ while True:
     #    current_background = mode_background.main()
     #    t_background = 0
     #if trigger_check == 0 and t_lorawan != 0 and time > t_lorawan :
-    if comms_type != '':
+    if comms_type != '' and primary_confidence > ai_sensitivity:
         mode_comms.main(primary_class, primary_confidence, secondary_class, secondary_confidence, device_identifier, comms_type, comms_backend)
         t_lorawan = 0
-    time.sleep(10)
+    else :
+        print('False Positive')
     print('Complete')
