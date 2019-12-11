@@ -26,7 +26,7 @@ def main(primary_type, data_directory, local_network, global_network):
         print(current_network)
         if x > 5:
             print("Connection Unsuccessful")
-            break()
+            break
     if current_network == local_network
         print("Local Connection Successful")
         if import_type == 0:
