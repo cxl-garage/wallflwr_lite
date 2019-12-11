@@ -30,7 +30,8 @@ def main(primary_type, data_directory, local_network, global_network):
         x += 1
     if current_network == local_network:
         print("Local Connection Successful")
-        flashair_cmd = "sudo flashair-util -S -all -T 1999"
+
+        flashair_cmd = "sudo flashair-util --list-files --only-jpg"#"sudo flashair-util -S -all -T 1999"
         print(flashair_cmd)
         os.system(flashair_cmd)
         print('Collecting Files from FlashAir')
