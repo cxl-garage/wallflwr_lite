@@ -69,6 +69,7 @@ draculae_freq = 0
 global_network = 'CXL'
 local_network = 'sentinel_retrofit'
 
+
 if delete_directories == 1:
     parser = argparse.ArgumentParser()
     parser.add_argument('--sensitivity', required=False, default=ai_sensitivity, \
