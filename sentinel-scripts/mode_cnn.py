@@ -270,17 +270,10 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
 
     upload_images_gcp(data_directory,'cxl_deploy')
     print('All orginial photos uploaded')
-    #upload_images_gcp(results_directory,'cxl_deploy')
-    print('Image successfully uploaded to Google Cloud')
+    upload_images_gcp(results_directory,'cxl_cropped')
+    print('All cropped photos uploaded')
 
-    # Write Results to timestamped .CSV File
-    #csv_file = '%s/_%s%s_%s%s%s.csv' %(results_directory,time.localtime()[1],time.localtime()[2],time.localtime()[3],time.localtime()[4],time.localtime()[5])
-    #csv_columns = ['file', 'bounding_box','class_id','score','time']
-    #with open(csv_file, 'w') as csvfile:
-    #    writer = csv.DictWriter(csvfile, fieldnames = csv_columns)
-    #    writer.writeheader()
-    #    for data in meta_array :
-    #        writer.writerow(data)
+
     final_confidence = sum_confidence/files_checked*100
     final_class = n_classes*100
 
