@@ -67,7 +67,7 @@ secondary_class = 99
 secondary_confidence = 0
 clear_directories = 1
 delete_directories = 1
-draculae_freq = 0
+draculae_freq = 100000
 global_network = 'CXL'
 local_network = 'sentinel_retrofit'
 
