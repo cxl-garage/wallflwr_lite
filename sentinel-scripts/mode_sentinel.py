@@ -58,13 +58,13 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_resolution, 
                   print('No Motion')
                   trigger_count = 0
                   exit_check += 1
-                  time.sleep(0.3)
+                  time.sleep(0.05)
              if exit_check > 30:
                   break
     	     #If motion detected by PIR sensor
              if pir_status == 1:
                   print('Motion Detected, awaiting confirmation')
-                  time.sleep(0.3)
+                  time.sleep(0.05)
                   trigger_count += 1
                   exit_check = 0
     if trigger_count >= trigger_sensitivity :
