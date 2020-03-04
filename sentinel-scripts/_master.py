@@ -144,6 +144,7 @@ while True:
     if sys_mode == 'real': # Actual camera scenario
         triggered = mode_sentinel.main(camera, trigger, trigger_check, \
         trigger_sensitivity, args.rgb_res,image_burst, primary_type, primary_data_directory)
+
         #print("Event Detected")
     toc = process_time()
     timer = toc - tic
@@ -217,4 +218,3 @@ while True:
     if comms_type != '' and primary_confidence > ai_sensitivity:
         mode_comms.main(primary_class, primary_confidence, secondary_class, secondary_confidence, device_identifier, comms_type, comms_backend)
         t_lorawan = 0
-    
