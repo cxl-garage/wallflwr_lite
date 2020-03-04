@@ -2,14 +2,15 @@
 
 import os
 import time
+import csv
 
 def gcp_init():
     try:
         f = open('user_details.csv')
     except IOError:
-        name = input('Lets get set up! What is your name?')
+        name = input('Lets get set up! What is your name?: ')
         time.sleep(1)
-        print('Welcome {}! Lets get you securly logged into Google Cloud')
+        print('Welcome {}! Lets get you securly logged into Google Cloud'.format(name))
         time.sleep(3)
         csv_file = 'user_details.csv'
         with open(csv_file, 'w') as csvfile:
