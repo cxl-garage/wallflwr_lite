@@ -47,22 +47,22 @@ def gcp_init():
 def device_setup():
     name = input('Lets get set up! What is your name?: ')
     time.sleep(1)
-    device_name = input('What is the name of this device?')
+    device_name = input('What is the name of this device? :')
     time.sleep(1)
     another_algorithm = 1
 
     while another_algorithm == 1:
-        primary_algorithm = input('What have you named your first algorithm (please match exactly)')
+        primary_algorithm = input('What have you named your first algorithm? (please match exactly): ')
         primary_type      = inquirer.List('primary_type',
-                            message='What sampling device are you using?',
+                            message='What sampling device are you using? :',
                             choices=['RGB Camera','FLIR Camera','Multispec','Microphone','External Hydrophone','Temperature','IMU'])
         _series = 1
         while _series == 1:
-            series    = input('Did you have an algorithm in series with {}? (y/n)'.format(algorithm))
+            series    = input('Did you have an algorithm in series with {}? (y/n): '.format(primary_algorithm))
             if series == 'y':
-                secondary_algorithm = input('What have you named your first algorithm (please match exactly)')
+                secondary_algorithm = input('What have you named your first algorithm? (please match exactly): ')
                 secondary_type      = inquirer.List('secondary_type',
-                                    message='What sampling device are you using?',
+                                    message='What sampling device are you using? ',
                                     choices=['RGB Camera','FLIR Camera','Multispec','Microphone','External Hydrophone','Temperature','IMU'])
                 _series = 0
             if series == 'n':
