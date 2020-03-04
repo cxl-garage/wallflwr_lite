@@ -104,8 +104,6 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
 
         cropped_im = cropped_im.save(filename)
         #try:
-        upload_images_gcp(filename,'cxl_deploy')
-        print('Image successfully uploaded to Google Cloud')
         #except Exception as e:
         #    pass
         #    print('Error uploading image to Google Cloud')
@@ -263,6 +261,9 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
                     sum_confidence = sum_confidence + sum(n_confidence)
                 else :
                     sys.exit('Need to have PiCamera, more camera functionality to come!')
+
+                upload_images_gcp(data_directory,'cxl_deploy')
+                print('Image successfully uploaded to Google Cloud')
 
                 print("Cleaning up...")
                 camera.close()

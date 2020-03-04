@@ -99,10 +99,20 @@ def upload_images_drive(image,folder):
     print(str)
     os.system(str)
 
-def upload_images_gcp(image,bucket):
-    str = 'gsutil cp {} gs://{}'.format(image,bucket)
-    print(str)
-    os.system(str)
+def upload_images_gcp(directory,bucket):
+    directory_list = os.listdir(directory)
+    for file in directory_list:
+        filename = os.fsdecode(file)
+        path = os.path.join(directory,file)
+        st = os.stat(path)
+        mtime = dt.datetime.fromtimestamp(st.st_mtime)
+        now = dt.datetime.now()
+        ago = now-dt.timedelta(minutes=1)
+        if filename.endswith(".jpg") and mtime < ago:
+            print(filename)
+            str = 'gsutil cp {} gs://{}'.format(image,bucket)
+            print(str)
+            os.system(str)
 
 def ota_algorithm(user_array):
     algorithm_name = ''
