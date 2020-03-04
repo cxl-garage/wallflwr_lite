@@ -102,7 +102,7 @@ def upload_images_drive(image,folder):
 
 def upload_images_gcp(directory,bucket):
     directory_list = os.listdir(directory)
-    print(directory_list)
+    #print(directory_list)
     for file in directory_list:
         filename = os.fsdecode(file)
         path = os.path.join(directory,file)
