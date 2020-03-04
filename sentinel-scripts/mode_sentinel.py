@@ -55,16 +55,16 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_resolution, 
              pir_status = GPIO.input(4)
              #If no motion detected by PIR sensor
              if pir_status == 0 :
-                 # print('No Motion')
+                  print('No Motion')
                   trigger_count = 0
                   exit_check += 1
-                  time.sleep(0.6)
+                  time.sleep(0.3)
              if exit_check > 30:
                   break
     	     #If motion detected by PIR sensor
              if pir_status == 1:
                   print('Motion Detected, awaiting confirmation')
-                  time.sleep(0.6)
+                  time.sleep(0.3)
                   trigger_count += 1
                   exit_check = 0
     if trigger_count >= trigger_sensitivity :
