@@ -23,7 +23,7 @@ from mode_gcs import ota_algorithm, gcp_init
 
 user_array = gcp_init()
 print(user_array)
-ota_algorithm(algorithm[1],)
+#ota_algorithm(user_array[1],)
 
 print('Please note that we do not currently support parallel algorithms')
 
