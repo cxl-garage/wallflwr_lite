@@ -170,7 +170,8 @@ while True:
         triggered = mode_sentinel.main(camera, trigger, trigger_check, \
         trigger_sensitivity, args.rgb_res,image_burst, primary_type, primary_data_directory)
 
-        #print("Event Detected")
+    print(primary_data_directory)
+    time.sleep(100)
     toc = process_time()
     timer = toc - tic
     if timer > draculae_freq:
