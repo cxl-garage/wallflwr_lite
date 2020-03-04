@@ -9,7 +9,7 @@ import sys,select
 def gcp_init():
     try:
         user_array = np.load('user_details.npy')
-        print('Welcome back {}'.format(name))
+        print('Welcome back {}'.format(user_array[0,0]))
         print('Press any key to re-configure (3 seconds)')
         i,o,e = select.select([sys.stdin],[],[],3)
         if (i):
