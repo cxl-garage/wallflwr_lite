@@ -5,6 +5,7 @@ import time
 import numpy as np
 import inquirer
 import sys,select
+import datetime as dt
 
 def gcp_init():
     try:
