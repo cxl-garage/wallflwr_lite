@@ -15,22 +15,22 @@ def gcp_init():
         if (i):
             _logout = 1
             while _logout:
-                logout = input('Do you want to switch accounts? (y/n)')
+                logout = input('Do you want to switch accounts? (y/n) ')
                 if logout == 'y':
                     gcloud_login()
-                    device_setup()
+                    user_array = device_setup()
                     _logout = 0
                 if logout == 'n':
                     _change_alg = 1
                     while _change_alg == 1:
-                        change_alg = input('Do you want to change algorithms? (y/n)')
+                        change_alg = input('Do you want to change algorithms? (y/n) ')
                         if change_alg == 'y':
                             device_setup()
                             _change_alg = 0
                         if change_alg == 'n':
                             _change_alg = 0
                         else:
-                            print('Please choose y or n')
+                            print('Please choose y or n ')
                     _logout = 0
                 else:
                     print('Please choose y or n')
@@ -39,7 +39,6 @@ def gcp_init():
 
     except IOError:
             user_array = device_setup()
-            gcloud_login()
             np.save('user_details.npy',user_array)
 
     return user_array
@@ -52,7 +51,7 @@ def device_setup():
     another_algorithm = 1
 
     while another_algorithm == 1:
-        primary_algorithm = input('What have you named your first algorithm? (please match exactly): ')
+        primary_algorithm = input('What have you named your algorithm? (please match exactly): ')
         primary_type      = inquirer.List('primary_type',
                             message='What sampling device are you using? :',
                             choices=['RGB Camera','FLIR Camera','Multispec','Microphone','External Hydrophone','Temperature','IMU'])
@@ -78,7 +77,7 @@ def device_setup():
             users_array = np.array([name, device_name, primary_algorithm,primary_type,secondary_algorithm,secondary_type])
         _parallel =1
         while _parallel == 1:
-            parallel = input('Do you want to add another algorithm?')
+            parallel = input('Do you want to add another algorithm? : ')
             if parallel == 'y':
                 _parallel = 0
             if parallel == 'n':
@@ -89,7 +88,6 @@ def device_setup():
     return users_array
 
 def gcloud_login():
-    print('Welcome {}! Lets get you securly logged into Google Cloud'.format(name))
     time.sleep(3)
     os.system('gcloud init')
 
