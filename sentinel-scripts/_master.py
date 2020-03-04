@@ -217,6 +217,4 @@ while True:
     if comms_type != '' and primary_confidence > ai_sensitivity:
         mode_comms.main(primary_class, primary_confidence, secondary_class, secondary_confidence, device_identifier, comms_type, comms_backend)
         t_lorawan = 0
-    else :
-        print('False Positive')
-    print('Complete')
+    
