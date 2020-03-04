@@ -39,6 +39,8 @@ def gcp_init():
             print('Lets go!')
 
     except IOError:
+            print('Welcome new user...')
+            gcloud_login()
             user_array = device_setup()
             np.save('user_details.npy',user_array)
 
