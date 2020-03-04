@@ -262,14 +262,14 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
                 else :
                     sys.exit('Need to have PiCamera, more camera functionality to come!')
 
-                upload_images_gcp(data_directory,'cxl_deploy')
-                print('Image successfully uploaded to Google Cloud')
-
                 print("Cleaning up...")
                 camera.close()
 
         if type == 'video' :
             print('Code for Video Recognition not Completed')
+
+    upload_images_gcp(data_directory,'cxl_deploy')
+    print('Image successfully uploaded to Google Cloud')
 
     # Write Results to timestamped .CSV File
     #csv_file = '%s/_%s%s_%s%s%s.csv' %(results_directory,time.localtime()[1],time.localtime()[2],time.localtime()[3],time.localtime()[4],time.localtime()[5])
