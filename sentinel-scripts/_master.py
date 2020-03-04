@@ -21,7 +21,11 @@ from mode_gcs import ota_algorithm, gcp_init
 
 ## Initialization
 
-gcp_init()
+user_array = gcp_init()
+print(user_array)
+ota_algorithm(algorithm[1],)
+
+print('Please note that we do not currently support parallel algorithms')
 
 primary_labels = 'models/tflite/deer_binary_v0_3/dict.txt'
 primary_model = 'models/tflite/deer_binary_v0_3/model.tflite' #'models/tflite/spermwhale/spermwhale_edge_v0_1.tflite'
@@ -68,6 +72,7 @@ secondary_confidence = 0
 clear_directories = 1
 delete_directories = 1
 draculae_freq = 100000
+ota_freq      = 10  # minutes
 global_network = 'CXL'
 local_network = 'sentinel_retrofit'
 
@@ -141,10 +146,12 @@ while True:
         trigger_sensitivity, args.rgb_res,image_burst, primary_type, primary_data_directory)
         #print("Event Detected")
     toc = process_time()
-    draculae_timer = toc - tic
-    if draculae_timer > draculae_freq:
+    timer = toc - tic
+    if timer > draculae_freq:
         desmodus_draculae.main(primary_type, primary_data_directory, local_network, global_network)
         tic = process_time()
+    if timer > ota_freq:
+        ota_freq
     if triggered == 1 :
         # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
         #print('Spinning up Primary Model', primary_model)
