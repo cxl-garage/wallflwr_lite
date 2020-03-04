@@ -6,14 +6,14 @@ import csv
 
 def gcp_init():
     try:
-        f = open('../../user_details.csv')
+        f = open('user_details.csv')
     except IOError:
         name = input('Lets get set up! What is your name?: ')
         time.sleep(1)
         print('Welcome {}! Lets get you securly logged into Google Cloud'.format(name))
         time.sleep(3)
         os.system('gcloud init')
-        csv_file = '../../user_details.csv'
+        csv_file = 'user_details.csv'
         with open(csv_file, 'w') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames = 'user_name')
             writer.writeheader()
