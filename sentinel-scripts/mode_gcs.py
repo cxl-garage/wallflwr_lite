@@ -101,6 +101,7 @@ def upload_images_drive(image,folder):
     os.system(str)
 
 def upload_images_gcp(directory,bucket):
+    print(directory)
     directory_list = os.listdir(directory)
     for file in directory_list:
         filename = os.fsdecode(file)
