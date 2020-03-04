@@ -2,22 +2,21 @@
 
 import os
 import time
-import csv
+import numpy as np
 
 def gcp_init():
     try:
-        f = open('user_details.csv')
+        user_array = np.load('user_details.npy')
+        name = user_array[0]
+        print('Welcome back {}'.format(name))
     except IOError:
         name = input('Lets get set up! What is your name?: ')
         time.sleep(1)
         print('Welcome {}! Lets get you securly logged into Google Cloud'.format(name))
         time.sleep(3)
         os.system('gcloud init')
-        csv_file = 'user_details.csv'
-        with open(csv_file, 'w') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames = 'user_name')
-            writer.writeheader()
-            writer.writerow(name)
+        user_array = np.array([name])
+        np.save('user_details.npy',user_array)
 
 def upload_images_drive(image,folder):
     str = 'gsutil cp {} gs://{}'.format(image,folder)
