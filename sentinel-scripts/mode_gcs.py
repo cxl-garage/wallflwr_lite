@@ -112,7 +112,7 @@ def upload_images_gcp(directory,bucket):
         ago = now-dt.timedelta(minutes=1)
         if filename.endswith(".jpg") and mtime < ago:
             print(filename)
-            str = 'gsutil cp {} gs://{}'.format(image,bucket)
+            str = 'gsutil cp {} gs://{}'.format(filename,bucket)
             print(str)
             os.system(str)
 
