@@ -72,7 +72,7 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_resolution, 
         if camera == 'PiCamera':
              camera = PiCamera.PiCamera()
              burst = 0
-             camera.resolution = image_resolution
+             #camera.resolution = image_resolution
              print('Taking photo burst')
              camera.start_preview()
              camera.vflip = True
