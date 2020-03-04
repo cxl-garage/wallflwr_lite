@@ -114,10 +114,11 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
 
 def tflite_im(format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, results_directory):
     """Returns a list of detection results, each a dictionary of object info."""
+    print('File: {}'.format(file))
+    print('Data Directory: {}'.format(data_directory))
     file_path = os.path.join(data_directory,file)
     #print('Current Image:', file)
-    current_file = Image.open(file_path).convert('RGB').resize(
-      (cnn_h, cnn_w), Image.ANTIALIAS)
+    current_file = Image.open(file_path).convert('RGB').resize((cnn_h, cnn_w), Image.ANTIALIAS)
     tic = time.process_time()
 
 
@@ -254,7 +255,7 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
                     print(data_directory)
                     print(results_directory)
                     meta, n_classes, n_confidence = tflite_im(format, interpreter, cnn_w, cnn_h, \
-                    data_directory,file, ai_sensitivity, results_directory)
+                    data_directory, file, ai_sensitivity, results_directory)
                     #print(result)
                     meta_array = np.append(meta_array, meta)
                     classes = np.append(classes, n_classes)

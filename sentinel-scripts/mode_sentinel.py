@@ -12,6 +12,7 @@ import time
 import picamera as PiCamera
 from datetime import datetime
 from time import strftime
+from mode_gcs import upload_images_gcp
 
 def save_data(image,results,path,ext='jpeg'):
     tag = '%010d' % int(time.monotonic()*1000)
@@ -84,7 +85,7 @@ def main(camera, trigger, trigger_check, trigger_sensitivity, image_resolution, 
                  time.sleep(0.05)
                  burst += 1
              camera.close()
-    return 1
+    return
 
 if __name__ == "__main__":
     main()
