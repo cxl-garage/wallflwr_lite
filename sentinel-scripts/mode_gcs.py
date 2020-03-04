@@ -47,7 +47,7 @@ def gcp_init():
 def device_setup():
     name = input('Lets get set up! What is your name?: ')
     time.sleep(1)
-    device_name = input('What is the name of this device? :')
+    device_name = input('What is the name of this device? ')
     time.sleep(1)
     another_algorithm = 1
 
