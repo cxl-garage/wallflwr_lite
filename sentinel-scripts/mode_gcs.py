@@ -12,12 +12,12 @@ def gcp_init():
         time.sleep(1)
         print('Welcome {}! Lets get you securly logged into Google Cloud'.format(name))
         time.sleep(3)
+        os.system('gcloud init')
         csv_file = 'user_details.csv'
         with open(csv_file, 'w') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames = 'user_name')
             writer.writeheader()
             writer.writerow(name)
-        os.system('gcloud init')
 
 def upload_images_drive(image,folder):
     str = 'gsutil cp {} gs://{}'.format(image,folder)
