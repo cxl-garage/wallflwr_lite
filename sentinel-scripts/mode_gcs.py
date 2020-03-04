@@ -104,7 +104,10 @@ def upload_images_gcp(image,bucket):
     print(str)
     os.system(str)
 
-def ota_algorithm(algorithm_name, bucket, directory):
+def ota_algorithm(user_array):
+    algorithm_name = ''
+    bucket = ''
+    directory ''
     model  = 'gsutil cp gs://{}/{} {}'.format(algorithm_name, bucket, directory)
     labels = 'gsutil cp gs://{}/{} {}'.format(algorithm_name, bucket, directory)
     print(str)

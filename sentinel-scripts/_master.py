@@ -151,16 +151,16 @@ while True:
         desmodus_draculae.main(primary_type, primary_data_directory, local_network, global_network)
         tic = process_time()
     if timer > ota_freq:
-        ota_freq
+        ota_algorithm(user_array)
     if triggered == 1 :
         # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
-        #print('Spinning up Primary Model', primary_model)
+        print('Spinning up Primary Model', primary_model)
         #[primary_class, primary_confidence, primary_output_file] = ...
         primary_class, primary_confidence = mode_cnn.cnn(sys_mode, mcu, \
         primary_format, camera, args.rgb_res, \
         primary_type, args.pcnn_res, primary_model, primary_labels, \
         primary_data_directory, primary_results_directory, \
-        current_background, ai_sensitivity, max_images)
+        current_background, args.sensitivity, max_images)
         #print('Model Complete')
         #print('Insert Code to Save Array in way that can be parsed for LoRa')
         #print('NOTE: CROPPED IMAGES AND .CSV RESULTS FILE ARE SAVED IN /DATA/RESULTS FOLDER ')
@@ -172,7 +172,7 @@ while True:
             secondary_format, camera, args.rgb_res,\
             secondary_type, args.scnn_res, secondary_model_resolution, secondary_model, secondary_labels,\
             primary_results_directory, secondary_results_directory,
-            current_background, ai_sensitivity, max_images)
+            current_background, args.sensitivity, max_images)
             print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
         # Run LoRa communication with outputs from primary algorithm
         if sys_mode == 'test':
