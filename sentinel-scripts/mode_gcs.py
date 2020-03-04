@@ -10,7 +10,7 @@ def gcp_init():
     try:
         user_array = np.load('user_details.npy')
         print(user_array)
-        print('Welcome back {}'.format(user_array(0)))
+        print('Welcome back {}'.format(user_array[0]))
         print('Press any key to re-configure (3 seconds)')
         i,o,e = select.select([sys.stdin],[],[],3)
         if (i):
