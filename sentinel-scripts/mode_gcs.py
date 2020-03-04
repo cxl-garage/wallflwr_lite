@@ -100,7 +100,7 @@ def upload_images_drive(image,folder):
     os.system(str)
 
 def upload_images_gcp(image,bucket):
-    str = 'gsutil cp {} gs://{}'.format(image,folder)
+    str = 'gsutil cp {} gs://{}'.format(image,bucket)
     print(str)
     os.system(str)
 
