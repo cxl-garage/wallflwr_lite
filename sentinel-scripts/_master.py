@@ -101,28 +101,28 @@ if sys_mode == 'real':
     print('Mode: Real')
     if mcu == 'computer':
         print('Cannot run "real" mode from mcu/vpu = computer')
-    if mcu == 'rpi0':
-        primary_labels = os.path.join('../',primary_labels)
-        primary_model  = os.path.join('../',primary_model)
-        primary_data_directory = os.path.join('../', primary_data_directory)
-        primary_results_directory = os.path.join('../', primary_results_directory)
-        secondary_labels = os.path.join('../', secondary_labels)
-        secondary_labels = os.path.join('../',secondary_model)
-        secondary_data_directory = os.path.join('../', secondary_data_directory)
-        secondary_results_directory = os.path.join('../', secondary_results_directory)
-        #primary_format = args.primary_format
-        #secondary_format = args.secondary_format
-        #primary_type = args.primary_type
-        #secondary_type = args.secondary_type
-        #print('Real Scenario running on RPi Zero')
-    if not os.path.exists(primary_data_directory):
-        os.mkdir(primary_data_directory)
-    if not os.path.exists(primary_results_directory):
-        os.mkdir(primary_results_directory)
-    if not os.path.exists(secondary_data_directory):
-        os.mkdir(secondary_data_directory)
-    if not os.path.exists(secondary_results_directory):
-        os.mkdir(secondary_results_directory)
+if mcu == 'rpi0':
+    primary_labels = os.path.join('../',primary_labels)
+    primary_model  = os.path.join('../',primary_model)
+    primary_data_directory = os.path.join('../', primary_data_directory)
+    primary_results_directory = os.path.join('../', primary_results_directory)
+    secondary_labels = os.path.join('../', secondary_labels)
+    secondary_labels = os.path.join('../',secondary_model)
+    secondary_data_directory = os.path.join('../', secondary_data_directory)
+    secondary_results_directory = os.path.join('../', secondary_results_directory)
+    #primary_format = args.primary_format
+    #secondary_format = args.secondary_format
+    #primary_type = args.primary_type
+    #secondary_type = args.secondary_type
+    #print('Real Scenario running on RPi Zero')
+if not os.path.exists(primary_data_directory):
+    os.mkdir(primary_data_directory)
+if not os.path.exists(primary_results_directory):
+    os.mkdir(primary_results_directory)
+if not os.path.exists(secondary_data_directory):
+    os.mkdir(secondary_data_directory)
+if not os.path.exists(secondary_results_directory):
+    os.mkdir(secondary_results_directory)
 
 
 if sys.version_info[0] < 3:
