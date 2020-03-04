@@ -15,11 +15,13 @@ from datetime import datetime
 from time import strftime
 import argparse
 from time import process_time
-
+from mode_gcs import ota_algorithm, gcp_init
 
 ## Master Script for CXL Camera Trap Control
 
 ## Initialization
+
+gcp_init()
 
 primary_labels = 'models/tflite/deer_binary_v0_3/dict.txt'
 primary_model = 'models/tflite/deer_binary_v0_3/model.tflite' #'models/tflite/spermwhale/spermwhale_edge_v0_1.tflite'

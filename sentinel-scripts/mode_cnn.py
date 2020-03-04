@@ -11,6 +11,7 @@ import sys
 import picamera
 import shutil
 from edgetpu.detection.engine import DetectionEngine
+from mode_gcs import upload_images_gcp
 #print('Loaded: Coral Accelerator')
 
 
@@ -100,7 +101,14 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, i):
         cropped_im = im.crop((left, top, right, bottom))
         filename = '%s/%s-%s' %(results_directory,str(i),file)
         #print('Saving Cropped Image as:',filename)
+
         cropped_im = cropped_im.save(filename)
+        try:
+            upload_images_gcp(filename,'cxl_deploy')
+            print('Image successfully uploaded to Google Cloud')
+        except Exception as e:
+            pass
+            print('Error uploading image to Google Cloud')
     else :
         print('ERROR: Weird 0 pixel wide/tall bounding box')
 
