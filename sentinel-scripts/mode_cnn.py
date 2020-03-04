@@ -269,7 +269,7 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
             print('Code for Video Recognition not Completed')
 
     upload_images_gcp(data_directory,'cxl_deploy')
-    upload_images_gcp(results_directory,'cxl_deploy')
+    #upload_images_gcp(results_directory,'cxl_deploy')
     print('Image successfully uploaded to Google Cloud')
 
     # Write Results to timestamped .CSV File

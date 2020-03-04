@@ -129,6 +129,31 @@ if sys.version_info[0] < 3:
     sys.exit("This sample requires Python 3. Please install Python 3!")
 
 
+# Clear directory_list
+if clear_directories == 1:
+    t_now = datetime.now().strftime("%Y%m%d_%H%M")
+
+    primary_data_files = os.listdir(primary_data_directory)
+    n_primary_data_folder = os.path.join(primary_data_directory,t_now)
+    if not os.path.exists(n_primary_data_folder):
+        os.mkdir(n_primary_data_folder)
+    for f in primary_data_files :
+        delete_path = os.path.join(primary_data_directory, f)
+        shutil.move(delete_path,n_primary_data_folder)
+        #os.remove(path)
+
+
+    if secondary_model != '':
+        secondary_data_files = os.listdir(secondary_data_directory)
+        n_secondary_data_folder = os.path.join(secondary_data_directory,t_now)
+        if not os.path.exists(n_secondary_data_folder):
+            os.mkdir(n_secondary_data_folder)
+        for f in secondary_data_files :
+            path = os.path.join(secondary_data_directory, f)
+            shutil.move(path,n_secondary_data_folder)
+
+
+
 time = 0
 primary_result = []
 primary_result_array = []
@@ -181,36 +206,6 @@ while True:
         if sys_mode == 'real':
             triggered == 0
             print('System Reset')
-
-    # Clear directory_list
-    if clear_directories == 1:
-        t_now = datetime.now().strftime("%Y%m%d_%H%M")
-
-        primary_data_files = os.listdir(primary_data_directory)
-        n_primary_data_folder = os.path.join(primary_data_directory,t_now)
-        if not os.path.exists(n_primary_data_folder):
-            os.mkdir(n_primary_data_folder)
-        for f in primary_data_files :
-            delete_path = os.path.join(primary_data_directory, f)
-            shutil.move(delete_path,n_primary_data_folder)
-            #os.remove(path)
-
-        #primary_results_files = os.listdir(primary_results_directory)
-        #n_primary_results_folder = os.path.join(primary_results_directory,t_now)
-        #if not os.path.exists(n_primary_results_folder):
-        #    os.mkdir(n_primary_results_folder)
-        #for f in primary_results_files :
-        #    path = os.path.join(primary_results_directory, f)
-        #    shutil.move(path,n_primary_results_folder)
-        if secondary_model != '':
-            secondary_data_files = os.listdir(secondary_data_directory)
-            n_secondary_data_folder = os.path.join(secondary_data_directory,t_now)
-            if not os.path.exists(n_secondary_data_folder):
-                os.mkdir(n_secondary_data_folder)
-            for f in secondary_data_files :
-                path = os.path.join(secondary_data_directory, f)
-                shutil.move(path,n_secondary_data_folder)
-
     #if trigger_check == 0 and t_backgrond != 0 and time > t_backgrond :
     #    current_background = mode_background.main()
     #    t_background = 0
