@@ -270,7 +270,7 @@ def cnn(sys_mode, mcu, format, camera, im_resolution, \
 
     upload_images_gcp(data_directory,'cxl_deploy')
     print('All orginial photos uploaded')
-    upload_images_gcp(results_directory,'cxl_deploy')
+    #upload_images_gcp(results_directory,'cxl_deploy')
     print('Image successfully uploaded to Google Cloud')
 
     # Write Results to timestamped .CSV File
