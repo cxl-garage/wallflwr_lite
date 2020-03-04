@@ -22,12 +22,12 @@ def gcp_init():
                     _logout = 0
                 if logout == 'n':
                     _change_alg = 1
-                    while _change_alg == 1
+                    while _change_alg == 1:
                         change_alg = input('Do you want to change algorithms? (y/n)')
                         if change_alg == 'y':
                             device_setup()
                             _change_alg = 0
-                        if change_alg = 'n':
+                        if change_alg == 'n':
                             _change_alg = 0
                         else:
                             print('Please choose y or n')
@@ -56,7 +56,6 @@ def device_setup():
         primary_type      = inquirer.List('primary_type',
                             message='What sampling device are you using?',
                             choices=['RGB Camera','FLIR Camera','Multispec','Microphone','External Hydrophone','Temperature','IMU'])
-        ]
         _series = 1
         while _series == 1:
             series    = input('Did you have an algorithm in series with {}? (y/n)'.format(algorithm))
@@ -65,7 +64,6 @@ def device_setup():
                 secondary_type      = inquirer.List('secondary_type',
                                     message='What sampling device are you using?',
                                     choices=['RGB Camera','FLIR Camera','Multispec','Microphone','External Hydrophone','Temperature','IMU'])
-                ]
                 _series = 0
             if series == 'n':
                 secondary_algorithm = []
@@ -79,7 +77,7 @@ def device_setup():
         except Exception as e:
             users_array = np.array([name, device_name, primary_algorithm,primary_type,secondary_algorithm,secondary_type])
         _parallel =1
-        while _parallel == 1
+        while _parallel == 1:
             parallel = input('Do you want to add another algorithm?')
             if parallel == 'y':
                 _parallel = 0
