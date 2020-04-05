@@ -54,10 +54,10 @@ def device_setup():
     time.sleep(1)
     another_algorithm = 1
     try:
-        user_array = np.array([name, device_name, primary_algorithm,primary_type,secondary_algorithm,secondary_type])
+        user_array = np.array([name, device_name])
         users_array = np.append(users_array,user_array)
     except Exception as e:
-        users_array = np.array([name, device_name, primary_algorithm,primary_type,secondary_algorithm,secondary_type])
+        users_array = np.array([name, device_name])
     return user_array
 
 def gcloud_login():
@@ -65,7 +65,7 @@ def gcloud_login():
     os.system('gcloud init')
 
 def upload_images_drive(image,folder):
-    str = 'gsutil cp {} gs://{}'.format(image,folder)
+    str = 'gsutil cp {} gs://{}'.format(image,folSader)
     print(str)
     os.system(str)
 
