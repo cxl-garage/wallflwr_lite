@@ -52,13 +52,14 @@ def device_setup():
     time.sleep(1)
     device_name = input('What is the name of this device? ')
     time.sleep(1)
+    gcloud_login()
     another_algorithm = 1
     try:
         user_array = np.array([name, device_name])
         users_array = np.append(users_array,user_array)
     except Exception as e:
         users_array = np.array([name, device_name])
-    return user_array
+    return users_array
 
 def gcloud_login():
     time.sleep(3)

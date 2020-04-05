@@ -23,7 +23,7 @@ from mode_gcs import ota_algorithm, gcp_init
 
 user_array = gcp_init()
 print(user_array)
-#ota_algorithm(user_array[1],)
+ota_algorithm(user_array)
 
 print('Please note that we do not currently support parallel algorithms')
 
@@ -38,7 +38,7 @@ secondary_results_directory = ''
 
 
 
-trigger = 'pir'     # 'pir' or 'ir'
+trigger = 'none'#'pir'     # 'pir' or 'ir'
 trigger_check = '' #'ir'    # 'ir' or 'paired_pir'
 trigger_sensitivity = 6  #int between 1-100 (twenty being highest sensitivity)
 camera = 'PiCamera'
