@@ -8,6 +8,7 @@ import sys,select
 import datetime as dt
 import keyboard
 from threading import Timer
+import csv
 
 def gcp_init():
     try:
@@ -93,6 +94,12 @@ def upload_images_gcp(directory,bucket):
             os.system(str)
 
 def ota_algorithm(user_array):
+    alg_array  = 'gsutil cp gs://cxl_tflite/{}_config.csv ../models/'.format(user_array[0])
+    os.system(alg_array)
+    with open('../models/{}_config.csv'.format(user_array[0])) as csvfile:
+        spamreader = csv.reader(csvfile,delimiter-',')
+        for row in spamreader:
+            print(', '.join(row))
     algorithm_name = ''
     bucket = ''
     directory = ''
