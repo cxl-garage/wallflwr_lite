@@ -53,43 +53,12 @@ def device_setup():
     device_name = input('What is the name of this device? ')
     time.sleep(1)
     another_algorithm = 1
-
-    while another_algorithm == 1:
-        primary_algorithm = input('What have you named your algorithm? (please match exactly): ')
-        primary_type      = inquirer.List('primary_type',
-                            message='What sampling device are you using? :',
-                            choices=['RGB Camera','FLIR Camera','Multispec','Microphone','External Hydrophone','Temperature','IMU'])
-        _series = 1
-        while _series == 1:
-            series    = input('Did you have an algorithm in series with {}? (y/n): '.format(primary_algorithm))
-            if series == 'y':
-                secondary_algorithm = input('What have you named your first algorithm? (please match exactly): ')
-                secondary_type      = inquirer.List('secondary_type',
-                                    message='What sampling device are you using? ',
-                                    choices=['RGB Camera','FLIR Camera','Multispec','Microphone','External Hydrophone','Temperature','IMU'])
-                _series = 0
-            if series == 'n':
-                secondary_algorithm = []
-                secondary_type      = []
-                _series = 0
-            else:
-                print('Please enter y or n')
-        try:
-            user_array = np.array([name, device_name, primary_algorithm,primary_type,secondary_algorithm,secondary_type])
-            users_array = np.append(users_array,user_array)
-        except Exception as e:
-            users_array = np.array([name, device_name, primary_algorithm,primary_type,secondary_algorithm,secondary_type])
-        _parallel =1
-        while _parallel == 1:
-            parallel = input('Do you want to add another algorithm? : ')
-            if parallel == 'y':
-                _parallel = 0
-            if parallel == 'n':
-                _parallel = 0
-                another_algorithm = 0
-            else:
-                print('Please enter y or n')
-    return users_array
+    try:
+        user_array = np.array([name, device_name, primary_algorithm,primary_type,secondary_algorithm,secondary_type])
+        users_array = np.append(users_array,user_array)
+    except Exception as e:
+        users_array = np.array([name, device_name, primary_algorithm,primary_type,secondary_algorithm,secondary_type])
+    return user_array
 
 def gcloud_login():
     time.sleep(3)
