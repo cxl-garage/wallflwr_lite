@@ -7,7 +7,7 @@ import inquirer
 import sys,select
 import datetime as dt
 import keyboard
-import threading import Timer
+from threading import Timer
 
 def gcp_init():
     try:
