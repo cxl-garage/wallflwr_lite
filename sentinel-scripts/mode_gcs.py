@@ -14,7 +14,7 @@ def gcp_init():
     try:
         user_array = np.load('user_details.npy')
         print(user_array)
-        print('Welcome back {}'.format(user_array[0])
+        print('Welcome back {}'.format(user_array[0]))
         toc = time.process_time()
         timeout = 2
         t = Timer(timeout,print,[''])
@@ -96,11 +96,8 @@ def upload_images_gcp(directory,bucket):
 def ota_algorithm(user_array):
     alg_array  = 'gsutil cp gs://cxl_tflite/{}_config.csv ../models/{}_config.csv'.format(user_array[0],users_array[0])
     os.system(alg_array)
-    with open('../models/{}_config.csv'.format(user_array[0])) as csvfile:
-        spamreader = csv.reader(csvfile,delimiter-',')
-        for row in spamreader:
-            print(', '.join(row))
-    algorithm_name = ''
+    alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]), delimiter=',')
+    print(alg_array)
     bucket = ''
     directory = ''
     model  = 'gsutil cp gs://{}/{} {}'.format(algorithm_name, bucket, directory)
