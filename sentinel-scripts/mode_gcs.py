@@ -13,13 +13,12 @@ def gcp_init():
     try:
         user_array = np.load('user_details.npy')
         print(user_array)
-        print('Welcome back {}'.format(user_array[0]))
-        print('Press any key to re-configure (3 seconds)')
+        print('Welcome back {}'.format(user_array[0])
         toc = time.process_time()
         timeout = 2
-        t = Timer(timeout,print,['Lets Go!'])
+        t = Timer(timeout,print,[''])
         t.start()
-        logout = input('Press any key to device settings...')
+        logout = input('Press enter to change user settings...')
         t.cancel()
         if logout in locals():
             _logout = 1
