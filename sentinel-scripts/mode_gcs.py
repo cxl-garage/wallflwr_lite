@@ -6,6 +6,8 @@ import numpy as np
 import inquirer
 import sys,select
 import datetime as dt
+import keyboard
+import threading import Timer
 
 def gcp_init():
     try:
@@ -13,8 +15,13 @@ def gcp_init():
         print(user_array)
         print('Welcome back {}'.format(user_array[0]))
         print('Press any key to re-configure (3 seconds)')
-        i,o,e = select.select([sys.stdin],[],[],3)
-        if (i):
+        toc = time.process_time()
+        timeout = 2
+        t = Timer(timeout,print,['Lets Go!'])
+        t.start()
+        logout = input('Press any key to device settings...')
+        t.cancel()
+        if logout in locals():
             _logout = 1
             while _logout:
                 logout = input('Do you want to switch accounts? (y/n) ')
