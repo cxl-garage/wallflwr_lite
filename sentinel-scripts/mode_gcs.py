@@ -122,6 +122,6 @@ def ota_algorithm(user_array):
                         os.system(labels)
                         alg_array[k][13] = 'False'
         k = k+1
-    np.savetxt('../models/{}_config.csv'.format(user_array[0]),alg_array, delimiter=',')
+    np.savetxt('../models/{}_config.csv'.format(user_array[0]),alg_array, delimiter=',',dtype='U6')
     alg_array  = 'gsutil cp ../models/{}_config.csv gs://cxl_tflite/{}_config.csv'.format(user_array[0],user_array[0])
     os.system(alg_array)
