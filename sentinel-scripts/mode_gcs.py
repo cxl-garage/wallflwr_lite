@@ -97,22 +97,23 @@ def upload_images_gcp(directory,bucket):
 def ota_algorithm(user_array):
     alg_array  = 'gsutil cp gs://cxl_tflite/{}_config.csv ../models/{}_config.csv'.format(user_array[0],user_array[0])
     os.system(alg_array)
-    alg_array = np.loadtxt('../models/{}_config.csv'.format(user_array[0]), delimiter=',',skiprows=1)
+    alg_array = np.loadtxt('../models/{}_config.csv'.format(user_array[0]), delimiter=',',dtype='str',skiprows=1)
     print(alg_array)
     alg_rows = len(alg_array[0][:])
     print(alg_rows)
+    print(str(alg_array[k][3]))
     #print(alg_array)
     k=0
     while k < alg_rows:
-        if alg_array[1] == user_array[0]:
-            if alg_array[3] == user_array[1]:
-                primary_algorithm = alg_array[4]
+        if str(alg_array[k][1]) == user_array[0]:
+            if str(alg_array[k][3]) == user_array[1]:
+                primary_algorithm = str(alg_array[k][4])
                 model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(primary_algorithm, primary_algorithm)
                 labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(primary_algorithm, primary_algorithm)
                 os.system(model)
                 os.system(labels)
-                if alg_array[12] != '':
-                    secondary_algorithm = alg_array[12]
+                if alg_array[k][12] != '':
+                    secondary_algorithm = alg_array[k][12]
                     model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(secondary_algorithm, secondary_algorithm)
                     labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(secondary_algorithm, secondary_algorithm)
                     os.system(model)
