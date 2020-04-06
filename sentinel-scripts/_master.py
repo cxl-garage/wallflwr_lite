@@ -44,13 +44,13 @@ primary_results_directory = 'data/{}_out'.format(primary_alg)
 secondary_data_directory = 'data/{}_in'.format(secondary_alg)
 secondary_results_directory = 'data/{}_out'.format(secondary_alg)
 
-if not os.path.exists('data/{}_in'.format(primary_alg))
+if not os.path.exists('data/{}_in'.format(primary_alg)):
     os.makedirs('data/{}_in'.format(primary_alg))
-if not os.path.exists('data/{}_out'.format(primary_alg))
+if not os.path.exists('data/{}_out'.format(primary_alg)):
     os.makedirs('data/{}_out'.format(primary_alg))
-if not os.path.exists('data/{}_in'.format(secondary_alg))
+if not os.path.exists('data/{}_in'.format(secondary_alg)):
     os.makedirs('data/{}_in'.format(secondary_alg))
-if not os.path.exists('data/{}_out'.format(secondary_alg))
+if not os.path.exists('data/{}_out'.format(secondary_alg)):
     os.makedirs('data/{}_out'.format(secondary_alg))
 
 
