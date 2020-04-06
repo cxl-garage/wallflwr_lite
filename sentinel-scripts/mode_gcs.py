@@ -99,9 +99,10 @@ def ota_algorithm(user_array):
     os.system(alg_array)
     alg_array = np.loadtxt('../models/{}_config.csv'.format(user_array[0]), delimiter=',',dtype='str',skiprows=1)
     print(alg_array)
-    alg_rows = len(alg_array)
+    alg_rows = len(alg_array[0][:])
     print(alg_rows)
     #print(alg_array)
+    k-
     while k < alg_rows:
         if alg_array[1] == user_array[0]:
             if alg_array[3] == user_array[1]:
