@@ -100,10 +100,10 @@ def ota_algorithm(user_array):
     alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]), delimiter=',',dtype='str',skip_header=1)
     #alg_rows, alg_columns = alg_array.size
     print(alg_array)
-    print(len(alg_array[:]))
+    #print(len(alg_array[:]))
     k=0
     print(alg_array[k][0])
-    while k < len(alg_array[:]):
+    while k < 1:
         if alg_array[k][1] == user_array[0]:
             if alg_array[k][3] == user_array[1]:
                 primary_algorithm = alg_array[k][4]
