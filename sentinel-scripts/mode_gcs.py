@@ -9,6 +9,7 @@ import datetime as dt
 import keyboard
 from threading import Timer
 import csv
+from pathlib import Path
 
 def gcp_init():
     try:
@@ -96,12 +97,21 @@ def upload_images_gcp(directory,bucket):
 def ota_algorithm(user_array):
     alg_array  = 'gsutil cp gs://cxl_tflite/{}_config.csv ../models/{}_config.csv'.format(user_array[0],user_array[0])
     os.system(alg_array)
-    alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]), delimiter=',',dtype='str')
+    alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]), delimiter=',',dtype='str',skiprows=1)
+    alg_rows, alg_columns = alg_array.size
     print(alg_array)
-    bucket = ''
-    directory = ''
-    model  = 'gsutil cp gs://{}/{} {}'.format(algorithm_name, bucket, directory)
-    labels = 'gsutil cp gs://{}/{} {}'.format(algorithm_name, bucket, directory)
-    print(str)
-    os.system(model)
-    os.system(labels)
+    while k < alg_rows:
+        if alg_array[1] == user_array[0]:
+            if alg_array[3] == user_array[1]:
+                primary_algorithm = alg_array[4]
+                model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(primary_algorithm, primary_algorithm)
+                labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(primary_algorithm, primary_algorithm)
+                os.system(model)
+                os.system(labels)
+                if alg_array[12] != '':
+                    secondary_algorithm = alg_array[12]
+                    model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(secondary_algorithm, secondary_algorithm)
+                    labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(secondary_algorithm, secondary_algorithm)
+                    os.system(model)
+                    os.system(labels)
+        k = k+1
