@@ -27,14 +27,31 @@ ota_algorithm(user_array)
 
 print('Please note that we do not currently support parallel algorithms')
 
-primary_labels = 'models/tflite/deer_binary_v0_3/dict.txt'
-primary_model = 'models/tflite/deer_binary_v0_3/model.tflite' #'models/tflite/spermwhale/spermwhale_edge_v0_1.tflite'
-primary_data_directory = 'data/rgb' #'/home/sam/AI_Training/deer_train'
-primary_results_directory = 'data/rgb_cropped'
-secondary_labels = ''
-secondary_model = ''
-secondary_data_directory = 'data/flir'
-secondary_results_directory = ''
+
+alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]), delimiter=',',dtype='str',skip_header=1)
+primary_alg = alg_array[4]
+secondary_alg = alg_array[12]
+primary_model = '../models/{}.tflite'.format(primary_alg)
+primary_labels = '../models/{}.txt'.format(primary_alg)
+if alg_array[12] != '':
+    secondary_model = '../models/{}.tflite'.format(secondary_alg)
+    secondary_labels = '../models/{}.txt'.format(secondary_alg)
+
+
+primary_data_directory = 'data/{}_in'.format(primary_alg) #'/home/sam/AI_Training/deer_train'
+primary_results_directory = 'data/{}_out'.format(primary_alg)
+
+secondary_data_directory = 'data/{}_in'.format(secondary_alg)
+secondary_results_directory = 'data/{}_out'.format(secondary_alg)
+
+if not os.path.exists('data/{}_in'.format(primary_alg))
+    os.makedirs('data/{}_in'.format(primary_alg))
+if not os.path.exists('data/{}_out'.format(primary_alg))
+    os.makedirs('data/{}_out'.format(primary_alg))
+if not os.path.exists('data/{}_in'.format(secondary_alg))
+    os.makedirs('data/{}_in'.format(secondary_alg))
+if not os.path.exists('data/{}_out'.format(secondary_alg))
+    os.makedirs('data/{}_out'.format(secondary_alg))
 
 
 
