@@ -102,7 +102,7 @@ def ota_algorithm(user_array):
     k=0
     alg_rows = len(alg_array[0][:])
     print(alg_rows)
-    print(str(alg_array[k][3]))
+    print(alg_array[0][3])
     #print(alg_array)
     while k < alg_rows:
         if str(alg_array[k][1]) == user_array[0]:
