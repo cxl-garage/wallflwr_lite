@@ -114,7 +114,7 @@ def ota_algorithm(user_array):
                     os.system(labels)
                     alg_array[k][5] = 'False'
                 if alg_array[k][12] != '':
-                    if alg_array[k][13] = 'True':
+                    if alg_array[k][13] == 'True':
                         secondary_algorithm = alg_array[k][12]
                         model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(secondary_algorithm, secondary_algorithm)
                         labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(secondary_algorithm, secondary_algorithm)
