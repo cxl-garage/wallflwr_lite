@@ -104,7 +104,7 @@ def savetofeather(array,directory,name):
 def ota_algorithm(user_array):
     alg_array  = 'gsutil cp gs://cxl_tflite/{}_config ../models/{}_config'.format(user_array[0],user_array[0])
     os.system(alg_array)
-    alg_array = pd.readfeather('../models/{}_config'.format(user_array[0]), columns=None,use_threads=True)
+    alg_array = pd.read_feather('../models/{}_config'.format(user_array[0]), columns=None,use_threads=True)
     print(alg_array)
     #alg_rows, alg_columns = alg_array.size
     #print(alg_array)
