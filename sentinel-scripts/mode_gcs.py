@@ -10,6 +10,7 @@ import keyboard
 from threading import Timer
 import csv
 from pathlib import Path
+import pandas as pd
 
 def gcp_init():
     try:
@@ -94,10 +95,17 @@ def upload_images_gcp(directory,bucket):
             print(str)
             os.system(str)
 
+def savetofeather(array,directory,name):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    feather_filename = '{}/{}'.format(directory,name)
+    array.to_feather(feather_filename)
+
 def ota_algorithm(user_array):
-    alg_array  = 'gsutil cp gs://cxl_tflite/{}_config.csv ../models/{}_config.csv'.format(user_array[0],user_array[0])
+    alg_array  = 'gsutil cp gs://cxl_tflite/{}_config ../models/{}_config'.format(user_array[0],user_array[0])
     os.system(alg_array)
-    alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]), delimiter=',',dtype='str')
+    alg_array = pd.readfeather('../models/{}_config'.format(user_array[0]), columns=None,use_threads=True)
+    print(alg_array)
     #alg_rows, alg_columns = alg_array.size
     #print(alg_array)
     #print(len(alg_array[:]))
@@ -108,7 +116,7 @@ def ota_algorithm(user_array):
             if alg_array[k][3] == user_array[1]:
                 if alg_array[k][5] == 'True':
                     primary_algorithm = alg_array[k][4]
-                    model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(primary_algorithm, primary_algorithm)
+                    model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}-tiny.tflite'.format(primary_algorithm, primary_algorithm)
                     labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(primary_algorithm, primary_algorithm)
                     os.system(model)
                     os.system(labels)
@@ -122,8 +130,7 @@ def ota_algorithm(user_array):
                         os.system(labels)
                         alg_array[k][13] = 'False'
         k = k+1
-    np.savetxt('../models/{}_config.csv'.format(user_array[0]),alg_array, delimiter=',',dtype='U6')
-    alg_array  = 'gsutil cp ../models/{}_config.csv gs://cxl_tflite/{}_config.csv'.format(user_array[0],user_array[0])
+    savetofeather(alg_array, '../models','/{}_config'.format(user_array[0]))
+    alg_array  = 'gsutil cp ../models/{}_config gs://cxl_tflite/{}_config'.format(user_array[0],user_array[0])
     os.system(alg_array)
-    print('Successful update
-    ')
+    print('Successful update')

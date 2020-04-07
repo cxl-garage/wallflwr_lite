@@ -16,7 +16,7 @@ from time import strftime
 import argparse
 from time import process_time
 from mode_gcs import ota_algorithm, gcp_init
-
+import pandas as pd
 ## Master Script for CXL Camera Trap Control
 
 ## Initialization
@@ -28,7 +28,7 @@ ota_algorithm(user_array)
 print('Please note that we do not currently support parallel algorithms')
 
 
-alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]), delimiter=',',dtype='str',skip_header=1)
+alg_array = pd.readfeather('../models/{}_config'.format(user_array[0]), columns=None,use_threads=True)
 primary_alg = alg_array[4]
 secondary_alg = alg_array[12]
 primary_model = '../models/{}.tflite'.format(primary_alg)
@@ -77,8 +77,8 @@ background_subtraction = ''
 current_background = ''
 primary_resolution = (2592,1944)
 secondary_resolution = (300,400)
-primary_model_resolution = (432,324)
-secondary_model_resolution = (300,400)
+primary_model_resolution = (416,416)
+secondary_model_resolution = (416,416)
 ai_sensitivity = 0.3
 lora_counter = 0
 image_burst = 3
