@@ -100,8 +100,8 @@ def ota_algorithm(user_array):
     os.system(alg_array)
     alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]),dtype='str',delimiter=',',skip_header=1)
     print(alg_array)
-    print(alg_array.item((0,5)))
-    print(alg_array[0,5])
+    print(alg_array.item((0,4)))
+    print(alg_array[0,4])
     #alg_rows, alg_columns = alg_array.size
     #print(alg_array)
     #print(len(alg_array[:]))
@@ -110,8 +110,7 @@ def ota_algorithm(user_array):
     while k < 2:
         if alg_array.item((k,1)) == user_array[0]:
             if alg_array.item((k,3)) == user_array[1]:
-                print(alg_array.item((k,5)))
-                if alg_array.item((k,5)) == 'True':
+                if alg_array.item((k,4)) == 'True':
                     primary_algorithm = alg_arrayitem((k,5))
                     model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}-tiny.tflite'.format(primary_algorithm, primary_algorithm)
                     labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(primary_algorithm, primary_algorithm)
