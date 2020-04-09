@@ -124,7 +124,8 @@ def ota_algorithm(user_array):
                         os.system(labels)
                         alg_array[k][13] = 'False'
         k = k+1
-    savetofeather(alg_array, '../models','/{}_config'.format(user_array[0]))
-    alg_array  = 'gsutil cp ../models/{}_config gs://cxl_tflite/{}_config'.format(user_array[0],user_array[0])
+
+    np.savetxt('../models','/{}_config.csv'.format(user_array[0]),alg_array,fmt='str')
+    alg_array  = 'gsutil cp ../models/{}_config.csv gs://cxl_tflite/{}_config'.format(user_array[0],user_array[0])
     os.system(alg_array)
     print('Successful update')
