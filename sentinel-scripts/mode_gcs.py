@@ -130,7 +130,7 @@ def ota_algorithm(user_array):
                     #alg_array[k,13] = 'False'
         k = k+1
 
-    np.savetxt('../models','/{}_config.csv'.format(user_array[0]),alg_array,fmt="%s")
+    np.savetxt('../models','/{}_config.csv'.format(user_array[0]),alg_array)
     alg_array  = 'gsutil cp ../models/{}_config.csv gs://cxl_tflite/{}_config'.format(user_array[0],user_array[0])
     os.system(alg_array)
     print('Successful update')
