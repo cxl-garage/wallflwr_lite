@@ -103,7 +103,7 @@ def savetofeather(array,directory,name):
 def ota_algorithm(user_array):
     alg_array  = 'gsutil cp gs://cxl_tflite/{}_config.csv ../models/{}_config.csv'.format(user_array[0],user_array[0])
     os.system(alg_array)
-    alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]), names=True)
+    alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]))#, names=True)
     print(alg_array)
     #alg_rows, alg_columns = alg_array.size
     #print(alg_array)
