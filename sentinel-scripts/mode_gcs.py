@@ -123,7 +123,7 @@ def ota_algorithm(user_array):
                         labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(secondary_algorithm, secondary_algorithm)
                         os.system(model)
                         os.system(labels)
-                        alg_array.[k,13] = 'False'
+                        alg_array[k,13] = 'False'
         k = k+1
 
     np.savetxt('../models','/{}_config.csv'.format(user_array[0]),alg_array,fmt="%s")
