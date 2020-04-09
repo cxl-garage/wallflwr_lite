@@ -106,23 +106,23 @@ def ota_algorithm(user_array):
     k=1
     #print(alg_array[1])
     while k < 2:
-        if alg_array[k][1] == user_array[0]:
-            if alg_array[k][3] == user_array[1]:
-                if alg_array[k][5] == 'True':
-                    primary_algorithm = alg_array[k][4]
+        if alg_array.item((k,1)) == user_array[0]:
+            if alg_array.item((k,3)) == user_array[1]:
+                if alg_array.item((k,5)) == 'True':
+                    primary_algorithm = alg_arrayitem((k,5))
                     model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}-tiny.tflite'.format(primary_algorithm, primary_algorithm)
                     labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(primary_algorithm, primary_algorithm)
                     os.system(model)
                     os.system(labels)
-                    alg_array[k][5] = 'False'
-                if alg_array[k][12] != '':
-                    if alg_array[k][13] == 'True':
-                        secondary_algorithm = alg_array[k][12]
+                    alg_array.item((k,5)) = 'False'
+                if alg_array.item((k,12)) != '':
+                    if alg_array.item((k,13)) == 'True':
+                        secondary_algorithm = alg_array.item((k,12))
                         model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(secondary_algorithm, secondary_algorithm)
                         labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(secondary_algorithm, secondary_algorithm)
                         os.system(model)
                         os.system(labels)
-                        alg_array[k][13] = 'False'
+                        alg_array.item((k,13)) = 'False'
         k = k+1
 
     np.savetxt('../models','/{}_config.csv'.format(user_array[0]),alg_array,fmt="%s")
