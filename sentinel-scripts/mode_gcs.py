@@ -100,6 +100,8 @@ def ota_algorithm(user_array):
     os.system(alg_array)
     alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]),dtype='str',delimiter=',',skip_header=1)
     print(alg_array)
+    print(alg_array.item((k,5)))
+    print(alg_array[k,5])
     #alg_rows, alg_columns = alg_array.size
     #print(alg_array)
     #print(len(alg_array[:]))
