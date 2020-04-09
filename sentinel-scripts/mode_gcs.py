@@ -108,6 +108,7 @@ def ota_algorithm(user_array):
     while k < 2:
         if alg_array.item((k,1)) == user_array[0]:
             if alg_array.item((k,3)) == user_array[1]:
+                print(alg_array.item((k,5)))
                 if alg_array.item((k,5)) == 'True':
                     primary_algorithm = alg_arrayitem((k,5))
                     model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}-tiny.tflite'.format(primary_algorithm, primary_algorithm)
