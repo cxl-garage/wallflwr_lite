@@ -16,7 +16,6 @@ from time import strftime
 import argparse
 from time import process_time
 from mode_gcs import ota_algorithm, gcp_init
-import pandas as pd
 ## Master Script for CXL Camera Trap Control
 
 ## Initialization
