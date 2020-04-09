@@ -104,30 +104,30 @@ def ota_algorithm(user_array):
     print(alg_array[0,4])
     #alg_rows, alg_columns = alg_array.size
     #print(alg_array)
-    print(len(alg_array[:,0]))
+    #print(len(alg_array[:,0]))
     k=0
     #print(alg_array[1])
-    while k < 2:
+    while k < len(alg_array[:,0]):
         if alg_array.item((k,1)) == user_array[0]:
-            print('1')
-            if alg_array.item((k,3)) == user_array[1]:
-                print('2')
-                if alg_array.item((k,4)) == 'True':
-                    print('3')
-                    primary_algorithm = alg_arrayitem((k,5))
+            print('User')
+            if alg_array.item((k,4)) == 'True':
+                print('Update Necessary')
+                if alg_array.item((k,3)) == user_array[1]:
+                    print('Device Found')
+                    primary_algorithm = alg_array.item((k,5))
                     model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}-tiny.tflite'.format(primary_algorithm, primary_algorithm)
                     labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(primary_algorithm, primary_algorithm)
                     os.system(model)
                     os.system(labels)
-                    alg_array[k,5] = 'False'
-                if alg_array.item((k,12)) != '':
-                    if alg_array.item((k,13)) == 'True':
-                        secondary_algorithm = alg_array.item((k,12))
-                        model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(secondary_algorithm, secondary_algorithm)
-                        labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(secondary_algorithm, secondary_algorithm)
-                        os.system(model)
-                        os.system(labels)
-                        alg_array[k,13] = 'False'
+                    alg_array[k,4] = 'False'
+                if alg_array.item((k,13)) != '':
+                    print('Secondary Algorithm Found')
+                    secondary_algorithm = alg_array.item((k,12))
+                    model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(secondary_algorithm, secondary_algorithm)
+                    labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(secondary_algorithm, secondary_algorithm)
+                    os.system(model)
+                    os.system(labels)
+                    #alg_array[k,13] = 'False'
         k = k+1
 
     np.savetxt('../models','/{}_config.csv'.format(user_array[0]),alg_array,fmt="%s")
