@@ -94,16 +94,11 @@ def upload_images_gcp(directory,bucket):
             print(str)
             os.system(str)
 
-def savetofeather(array,directory,name):
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    feather_filename = '{}/{}'.format(directory,name)
-    array.to_feather(feather_filename)
 
 def ota_algorithm(user_array):
     alg_array  = 'gsutil cp gs://cxl_tflite/{}_config.csv ../models/{}_config.csv'.format(user_array[0],user_array[0])
     os.system(alg_array)
-    alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]),dtype='str')
+    alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]),dtype='str',delimiter=',')
     print(alg_array)
     #alg_rows, alg_columns = alg_array.size
     #print(alg_array)
