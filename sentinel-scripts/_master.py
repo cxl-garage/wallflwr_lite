@@ -52,7 +52,7 @@ secondary_models = []
 secondary_labels = []
 secondary_data_directories = []
 secondary_results_directories = []
-if secondary_alg != []:
+if secondary_algs != []:
     while k < len(secondary_algs):
         secondary_alg = secondary_algs[k]
         secondary_model = '../models/{}.tflite'.format(secondary_alg)
