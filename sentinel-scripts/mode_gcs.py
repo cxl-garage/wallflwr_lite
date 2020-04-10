@@ -118,7 +118,9 @@ def ota_algorithm(user_array):
                 if alg_array.item((k,3)) == user_array[1]:
                     print('Device {} Confirmed'.format(user_array[1]))
                     primary_algorithm = alg_array.item((k,5))
-                    if primary_algorithm != any(downloaded):
+                    if primary_algorithm == any(downloaded):
+                        print('Already Downloaded!')
+                    else:
                         primary_algorithms.append(primary_algorithm)
                         model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}-tiny.tflite'.format(primary_algorithm, primary_algorithm)
                         labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(primary_algorithm, primary_algorithm)
@@ -126,12 +128,12 @@ def ota_algorithm(user_array):
                         os.system(labels)
                         alg_array[k,4] = 'False'
                         downloaded.append(primary_algorithm)
-                    else:
-                        print('Already Downloaded!')
                 if alg_array.item((k,13)) != '':
                     print('Secondary Algorithm Found')
                     secondary_algorithm = alg_array.item((k,12))
-                    if secondary_algorithm != any(downloaded):
+                    if secondary_algorithm == any(downloaded):
+                        print('Already Downloaded')
+                    else:
                         secondary_algorithms.append(secondary_algorithm)
                         model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(secondary_algorithm, secondary_algorithm)
                         labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(secondary_algorithm, secondary_algorithm)
@@ -139,8 +141,6 @@ def ota_algorithm(user_array):
                         os.system(labels)
                         downloaded.append(primary_algorithm)
                         #alg_array[k,13] = 'False'
-                    else:
-                        print('Already Downloaded')
         k = k+1
 
     np.savetxt('../models/{}_config.csv'.format(user_array[0]),alg_array, fmt='%5s',delimiter = ',')

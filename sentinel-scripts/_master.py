@@ -156,27 +156,31 @@ if sys.version_info[0] < 3:
 
 
 # Clear directory_list
-if clear_directories == 1:
-    t_now = datetime.now().strftime("%Y%m%d_%H%M")
+#if clear_directories == 1:
+#    t_now = datetime.now().strftime("%Y%m%d_%H%M")
+#    k = 0
+#    while k<len(primary_results_directories):
+#        primary_data_files = os.listdir(primary_data_directories[k])
+#        n_primary_data_folder = os.path.join(primary_data_directories[k],t_now)
+#        if not os.path.exists(n_primary_data_folder):
+#            os.mkdir(n_primary_data_folder)
+#        for f in primary_data_files :
+#            delete_path = os.path.join(primary_data_directories[k], f)
+#            shutil.move(delete_path,n_primary_data_folder)
+#            #os.remove(path)
+#        k = k+1
 
-    primary_data_files = os.listdir(primary_data_directory)
-    n_primary_data_folder = os.path.join(primary_data_directory,t_now)
-    if not os.path.exists(n_primary_data_folder):
-        os.mkdir(n_primary_data_folder)
-    for f in primary_data_files :
-        delete_path = os.path.join(primary_data_directory, f)
-        shutil.move(delete_path,n_primary_data_folder)
-        #os.remove(path)
 
-
-    if secondary_model != '':
-        secondary_data_files = os.listdir(secondary_data_directory)
-        n_secondary_data_folder = os.path.join(secondary_data_directory,t_now)
-        if not os.path.exists(n_secondary_data_folder):
-            os.mkdir(n_secondary_data_folder)
-        for f in secondary_data_files :
-            path = os.path.join(secondary_data_directory, f)
-            shutil.move(path,n_secondary_data_folder)
+#    if secondary_models != []:
+#        k=0
+#        while k<len(secondary_models[])
+#        secondary_data_files = os.listdir(secondary_data_directory)
+#        n_secondary_data_folder = os.path.join(secondary_data_directory,t_now)
+#        if not os.path.exists(n_secondary_data_folder):
+#            os.mkdir(n_secondary_data_folder)
+#        for f in secondary_data_files :
+#            path = os.path.join(secondary_data_directory, f)
+#            shutil.move(path,n_secondary_data_folder)
 
 
 
