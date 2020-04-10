@@ -27,12 +27,12 @@ ota_algorithm(user_array)
 print('Please note that we do not currently support parallel algorithms')
 
 
-alg_array = pd.readfeather('../models/{}_config'.format(user_array[0]), columns=None,use_threads=True)
-primary_alg = alg_array[4]
-secondary_alg = alg_array[12]
+alg_array = alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]),dtype='str',delimiter=',',skip_header=1)
+primary_alg = alg_array[0,4]
+secondary_alg = alg_array[0,13]
 primary_model = '../models/{}.tflite'.format(primary_alg)
 primary_labels = '../models/{}.txt'.format(primary_alg)
-if alg_array[12] != '':
+if alg_array[0,13] != '':
     secondary_model = '../models/{}.tflite'.format(secondary_alg)
     secondary_labels = '../models/{}.txt'.format(secondary_alg)
 

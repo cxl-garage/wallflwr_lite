@@ -110,6 +110,7 @@ def ota_algorithm(user_array):
     while k < len(alg_array[:,0]):
         if alg_array.item((k,1)) == user_array[0]:
             print('User')
+
             if alg_array.item((k,4)) == 'True':
                 print('Update Necessary')
                 if alg_array.item((k,3)) == user_array[1]:
@@ -130,7 +131,7 @@ def ota_algorithm(user_array):
                     #alg_array[k,13] = 'False'
         k = k+1
 
-    np.savetxt('../models','/{}_config.csv'.format(user_array[0]),alg_array)
+    np.savetxt('../models/{}_config.csv'.format(user_array[0]),alg_array)
     alg_array  = 'gsutil cp ../models/{}_config.csv gs://cxl_tflite/{}_config'.format(user_array[0],user_array[0])
     os.system(alg_array)
     print('Successful update')
