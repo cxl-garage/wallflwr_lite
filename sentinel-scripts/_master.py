@@ -22,32 +22,52 @@ from mode_gcs import ota_algorithm, gcp_init
 
 user_array = gcp_init()
 print(user_array)
-primary_alg, secondary_alg = ota_algorithm(user_array)
+primary_algs, secondary_algs = ota_algorithm(user_array)
 
 print('Please note that we do not currently support parallel algorithms')
 
+k = 0
+primary_models = []
+primary_labels = []
+primary_data_directories = []
+primary_results_directories = []
+while k < len(primary_algs):
+    primary_alg = primary_algs[k]
+    primary_models[k] = '../models/{}.tflite'.format(primary_alg)
+    primary_labels[k] = '../models/{}.txt'.format(primary_alg)
+    primary_data_directory = 'data/{}_in'.format(primary_alg) #'/home/sam/AI_Training/deer_train'
+    primary_results_directory = 'data/{}_out'.format(primary_alg)
+    if not os.path.exists('data/{}_in'.format(primary_alg)):
+        os.makedirs('data/{}_in'.format(primary_alg))
+    if not os.path.exists('data/{}_out'.format(primary_alg)):
+        os.makedirs('data/{}_out'.format(primary_alg))
+    primary_models.append(primary_model)
+    primary_labels.append(primary_label)
+    primary_data_directories.append(primary_data_directory)
+    primary_results_directories.append(primary_results_directory)
+    k = k+1
 
-primary_model = '../models/{}.tflite'.format(primary_alg)
-primary_labels = '../models/{}.txt'.format(primary_alg)
-if alg_array[0,13] != '':
-    secondary_model = '../models/{}.tflite'.format(secondary_alg)
-    secondary_labels = '../models/{}.txt'.format(secondary_alg)
-
-
-primary_data_directory = 'data/{}_in'.format(primary_alg) #'/home/sam/AI_Training/deer_train'
-primary_results_directory = 'data/{}_out'.format(primary_alg)
-
-secondary_data_directory = 'data/{}_in'.format(secondary_alg)
-secondary_results_directory = 'data/{}_out'.format(secondary_alg)
-
-if not os.path.exists('data/{}_in'.format(primary_alg)):
-    os.makedirs('data/{}_in'.format(primary_alg))
-if not os.path.exists('data/{}_out'.format(primary_alg)):
-    os.makedirs('data/{}_out'.format(primary_alg))
-if not os.path.exists('data/{}_in'.format(secondary_alg)):
-    os.makedirs('data/{}_in'.format(secondary_alg))
-if not os.path.exists('data/{}_out'.format(secondary_alg)):
-    os.makedirs('data/{}_out'.format(secondary_alg))
+k = 0
+secondary_models = []
+secondary_labels = []
+secondary_data_directories = []
+secondary_results_directories = []
+if secondary_alg != []:
+    while k < len(secondary_algs):
+        secondary_alg = secondary_algs[k]
+        secondary_model = '../models/{}.tflite'.format(secondary_alg)
+        secondary_label = '../models/{}.txt'.format(secondary_alg)
+        secondary_data_directory = 'data/{}_in'.format(secondary_alg)
+        secondary_results_directory = 'data/{}_out'.format(secondary_alg)
+        if not os.path.exists('data/{}_in'.format(secondary_alg)):
+            os.makedirs('data/{}_in'.format(secondary_alg))
+        if not os.path.exists('data/{}_out'.format(secondary_alg)):
+            os.makedirs('data/{}_out'.format(secondary_alg))
+        secondary_models.append(secondary_model)
+        secondary_labels.append(secondary_label)
+        secondary_data_directories.append(secondary_data_directory)
+        secondary_results_directories.append(secondary_results_directory)
+    k = k+1
 
 
 
@@ -114,28 +134,21 @@ if sys_mode == 'real':
     print('Mode: Real')
     if mcu == 'computer':
         print('Cannot run "real" mode from mcu/vpu = computer')
-if mcu == 'rpi0':
-    primary_labels = os.path.join('../',primary_labels)
-    primary_model  = os.path.join('../',primary_model)
-    primary_data_directory = os.path.join('../', primary_data_directory)
-    primary_results_directory = os.path.join('../', primary_results_directory)
-    secondary_labels = os.path.join('../', secondary_labels)
-    secondary_labels = os.path.join('../',secondary_model)
-    secondary_data_directory = os.path.join('../', secondary_data_directory)
-    secondary_results_directory = os.path.join('../', secondary_results_directory)
-    #primary_format = args.primary_format
+#if mcu == 'rpi0':
+#    primary_labels = os.path.join('../',primary_labels)
+#    primary_model  = os.path.join('../',primary_model)
+#    primary_data_directory = os.path.join('../', primary_data_directory)
+#    primary_results_directory = os.path.join('../', primary_results_directory)
+#    secondary_labels = os.path.join('../', secondary_labels)
+#    secondary_labels = os.path.join('../',secondary_model)
+#    secondary_data_directory = os.path.join('../', secondary_data_directory)
+    #secondary_results_directory = os.path.join('../', secondary_results_directory)
+#    #primary_format = args.primary_format
     #secondary_format = args.secondary_format
     #primary_type = args.primary_type
     #secondary_type = args.secondary_type
     #print('Real Scenario running on RPi Zero')
-if not os.path.exists(primary_data_directory):
-    os.mkdir(primary_data_directory)
-if not os.path.exists(primary_results_directory):
-    os.mkdir(primary_results_directory)
-if not os.path.exists(secondary_data_directory):
-    os.mkdir(secondary_data_directory)
-if not os.path.exists(secondary_results_directory):
-    os.mkdir(secondary_results_directory)
+
 
 
 if sys.version_info[0] < 3:
@@ -191,28 +204,34 @@ while True:
     if timer > ota_freq:
         ota_algorithm(user_array)
     if triggered == 1 :
-        # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
-        print('Spinning up Primary Model', primary_model)
-        #[primary_class, primary_confidence, primary_output_file] = ...
-        primary_class, primary_confidence = mode_cnn.cnn(sys_mode, mcu, \
-        primary_format, camera, args.rgb_res, \
-        primary_type, args.pcnn_res, primary_model, primary_labels, \
-        primary_data_directory, primary_results_directory, \
-        current_background, args.sensitivity, max_images)
-        #print('Model Complete')
-        #print('Insert Code to Save Array in way that can be parsed for LoRa')
-        #print('NOTE: CROPPED IMAGES AND .CSV RESULTS FILE ARE SAVED IN /DATA/RESULTS FOLDER ')
-
-        # Run Secondary Model (if it exists)
-        if secondary_model :
-            #[secondary_class, secondary_confidence, secondary_output_file] = ...
-            secondary_class, secondary_confidence = mode_cnn.main(sys_mode, mcu, \
-            secondary_format, camera, args.rgb_res,\
-            secondary_type, args.scnn_res, secondary_model_resolution, secondary_model, secondary_labels,\
-            primary_results_directory, secondary_results_directory,
+        k=0
+        while k<len(primary_algs):
+            # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
+            print('Spinning up Primary Model', primary_model)
+            #[primary_class, primary_confidence, primary_output_file] = ...
+            primary_class, primary_confidence = mode_cnn.cnn(sys_mode, mcu, \
+            primary_format, camera, args.rgb_res, \
+            primary_type, args.pcnn_res, primary_models[k], primary_labels[k], \
+            primary_data_directories[k], primary_results_directories[k], \
             current_background, args.sensitivity, max_images)
-            print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
-        # Run LoRa communication with outputs from primary algorithm
+            #print('Model Complete')
+            #print('Insert Code to Save Array in way that can be parsed for LoRa')
+            #print('NOTE: CROPPED IMAGES AND .CSV RESULTS FILE ARE SAVED IN /DATA/RESULTS FOLDER ')
+
+            # Run Secondary Model (if it exists)
+            if secondary_model :
+                #[secondary_class, secondary_confidence, secondary_output_file] = ...
+                secondary_class, secondary_confidence = mode_cnn.main(sys_mode, mcu, \
+                secondary_format, camera, args.rgb_res,\
+                secondary_type, args.scnn_res, secondary_model_resolution, secondary_models[k], secondary_labels[k],\
+                primary_results_directories[k], secondary_results_directories[k],
+                current_background, args.sensitivity, max_images)
+                print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
+            # Run LoRa communication with outputs from primary algorithm
+            if comms_type != '' and primary_confidence > ai_sensitivity:
+                mode_comms.main(primary_class, primary_confidence, secondary_class, secondary_confidence, device_identifier, comms_type, comms_backend)
+                t_lorawan = 0
+            k = k+1
         if sys_mode == 'test':
             sys.exit('Completed Scenario')
         if sys_mode == 'real':
@@ -222,6 +241,3 @@ while True:
     #    current_background = mode_background.main()
     #    t_background = 0
     #if trigger_check == 0 and t_lorawan != 0 and time > t_lorawan :
-    if comms_type != '' and primary_confidence > ai_sensitivity:
-        mode_comms.main(primary_class, primary_confidence, secondary_class, secondary_confidence, device_identifier, comms_type, comms_backend)
-        t_lorawan = 0
