@@ -122,7 +122,7 @@ def ota_algorithm(user_array):
                         print('Already Downloaded!')
                     else:
                         primary_algorithms.append(primary_algorithm)
-                        model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}-tiny.tflite'.format(primary_algorithm, primary_algorithm)
+                        model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(primary_algorithm, primary_algorithm)
                         labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(primary_algorithm, primary_algorithm)
                         os.system(model)
                         os.system(labels)
