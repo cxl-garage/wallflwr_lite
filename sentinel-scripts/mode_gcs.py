@@ -122,6 +122,7 @@ def ota_algorithm(user_array):
                         print('Already Downloaded!')
                     else:
                         primary_algorithms.append(primary_algorithm)
+                        print(primary_algorithm)
                         model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(primary_algorithm, primary_algorithm)
                         labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(primary_algorithm, primary_algorithm)
                         os.system(model)
@@ -144,7 +145,7 @@ def ota_algorithm(user_array):
         k = k+1
 
     np.savetxt('../models/{}_config.csv'.format(user_array[0]),alg_array, fmt='%5s',delimiter = ',')
-    alg_array  = 'gsutil cp ../models/{}_config.csv gs://cxl_tflite/{}_config'.format(user_array[0],user_array[0])
+    alg_array  = 'gsutil cp ../models/{}_config.csv gs://cxl_tflite/{}_config.csv'.format(user_array[0],user_array[0])
     os.system(alg_array)
     print('Successful update')
     return primary_algorithms, secondary_algorithms
