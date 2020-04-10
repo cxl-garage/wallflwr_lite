@@ -27,8 +27,9 @@ ota_algorithm(user_array)
 print('Please note that we do not currently support parallel algorithms')
 
 
-alg_array = alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]),dtype='str',delimiter=',',skip_header=1)
+alg_array = alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]),dtype='str',delimiter=',')
 print(alg_array)
+print(alg_array.size())
 primary_alg = alg_array[0,4]
 secondary_alg = alg_array[0,13]
 primary_model = '../models/{}.tflite'.format(primary_alg)
