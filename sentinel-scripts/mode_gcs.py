@@ -105,6 +105,8 @@ def ota_algorithm(user_array):
     #alg_rows, alg_columns = alg_array.size
     #print(alg_array)
     #print(len(alg_array[:,0]))
+    primary_algorithm = []
+    secondary_algorithm = []
     k=1
     #print(alg_array[1])
     while k < len(alg_array[:,0]):
@@ -114,7 +116,7 @@ def ota_algorithm(user_array):
                 print('Update Necessary')
                 if alg_array.item((k,3)) == user_array[1]:
                     print('Device {} Confirmed'.format(user_array[1]))
-                    primary_algorithm = alg_array.item((k,5))
+                    primary_algorithm.append(alg_array.item((k,5)))
                     model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}-tiny.tflite'.format(primary_algorithm, primary_algorithm)
                     labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(primary_algorithm, primary_algorithm)
                     os.system(model)
@@ -122,7 +124,7 @@ def ota_algorithm(user_array):
                     alg_array[k,4] = 'False'
                 if alg_array.item((k,13)) != '':
                     print('Secondary Algorithm Found')
-                    secondary_algorithm = alg_array.item((k,12))
+                    secondary_algorithm.append(alg_array.item((k,12)))
                     model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(secondary_algorithm, secondary_algorithm)
                     labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(secondary_algorithm, secondary_algorithm)
                     os.system(model)
@@ -130,7 +132,8 @@ def ota_algorithm(user_array):
                     #alg_array[k,13] = 'False'
         k = k+1
 
-    np.savetxt('../models/{}_config.csv'.format(user_array[0]),alg_array, fmt='%5s')
+    np.savetxt('../models/{}_config.csv'.format(user_array[0]),alg_array, fmt='%5s',delimiter = ',')
     alg_array  = 'gsutil cp ../models/{}_config.csv gs://cxl_tflite/{}_config'.format(user_array[0],user_array[0])
     os.system(alg_array)
     print('Successful update')
+    return primary_algorithm, secondary_algorithm

@@ -22,18 +22,11 @@ from mode_gcs import ota_algorithm, gcp_init
 
 user_array = gcp_init()
 print(user_array)
-ota_algorithm(user_array)
+primary_alg, secondary_alg = ota_algorithm(user_array)
 
 print('Please note that we do not currently support parallel algorithms')
 
 
-alg_array = alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]),dtype='str',delimiter=',')
-print(alg_array)
-print(alg_array[1])
-print(alg_array[1][2])
-print(alg_array.size())
-primary_alg = alg_array[0,4]
-secondary_alg = alg_array[0,13]
 primary_model = '../models/{}.tflite'.format(primary_alg)
 primary_labels = '../models/{}.txt'.format(primary_alg)
 if alg_array[0,13] != '':
