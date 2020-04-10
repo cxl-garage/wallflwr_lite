@@ -98,14 +98,14 @@ def upload_images_gcp(directory,bucket):
 def ota_algorithm(user_array):
     alg_array  = 'gsutil cp gs://cxl_tflite/{}_config.csv ../models/{}_config.csv'.format(user_array[0],user_array[0])
     os.system(alg_array)
-    alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]),dtype='str',delimiter=',',skip_header=1)
+    alg_array = np.genfromtxt('../models/{}_config.csv'.format(user_array[0]),dtype='str',delimiter=',')
     print(alg_array)
     print(alg_array.item((0,4)))
     print(alg_array[0,4])
     #alg_rows, alg_columns = alg_array.size
     #print(alg_array)
     #print(len(alg_array[:,0]))
-    k=0
+    k=1
     #print(alg_array[1])
     while k < len(alg_array[:,0]):
         if alg_array.item((k,1)) == user_array[0]:
