@@ -113,7 +113,7 @@ def ota_algorithm(user_array):
             if alg_array.item((k,4)) == 'True':
                 print('Update Necessary')
                 if alg_array.item((k,3)) == user_array[1]:
-                    print('Device Found')
+                    print('Device {} Confirmed'.format(user_array[1]))
                     primary_algorithm = alg_array.item((k,5))
                     model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}-tiny.tflite'.format(primary_algorithm, primary_algorithm)
                     labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(primary_algorithm, primary_algorithm)
