@@ -200,7 +200,7 @@ while True:
     if sys_mode == 'real': # Actual camera scenario
         triggered = mode_sentinel.main(camera, trigger, trigger_check, \
         trigger_sensitivity, args.rgb_res,image_burst, primary_type, primary_data_directory)
-
+        print(triggered)
     toc = process_time()
     timer = toc - tic
     k=0
