@@ -32,7 +32,7 @@ primary_labels = []
 primary_data_directories = []
 primary_results_directories = []
 primary_data_directory = 'data/data_in'
-if not os.path.exists('data/data_in'.):
+if not os.path.exists('data/data_in'):
     os.makedirs('data/data_in')
 while k < len(primary_algs):
     primary_alg = primary_algs[k]
