@@ -31,11 +31,13 @@ primary_models = []
 primary_labels = []
 primary_data_directories = []
 primary_results_directories = []
+primary_data_directory = 'data/data_in'
+if not os.path.exists('data/data_in'.):
+    os.makedirs('data/data_in')
 while k < len(primary_algs):
     primary_alg = primary_algs[k]
     primary_model = '../models/{}.tflite'.format(primary_alg)
     primary_label = '../models/{}.txt'.format(primary_alg)
-    primary_data_directory = 'data/{}_in'.format(primary_alg) #'/home/sam/AI_Training/deer_train'
     primary_results_directory = 'data/{}_out'.format(primary_alg)
     if not os.path.exists('data/{}_in'.format(primary_alg)):
         os.makedirs('data/{}_in'.format(primary_alg))
@@ -43,7 +45,6 @@ while k < len(primary_algs):
         os.makedirs('data/{}_out'.format(primary_alg))
     primary_models.append(primary_model)
     primary_labels.append(primary_label)
-    primary_data_directories.append(primary_data_directory)
     primary_results_directories.append(primary_results_directory)
     k = k+1
 
