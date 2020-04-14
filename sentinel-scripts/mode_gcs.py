@@ -143,6 +143,8 @@ def ota_algorithm(user_array):
                         os.system(labels)
                         downloaded.append(primary_algorithm)
                         #alg_array[k,13] = 'False'
+            if alg_array.item((k,4)) == 'False':
+                print('Update Not Necessary')
         k = k+1
 
     np.savetxt('../models/{}_config.csv'.format(user_array[0]),alg_array, fmt='%5s',delimiter = ',')
