@@ -21,7 +21,8 @@ from mode_gcs import ota_algorithm, gcp_init,device_setup
 ## Initialization
 
 #user_array = gcp_init()
-user_array = device_setup()
+#user_array = device_setup()
+user_array = np.load('user_details.npy')
 print(user_array)
 primary_algs, secondary_algs = ota_algorithm(user_array)
 
