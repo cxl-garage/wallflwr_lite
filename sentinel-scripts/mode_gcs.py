@@ -114,15 +114,17 @@ def ota_algorithm(user_array):
     while k < len(alg_array[:,0]):
         if user_array[0] in alg_array.item((k,1)):
             print('User: {}'.format(user_array[0]))
-            if alg_array.item((k,4)) == 'True':
-                print('Update Necessary')
-                if alg_array.item((k,3)) == user_array[1]:
-                    print('Device {} Confirmed'.format(user_array[1]))
-                    primary_algorithm = alg_array.item((k,5))
+            if alg_array.item((k,3)) == user_array[1]:
+                print('Device {} Confirmed'.format(user_array[1]))
+                primary_algorithm = alg_array.item((k,5))
+                primary_algorithms.append(primary_algorithm)
+                if alg_array.item((k,4)) == 'False':
+                    print('Update not necessary')
+                if alg_array.item((k,4)) == 'True':
+                    print('Update Necessary')
                     if primary_algorithm == any(downloaded):
                         print('Already Downloaded!')
                     else:
-                        primary_algorithms.append(primary_algorithm)
                         print(primary_algorithm)
                         model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(primary_algorithm, primary_algorithm)
                         labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(primary_algorithm, primary_algorithm)
@@ -130,21 +132,20 @@ def ota_algorithm(user_array):
                         os.system(labels)
                         alg_array[k,4] = 'False'
                         downloaded.append(primary_algorithm)
-                if alg_array.item((k,13)) != '':
-                    print('Secondary Algorithm Found')
-                    secondary_algorithm = alg_array.item((k,12))
-                    if secondary_algorithm == any(downloaded):
-                        print('Already Downloaded')
-                    else:
+                    if alg_array.item((k,13)) != '':
+                        secondary_algorithm = alg_array.item((k,12))
                         secondary_algorithms.append(secondary_algorithm)
-                        model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(secondary_algorithm, secondary_algorithm)
-                        labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(secondary_algorithm, secondary_algorithm)
-                        os.system(model)
-                        os.system(labels)
-                        downloaded.append(primary_algorithm)
-                        #alg_array[k,13] = 'False'
-            if alg_array.item((k,4)) == 'False':
-                print('Update Not Necessary')
+                        print('Secondary Algorithm Found')
+                        if secondary_algorithm == any(downloaded):
+                            print('Already Downloaded')
+                        else:
+                            model  = 'gsutil cp gs://cxl_tflite/{}.tflite ../models/{}.tflite'.format(secondary_algorithm, secondary_algorithm)
+                            labels = 'gsutil cp gs://cxl_tflite/{}.txt ../models/{}.txt'.format(secondary_algorithm, secondary_algorithm)
+                            os.system(model)
+                            os.system(labels)
+                            downloaded.append(primary_algorithm)
+                            #alg_array[k,13] = 'False'
+
         k = k+1
 
     np.savetxt('../models/{}_config.csv'.format(user_array[0]),alg_array, fmt='%5s',delimiter = ',')
