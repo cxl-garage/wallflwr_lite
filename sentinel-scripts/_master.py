@@ -215,6 +215,7 @@ while True:
     print('Triggered: {}'.format(triggered))
     if triggered == 1 :
         k=0
+        print('Algorithms: {}'.format(primary_algs))
         while k<len(primary_algs):
             # Run Primary Model, which identifies/classifies species + confidence, and saves recorded and boxed images
             print('Spinning up Primary Model', primary_model)
