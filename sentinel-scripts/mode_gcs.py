@@ -111,7 +111,7 @@ def ota_algorithm(user_array):
     k=1
     #print(alg_array[1])
     while k < len(alg_array[:,0]):
-        if alg_array.item((k,1)) == user_array[0]:
+        if (alg_array.item((k,1))).strip == user_array[0]:
             print('User: {}'.format(user_array[0]))
             if alg_array.item((k,4)) == 'True':
                 print('Update Necessary')
