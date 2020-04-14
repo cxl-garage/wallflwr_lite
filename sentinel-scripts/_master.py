@@ -26,6 +26,9 @@ user_array = np.load('user_details.npy')
 print(user_array)
 primary_algs, secondary_algs = ota_algorithm(user_array)
 
+print('Primary Algorithms: {}'.format(primary_algs))
+print('Secondary Algorithms: {}'.format(secondary_algs))
+
 print('Please note that we do not currently support parallel algorithms')
 
 k = 0
