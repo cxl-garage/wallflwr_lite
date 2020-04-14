@@ -17,11 +17,11 @@ def gcp_init():
         print(user_array)
         print('Welcome back {}'.format(user_array[0]))
         toc = time.process_time()
-        timeout = 2
-        t = Timer(timeout,print,[''])
-        t.start()
-        logout = input('Press enter to change user settings...')
-        t.cancel()
+        #timeout = 2
+        #t = Timer(timeout,print,[''])
+        #t.start()
+        #logout = input('Press enter to change user settings...')
+        #t.cancel()
         if logout in locals():
             _logout = 1
             while _logout:
