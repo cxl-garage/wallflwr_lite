@@ -34,7 +34,7 @@ print('Please note that we do not currently support parallel algorithms')
 k = 0
 primary_models = []
 primary_labels = []
-primary_data_directories = []
+#primary_data_directories = []
 primary_results_directories = []
 primary_data_directory = 'data/data_in'
 if not os.path.exists('data/data_in'):
@@ -210,7 +210,7 @@ while True:
     k=0
     while k<len(primary_algs):
         if timer > draculae_freq:
-            desmodus_draculae.main(primary_type, primary_data_directories[k], local_network, global_network)
+            desmodus_draculae.main(primary_type, primary_data_directory, local_network, global_network)
         k = k + 1
     tic = process_time()
     if timer > ota_freq:
@@ -226,7 +226,7 @@ while True:
             primary_class, primary_confidence = mode_cnn.cnn(sys_mode, mcu, \
             primary_format, camera, args.rgb_res, \
             primary_type, args.pcnn_res, primary_models[k], primary_labels[k], \
-            primary_data_directories[k], primary_results_directories[k], \
+            primary_data_directory, primary_results_directories[k], \
             current_background, args.sensitivity, max_images)
             #print('Model Complete')
             #print('Insert Code to Save Array in way that can be parsed for LoRa')
