@@ -108,10 +108,11 @@ def ota_algorithm(user_array):
     primary_algorithms = []
     secondary_algorithms = []
     downloaded = []
+    print((alg_array.item((k,1))).strip)
     k=1
     #print(alg_array[1])
     while k < len(alg_array[:,0]):
-        if (alg_array.item((k,1))).strip == user_array[0]:
+        if user_array[0] in alg_array.item((k,1)):
             print('User: {}'.format(user_array[0]))
             if alg_array.item((k,4)) == 'True':
                 print('Update Necessary')
