@@ -108,7 +108,7 @@ def ota_algorithm(user_array):
     primary_algorithms = []
     secondary_algorithms = []
     downloaded = []
-    print((alg_array.item((k,1))).strip)
+    print((alg_array.item((1,1))).strip)
     k=1
     #print(alg_array[1])
     while k < len(alg_array[:,0]):
