@@ -113,13 +113,11 @@ def ota_algorithm(user_array):
     #print(alg_array[1])
     while k < len(alg_array[:,0]):
         if user_array[0] in alg_array.item((k,1)):
-            print('User: {}'.format(user_array[0]))
             if alg_array.item((k,3)) == user_array[1]:
-                print('Device {} Confirmed'.format(user_array[1]))
                 primary_algorithm = alg_array.item((k,5))
                 primary_algorithms.append(primary_algorithm)
                 if alg_array.item((k,4)) == 'False':
-                    print('Update not necessary')
+                    print('Update not necessary for {}'.format(primary_algorithm))
                 if alg_array.item((k,4)) == 'True':
                     print('Update Necessary')
                     if primary_algorithm == any(downloaded):
@@ -135,7 +133,7 @@ def ota_algorithm(user_array):
                     if alg_array.item((k,13)) != '':
                         secondary_algorithm = alg_array.item((k,12))
                         secondary_algorithms.append(secondary_algorithm)
-                        print('Secondary Algorithm Found')
+                        print('Secondary Algorithm Found ({})'.format(secondary_algorithm))
                         if secondary_algorithm == any(downloaded):
                             print('Already Downloaded')
                         else:
