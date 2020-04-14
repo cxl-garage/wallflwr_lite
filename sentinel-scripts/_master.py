@@ -15,12 +15,13 @@ from datetime import datetime
 from time import strftime
 import argparse
 from time import process_time
-from mode_gcs import ota_algorithm, gcp_init
+from mode_gcs import ota_algorithm, gcp_init,device_setup
 ## Master Script for CXL Camera Trap Control
 
 ## Initialization
 
-user_array = gcp_init()
+#user_array = gcp_init()
+user_array = device_setup()
 print(user_array)
 primary_algs, secondary_algs = ota_algorithm(user_array)
 
