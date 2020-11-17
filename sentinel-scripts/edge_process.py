@@ -333,6 +333,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                 # Specifying the specific file to be processed
                 file = directory_list[k]
                 logger.info('File: {}'.format(file))
+                k = k + 1
             except Exception as e:
                 k = k + 1
                 break
