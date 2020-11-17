@@ -71,6 +71,8 @@ def get_output_tensor(interpreter, index):
   tensor = np.squeeze(interpreter.get_tensor(output_details['index']))
   return tensor
 
+
+
 ### Function to Save Cropped Images
 def bb_crop(data_directory, file, aoi, result, classes, results_directory, insight_id,class_names):
 
@@ -112,9 +114,15 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, insig
 
     # Saving image to file if the bounded box is sufficiently big
     if right-left > 15 and bottom -top > 15 :
-
-        # Cropping image
-        cropped_im = im.crop((left, top, right, bottom))
+        # this is all some funkiness to reshape everything to a pretty square without distorting (good for gui.py)
+        height = bottom-top
+        width =  right - left
+                    #cropped_im = im.crop((left, top, right, bottom))
+        if height < width:
+            cropped_im = im.crop((left, (top+height/2)-(width/2), right, (top+height/2)+(width/2)))
+        if width <= height:
+            cropped_im = im.crop(((left+(width/2))-(height/2), top, (left+(width/2))+(height/2), bottom))
+        #cropped_im = cropped_im.resize((200,200))
 
         # Checking saving directory exists, and making it if necessary
         if not os.path.exists('{}/{}/cropped/'.format(results_directory,class_names[0][classes])):
