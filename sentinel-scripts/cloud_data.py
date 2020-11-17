@@ -55,9 +55,12 @@ def upload_images():
     #print(x)
     x = x[x['class'] != 'blank']
     x = x.reset_index()
+    if len(x) == 0:
+        logger.warning('No images to upload')
+        return
     k = 0
     device_name = str(os.environ.get('device_name')).replace(" ","_")
-    query = 'gsutil -m cp -r -n "../data/results/{}/{}/cropped/*" "gs://insights-{}/{}/{}/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
+    query = 'gsutil -m cp -r -n "../data/results/{}/{}/*" "gs://insights-{}/{}/{}/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
     os.system(query)
     #query = 'gsutil -m cp -r -n "../data/results/{}/{}/original/*" "gs://insights-{}/{}/{}/original/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
     #os.system(query)
