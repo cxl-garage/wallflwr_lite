@@ -61,6 +61,23 @@ def initialize():
     f = open("../device.name", "r")
     lines = f.readlines()
     os.environ['device_name'] = lines[0]
+    
+    # set up logging to file - see previous section for more details
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                        datefmt='%m-%d %H:%M',
+                        filename='../../logs/{}_actions.log'.format(os.environ.get("device_name")),
+                        filemode='w')
+    # define a Handler which writes INFO messages or higher to the sys.stderr
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    # set a format which is simpler for console use
+    formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+    # tell the handler to use this format
+    console.setFormatter(formatter)
+    # add the handler to the root logger
+    logging.getLogger('').addHandler(console)
+    logger = logging.getLogger('main')
 
     # Check local database exists
     if not os.path.exists('../data/device_insights.csv'):
@@ -91,22 +108,7 @@ def initialize():
     else:
         logger.warning('Internet Connection not available')
 
-    # set up logging to file - see previous section for more details
-    logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                        datefmt='%m-%d %H:%M',
-                        filename='../../logs/{}_actions.log'.format(os.environ.get("device_name")),
-                        filemode='w')
-    # define a Handler which writes INFO messages or higher to the sys.stderr
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    # set a format which is simpler for console use
-    formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
-    # tell the handler to use this format
-    console.setFormatter(formatter)
-    # add the handler to the root logger
-    logging.getLogger('').addHandler(console)
-    logger = logging.getLogger('main')
+
 
     # Loop to run consistently run on RasPi
     if opt.test == False:
