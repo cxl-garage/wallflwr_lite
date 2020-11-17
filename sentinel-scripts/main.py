@@ -225,52 +225,52 @@ if len(os.listdir(data_directory)) == 0:
     logger.warning('No files to process')
 
 ## Process data until there are no data left in the data directory
-while len(os.listdir(data_directory)) != 0:
+#while len(os.listdir(data_directory)) != 0:
 
-    ## Running loop of all algorithms that have to run on device
-    k = 0
-    while k < len(primary_algs):
-        primary_alg = primary_algs.iloc[[k]]
-        logger.info('Model {} Starting'.format(primary_alg['alg_id'][0]))
+## Running loop of all algorithms that have to run on device
+k = 0
+while k < len(primary_algs):
+    primary_alg = primary_algs.iloc[[k]]
+    logger.info('Model {} Starting'.format(primary_alg['alg_id'][0]))
 
-        # Run Primary ALgorithm
-        primary_df = edge_process.main(primary_alg,data_directory,opt.type)
-        logger.info('Model {} Complete'.format(primary_alg['alg_id']))
+    # Run Primary ALgorithm
+    primary_df = edge_process.main(primary_alg,data_directory,opt.type)
+    logger.info('Model {} Complete'.format(primary_alg['alg_id']))
 
-        # Run Secondary Model (if it exists)
-        #if len(secondary_algs)! :
-        #    secondary_df = edge_process.main(secondary_algs,data_directory,opt.type)
-            #print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
+    # Run Secondary Model (if it exists)
+    #if len(secondary_algs)! :
+    #    secondary_df = edge_process.main(secondary_algs,data_directory,opt.type)
+        #print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
 
-        k = k+1
+    k = k+1
 
-    # Delete all processed files from SD Card
-    delete_files()
+# Delete all processed files from SD Card
+delete_files()
 
-    # Run LoRa Routine
-    #lora.main()
+# Run LoRa Routine
+#lora.main()
 
-    # If internet connection exists, upload data to cloud
-    if connect() == True:
+# If internet connection exists, upload data to cloud
+if connect() == True:
 
-        # Upload metadata to SQL database
-        if opt.sql_off == False:
-            cloud_db.insights()
+    # Upload metadata to SQL database
+    if opt.sql_off == False:
+        cloud_db.insights()
 
-        # Upload images to Google Cloud Storage
-        if opt.gcs_off == False:
-            cloud_data.upload_images()
+    # Upload images to Google Cloud Storage
+    if opt.gcs_off == False:
+        cloud_data.upload_images()
 
-        # Send email notification (if requested by SQL table eventually)
-        if opt.email ==True:
-            cloud_data.notification(type=email)
+    # Send email notification (if requested by SQL table eventually)
+    if opt.email ==True:
+        cloud_data.notification(type=email)
 
-        # Send text notification (if requested by SQL table eventually)
-        if opt.text ==True:
-            cloud_data.notification(type=text)
+    # Send text notification (if requested by SQL table eventually)
+    if opt.text ==True:
+        cloud_data.notification(type=text)
 
-    else:
-        logger.warning('Unable to upload to SQL/Google Cloud Storage')
+else:
+    logger.warning('Unable to upload to SQL/Google Cloud Storage')
 
 ## Shut down Raspberry Pi
 device_info = pd.read_csv('../device_info.csv')
