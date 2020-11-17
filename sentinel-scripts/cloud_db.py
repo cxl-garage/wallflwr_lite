@@ -236,6 +236,7 @@ def device_info():
     device_information.to_csv('../_device_info.csv')
     print('Device ID: {}'.format(str(device_information['device_id'][0])))
     os.environ['device_id'] = str(device_information['device_id'][0])
+    os.environ['cycle_time'] = str(device_information['cycle_time'][0])
     os.environ['sudoPW'] = 'endextinction'
 
 ### Upload insights captured on device to SQL DB

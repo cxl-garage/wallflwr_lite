@@ -274,4 +274,4 @@ else:
 
 ## Shut down Raspberry Pi
 device_info = pd.read_csv('../device_info.csv')
-shutdown(device_info['cycle_time'])
+shutdown(os.environ.get("cycle_time"))
