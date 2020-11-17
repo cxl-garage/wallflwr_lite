@@ -152,7 +152,7 @@ def shutdown(cycle_time):
     # Pull the M0 Pin low to communicate sleep length...
     shutdown_pin.value = False
     logger.info('Send command to M0 to shut down')
-    time.sleep(cycle_time/100)
+    time.sleep(int(cycle_time)/100)
     shutdown_pin.value = True
 
     # Pull the M0 Pin low to begin shutdown sequence...
