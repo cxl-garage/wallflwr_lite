@@ -56,10 +56,10 @@ def upload_images():
     x = x[x['class'] != 'blank']
     x = x.reset_index()
     k = 0
-
-    query = 'gsutil -m cp -r -n "../data/results/{}/{}/cropped/*" "gs://insights-{}/{}/{}/cropped/"'.format(int(x['alg_id'][k]),x['class'][k],os.environ.get('device_name'),int(x['alg_id'][k]),x['class'][k])
+    device_name = str(os.environ.get('device_name')).replace(" ","_")
+    query = 'gsutil -m cp -r -n "../data/results/{}/{}/cropped/*" "gs://insights-{}/{}/{}/cropped/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
     os.system(query)
-    query = 'gsutil -m cp -r -n "../data/results/{}/{}/original/*" "gs://insights-{}/{}/{}/original/"'.format(int(x['alg_id'][k]),x['class'][k],os.environ.get('device_name'),int(x['alg_id'][k]),x['class'][k])
+    query = 'gsutil -m cp -r -n "../data/results/{}/{}/original/*" "gs://insights-{}/{}/{}/original/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
     os.system(query)
     insights.loc[insights['insight_id'] == x['insight_id'][k],'committed_images'] = 1
 
