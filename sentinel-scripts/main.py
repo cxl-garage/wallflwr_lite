@@ -41,31 +41,6 @@ import logging
 ## Setting relative path (necessary for backseat driving)
 os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
 
-f = open("../device.name", "r")
-lines = f.readlines()
-os.environ['device_name'] = lines[0]
-os.environ['device_id'] = str(1)
-os.environ['sudoPW'] = 'endextinction'
-
-
-# set up logging to file - see previous section for more details
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                    datefmt='%m-%d %H:%M',
-                    filename='../../logs/{}_actions.log'.format(os.environ.get("device_name")),
-                    filemode='w')
-# define a Handler which writes INFO messages or higher to the sys.stderr
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-# set a format which is simpler for console use
-formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
-# tell the handler to use this format
-console.setFormatter(formatter)
-# add the handler to the root logger
-logging.getLogger('').addHandler(console)
-logger = logging.getLogger('main')
-
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--test', action='store_true', help='Use onboard test data rather than SD card')
 parser.add_argument('--lora_off', action='store_true', help='Disable LoRa')
@@ -77,11 +52,16 @@ parser.add_argument('--tpu_off', action='store_true', help='Turn off TPU (just r
 parser.add_argument('--text', action='store_true', help='Send text notification')
 parser.add_argument('--email', action='store_true', help='Send email notification')
 opt = parser.parse_args()
-logger.info(opt)
+#logger.info(opt)
 
 
 ### Initialize the device (check that local device is ready)
 def initialize():
+
+    f = open("../device.name", "r")
+    lines = f.readlines()
+    os.environ['device_name'] = lines[0]
+
     # Check local database exists
     if not os.path.exists('../data/device_insights.csv'):
         logger.info('Device Insights Table Initializing!')
@@ -104,12 +84,29 @@ def initialize():
         logger.info('Device Name: {}'.format(os.environ.get('device_name')))
 
         # Pull device info and write it to memory as a CSV
-        cloud_db.device_info(0)
+        cloud_db.device_info(os.environ.get("device_name"))
         if opt.update_off == False:
             logger.info('Checking for new algorithms')
             cloud_db.check_algs()
     else:
         logger.warning('Internet Connection not available')
+
+    # set up logging to file - see previous section for more details
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                        datefmt='%m-%d %H:%M',
+                        filename='../../logs/{}_actions.log'.format(os.environ.get("device_name")),
+                        filemode='w')
+    # define a Handler which writes INFO messages or higher to the sys.stderr
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    # set a format which is simpler for console use
+    formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+    # tell the handler to use this format
+    console.setFormatter(formatter)
+    # add the handler to the root logger
+    logging.getLogger('').addHandler(console)
+    logger = logging.getLogger('main')
 
     # Loop to run consistently run on RasPi
     if opt.test == False:

@@ -213,7 +213,7 @@ def check_algs():
 
 
 ### Function to make sure that the device is self-aware even after catastrophic (except memory card) failure
-def device_info(device_id):
+def device_info():
     db_user = os.environ.get("DB_USER")
     db_pass = os.environ.get("DB_PASS")
     db_name = os.environ.get("DB_NAME")
@@ -221,9 +221,11 @@ def device_info(device_id):
     cloud_sql_connection_name = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
     URL = 'mysql+pymysql://{}:{}@{}/{}'.format(db_user,db_pass,db_ip,db_name)
     engine = sqlalchemy.create_engine(URL, pool_size=5,max_overflow=2,pool_timeout=30,pool_recycle=1800,)
-    query = "SELECT * FROM devices WHERE device_id = \'{}\'".format(os.environ.get('device_id'))
+    query = "SELECT * FROM devices WHERE device_name = \'{}\'".format(os.environ.get('device_name'))
     device_information = pd.read_sql(query,con=engine)
     device_information.to_csv('../_device_info.csv')
+    os.environ['device_id'] = device_information['device_id']
+    os.environ['sudoPW'] = 'endextinction'
 
 ### Upload insights captured on device to SQL DB
 def insights():
