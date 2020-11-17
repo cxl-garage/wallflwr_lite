@@ -203,10 +203,10 @@ def delete_files():
         try:
             delete_command = 'sudo rm -f ../data/camera/DCIM/100MEDIA/{}'.format(insights['image_id'][k])
             os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), delete_command))
-            logger.info('File Deleted: {}'.format(insights['image_id'][k]))
         except Exception as e:
             logger.warning('Issue deleting file')
         k = k+1
+    logger.info('Files Deleted')
 
 
 

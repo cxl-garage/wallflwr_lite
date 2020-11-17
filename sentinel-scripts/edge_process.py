@@ -92,9 +92,9 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, insig
         im = im.convert('RGB')
 
     # save size of original (full-res) pic
-    if not os.path.exists('{}/{}/original/'.format(results_directory,class_names[0][classes])):
-        os.makedirs('{}/{}/original/'.format(results_directory,class_names[0][classes]))
-    filename = '{}/{}/original/{}'.format(results_directory,class_names[0][classes],file)
+    if not os.path.exists('../data/repo':
+        os.makedirs('../data/repo'
+    filename = '../data/repo/{}'.format(file)
     im.save(filename)
 
     # make sure bounding boxes are within bounds of image
@@ -122,14 +122,14 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, insig
             cropped_im = im.crop((left, (top+height/2)-(width/2), right, (top+height/2)+(width/2)))
         if width <= height:
             cropped_im = im.crop(((left+(width/2))-(height/2), top, (left+(width/2))+(height/2), bottom))
-        #cropped_im = cropped_im.resize((200,200))
+        cropped_im = cropped_im.resize((200,200))
 
         # Checking saving directory exists, and making it if necessary
-        if not os.path.exists('{}/{}/cropped/'.format(results_directory,class_names[0][classes])):
-            os.makedirs('{}/{}/cropped/'.format(results_directory,class_names[0][classes]))
+        if not os.path.exists('{}/{}/'.format(results_directory,class_names[0][classes])):
+            os.makedirs('{}/{}/'.format(results_directory,class_names[0][classes]))
 
         # Saving the cropped image
-        filename = '{}/{}/cropped/{}.jpeg'.format(results_directory, class_names[0][classes],int(insight_id))
+        filename = '{}/{}/{}.jpeg'.format(results_directory, class_names[0][classes],int(insight_id))
         cropped_im = cropped_im.save(filename)
     else :
         logger.error('ERROR: Bounded box is not large enough')
@@ -338,7 +338,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                         k = k + 1
                         break
                     if k > len(directory_list):
-                        break
+                        b
                     k = k + 1
                 except Exception as e:
                     k = k + 1

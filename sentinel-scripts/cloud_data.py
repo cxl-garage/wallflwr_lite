@@ -57,10 +57,10 @@ def upload_images():
     x = x.reset_index()
     k = 0
     device_name = str(os.environ.get('device_name')).replace(" ","_")
-    query = 'gsutil -m cp -r -n "../data/results/{}/{}/cropped/*" "gs://insights-{}/{}/{}/cropped/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
+    query = 'gsutil -m cp -r -n "../data/results/{}/{}/cropped/*" "gs://insights-{}/{}/{}/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
     os.system(query)
-    query = 'gsutil -m cp -r -n "../data/results/{}/{}/original/*" "gs://insights-{}/{}/{}/original/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
-    os.system(query)
+    #query = 'gsutil -m cp -r -n "../data/results/{}/{}/original/*" "gs://insights-{}/{}/{}/original/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
+    #os.system(query)
     insights.loc[insights['insight_id'] == x['insight_id'][k],'committed_images'] = 1
 
     insights = insights[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
