@@ -104,10 +104,10 @@ def check_algs():
         query = "SELECT * FROM deployed_algs WHERE device_id = \'{}\' AND status = 'Deployed' AND primary_alg IS NULL".format(os.environ.get('device_id'))
         primary_algs = pd.read_sql(query,con=engine)
         primary_algs.to_csv('../models/_primary_algs.txt')
-        
+
         query = "SELECT * FROM deployed_algs WHERE device_id = \'{}\' AND status = 'Deployed' AND primary_alg IS NOT NULL".format(os.environ.get('device_id'))
         secondary_algs = pd.read_sql(query,con=engine)
-        secondary_algs.to_csv('../models/_primary_algs.txt')
+        secondary_algs.to_csv('../models/_secondary_algs.txt')
         return
     else:
         # Checking for algorithms that are labelled as ready to deployment but not confirmed by device
