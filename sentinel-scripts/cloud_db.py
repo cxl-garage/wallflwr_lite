@@ -223,6 +223,8 @@ def device_info():
     engine = sqlalchemy.create_engine(URL, pool_size=5,max_overflow=2,pool_timeout=30,pool_recycle=1800,)
     query = "SELECT * FROM devices WHERE device_name = \'{}\'".format(os.environ.get('device_name'))
     device_information = pd.read_sql(query,con=engine)
+    print(device_information)
+    device_information = device_information.reset_index(drop=True)
     device_information.to_csv('../_device_info.csv')
     os.environ['device_id'] = device_information['device_id'][0]
     os.environ['sudoPW'] = 'endextinction'
