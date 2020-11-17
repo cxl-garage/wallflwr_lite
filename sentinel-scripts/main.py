@@ -42,7 +42,8 @@ import logging
 os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
 
 f = open("../device.name", "r")
-os.environ['device_name'] = 'kakapo'
+lines = f.readlines()
+os.environ['device_name'] = lines[0]
 os.environ['device_id'] = str(1)
 os.environ['sudoPW'] = 'endextinction'
 
