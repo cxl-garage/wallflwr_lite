@@ -224,7 +224,7 @@ def device_info():
     query = "SELECT * FROM devices WHERE device_name = \'{}\'".format(os.environ.get('device_name'))
     device_information = pd.read_sql(query,con=engine)
     device_information.to_csv('../_device_info.csv')
-    os.environ['device_id'] = device_information['device_id']
+    os.environ['device_id'] = device_information['device_id'][0]
     os.environ['sudoPW'] = 'endextinction'
 
 ### Upload insights captured on device to SQL DB
