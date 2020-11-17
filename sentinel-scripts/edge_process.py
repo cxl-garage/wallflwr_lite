@@ -93,7 +93,7 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, insig
 
     # save size of original (full-res) pic
     if not os.path.exists('../data/repo'):
-        os.makedirs('../data/repo'
+        os.makedirs('../data/repo')
     filename = '../data/repo/{}'.format(file)
     im.save(filename)
 
