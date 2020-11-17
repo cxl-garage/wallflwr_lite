@@ -289,7 +289,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
 
     x = 0
     directories = [str(data_directory),'../data/repo']
-    while x < len(directories)
+    while x < len(directories):
         # Finding all files within the data directory
         directory_list = os.listdir(directories[x])
         logger.infro('Checking Directory: {}'.format(directories[x]))
