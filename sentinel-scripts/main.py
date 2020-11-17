@@ -147,10 +147,15 @@ def initialize():
 ### Function to make the RPi shut itself down
 def shutdown():
 
-    # Pull the M0 Pin High to keep the Pi on...
+    # Pull the M0 Pin low to communicate sleep length...
     shutdown_pin.value = False
     logger.info('Send command to M0 to shut down')
+    time.sleep(cycle_time/100)
+    shutdown_pin.value = True
+
+    # Pull the M0 Pin low to begin shutdown sequence...
     time.sleep(0.2)
+    shutdown_pin.value = False
 
     # Switching pin to check for confirmation from M0 shutdown
     shutdown_pin.switch_to_input(pull=digitalio.Pull.DOWN)
@@ -266,4 +271,5 @@ while len(os.listdir(data_directory)) != 0:
         logger.warning('Unable to upload to SQL/Google Cloud Storage')
 
 ## Shut down Raspberry Pi
-shutdown()
+device_info = pd.read_csv('../device_info.csv')
+shutdown(device_info['cycle_time'])
