@@ -273,5 +273,4 @@ else:
     logger.warning('Unable to upload to SQL/Google Cloud Storage')
 
 ## Shut down Raspberry Pi
-device_info = pd.read_csv('../device_info.csv')
 shutdown(os.environ.get("cycle_time"))
