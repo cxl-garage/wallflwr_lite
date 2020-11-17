@@ -61,7 +61,7 @@ def initialize():
     f = open("../device.name", "r")
     lines = f.readlines()
     os.environ['device_name'] = lines[0]
-    
+
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
@@ -101,7 +101,7 @@ def initialize():
         logger.info('Device Name: {}'.format(os.environ.get('device_name')))
 
         # Pull device info and write it to memory as a CSV
-        cloud_db.device_info(os.environ.get("device_name"))
+        cloud_db.device_info()
         if opt.update_off == False:
             logger.info('Checking for new algorithms')
             cloud_db.check_algs()
