@@ -60,7 +60,7 @@ def initialize():
 
     f = open("../device.name", "r")
     lines = f.readlines()
-    os.environ['device_name'] = lines[0]
+    os.environ['device_name'] = lines[0].rstrip()
 
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
@@ -115,7 +115,7 @@ def initialize():
         list_of_devices = []
 
         for file in os.listdir('/dev'):
-            if file.startswith("sda"):
+            if file.startswith("s"):
                 list_of_devices.append(os.path.join("/dev", file))
         logger.info('Mounting SD card')
         k = 0

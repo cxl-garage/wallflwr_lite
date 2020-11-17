@@ -1,1 +1,2 @@
-device_id,device_name,location,lora_devaddr,lora_nwkey,lora_appkey,lte,satellite,wifi,cycle_time
+,device_id,device_name,location_name,lora_devaddr,lora_nwkey,lora_appkey,lte,satellite,wifi,cycle_time,lat,long,privacy,version
+0,2,honey badger,"Washington, DC",,,,,,,30,,,0,

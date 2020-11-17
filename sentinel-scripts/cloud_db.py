@@ -227,7 +227,7 @@ def device_info():
     print(device_information)
     device_information = device_information.reset_index(drop=True)
     device_information.to_csv('../_device_info.csv')
-    os.environ['device_id'] = device_information['device_id'][0]
+    os.environ['device_id'] = str(device_information['device_id'][0])
     os.environ['sudoPW'] = 'endextinction'
 
 ### Upload insights captured on device to SQL DB
