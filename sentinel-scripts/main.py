@@ -88,6 +88,8 @@ def initialize():
         os.makedirs('../models')
     if not os.path.exists('../data/camera'):
         os.makedirs('../data/camera')
+    if not os.path.exists('../data/repo'):
+        os.makedirs('../data/repo')
 
 
     # Check if device is connected to internet

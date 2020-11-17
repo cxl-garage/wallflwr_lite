@@ -289,6 +289,8 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
 
     # Finding all files within the data directory
     directory_list = os.listdir(data_directory)
+    # also adding the local repo (just in case images werent processed by this alg before they were moved)
+    directory_list = directory_list.append(os.listdir('../data/repo'))
 
     # Loading in the algorithm directory from file
     alg_df = pd.read_csv('../data/device_insights.csv')
@@ -312,68 +314,72 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     k = 0
     ## Looping through all files on the SD Card
     while k < len(directory_list):
+        # Specifying the specific file to be processed
+        file = directory_list[k]
+        logger.info('File: {}'.format(file))
 
-        # Checking if number of files checked has exceeded the "batch" variable (in production this should be inf)
-        if k == batch:
-            break
+        # Checking that the file hasn't already been processed by this algorithm
+        if ((alg_df['alg_id'] == alg['alg_id'][0]) & (alg_df['file'] == file)).any():
+            logger.info('File already processed')
+        else:
+            # Checking if number of files checked has exceeded the "batch" variable (in production this should be inf)
+            if k == batch:
+                break
 
-        # Looping through files that is only broken if the spacing between files is above "spacing" variable seconds
-        while 1:
-            # Defining a unique key for this group of insights
-            group_key = str(uuid.uuid1())
+            # Looping through files that is only broken if the spacing between files is above "spacing" variable seconds
+            while 1:
+                # Defining a unique key for this group of insights
+                group_key = str(uuid.uuid1())
 
 
-            try:
-                # Break loop if the previous gap between files timestamp was greater than "spacing" variable
-                if spacing[k] > 10:
+                try:
+                    # Break loop if the previous gap between files timestamp was greater than "spacing" variable
+                    if spacing[k] > 10:
+                        k = k + 1
+                        break
+                    if k > len(directory_list):
+                        break
+                    k = k + 1
+                except Exception as e:
                     k = k + 1
                     break
-                if k > len(directory_list):
+
+                ## Check that the file is actually a processable photo
+                #  Feature: Add ability to process videos
+                if file.endswith(".jpeg") or file.endswith(".JPG") or file.endswith(".jpg") or file.endswith(".JPEG") or file.endswith(".png") or file.endswith(".PNG"):
+
+                        if algorithm_type == 'detection':
+                            # Run the inference function, returns the bounded box metadata
+                            meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, data_directory,file, ai_sensitivity, results_directory,class_names)
+
+                            # Appending the unique group key to the metadata
+                            meta_df['group_id'] = group_key
+
+                            # Appending to existing results from the while loop
+                            alg_df = alg_df.append(meta_df,ignore_index=True)
+
+
+                            # Adding group confidence from linked confidence between inferences
+                            m = 0
+                            while m < len(meta_df):
+                                # if the previous data inference within the same group had the same class, add the confidences.
+                                # note that this will only run if all detections within the current image are also the same as the previous image
+                                if previous_class == meta_df['class'][m]:
+                                    try:
+                                        previous_confidence = meta_df['confidence'][m] + previous_confidence
+                                    except Exception as e:
+                                        previous_confidence = previous_confidence
+                                previous_class = meta_df['class'][m]
+                                m = m+1
+                        else:
+                            logger.error('Type of algorithm not yet supported')
+                else:
                     break
-                # Specifying the specific file to be processed
-                file = directory_list[k]
-                logger.info('File: {}'.format(file))
-                k = k + 1
-            except Exception as e:
-                k = k + 1
-                break
+                # Adding the group confidence to any data point that has the same group key
+                alg_df.loc[alg_df['group_id'] == group_key,'group_confidence'] = previous_confidence
 
-            ## Check that the file is actually a processable photo
-            #  Feature: Add ability to process videos
-            if file.endswith(".jpeg") or file.endswith(".JPG") or file.endswith(".jpg") or file.endswith(".JPEG") or file.endswith(".png") or file.endswith(".PNG"):
-
-                    if algorithm_type == 'detection':
-                        # Run the inference function, returns the bounded box metadata
-                        meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, data_directory,file, ai_sensitivity, results_directory,class_names)
-
-                        # Appending the unique group key to the metadata
-                        meta_df['group_id'] = group_key
-
-                        # Appending to existing results from the while loop
-                        alg_df = alg_df.append(meta_df,ignore_index=True)
-
-
-                        # Adding group confidence from linked confidence between inferences
-                        m = 0
-                        while m < len(meta_df):
-                            # if the previous data inference within the same group had the same class, add the confidences.
-                            # note that this will only run if all detections within the current image are also the same as the previous image
-                            if previous_class == meta_df['class'][m]:
-                                try:
-                                    previous_confidence = meta_df['confidence'][m] + previous_confidence
-                                except Exception as e:
-                                    previous_confidence = previous_confidence
-                            previous_class = meta_df['class'][m]
-                            m = m+1
-                    else:
-                        logger.error('Type of algorithm not yet supported')
-            else:
-                break
-            # Adding the group confidence to any data point that has the same group key
-            alg_df.loc[alg_df['group_id'] == group_key,'group_confidence'] = previous_confidence
-
-            # Moving on to next file
-            k = k + 1
+        # Moving on to next file
+        k = k + 1
 
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
     alg_df = alg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
