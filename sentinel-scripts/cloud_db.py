@@ -101,6 +101,9 @@ def check_algs():
     ## Downloading algorithms
     if len(alg_ids) == 0:
         logger.warning('No algorithms for device')
+        query = "SELECT * FROM deployed_algs WHERE device_id = \'{}\' AND status = 'Deployed' AND primary_alg IS NULL".format(os.environ.get('device_id'))
+        primary_algs = pd.read_sql(query,con=engine)
+        primary_algs.to_csv('../models/_primary_algs.txt')
         return
     else:
         # Checking for algorithms that are labelled as ready to deployment but not confirmed by device
