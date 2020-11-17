@@ -251,7 +251,7 @@ def insights():
 
     ## Committing the insights to SQL
     try:
-        x = x[['insight_id','device_id','alg_id','image_id','time_stamp','class_id','class','confidence','x_min','y_min','x_max','y_max']]
+        x = x[['insight_id','device_id','alg_id','image_id','time_stamp','class_id','class','confidence','x_min','y_min','x_max','y_max','group_id','group_confidence']]
         x.to_sql('insights', con=engine, if_exists='append', index=False)
 
         # Changing the local db to reflect that these insights are now on the cloud

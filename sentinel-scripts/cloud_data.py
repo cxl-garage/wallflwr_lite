@@ -63,5 +63,5 @@ def upload_images():
     os.system(query)
     insights.loc[insights['insight_id'] == x['insight_id'][k],'committed_images'] = 1
 
-    insights = insights[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group','group_confidence']]
+    insights = insights[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
     insights.to_csv('../data/device_insights.csv')

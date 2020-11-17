@@ -338,7 +338,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                         meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, data_directory,file, ai_sensitivity, results_directory,class_names)
 
                         # Appending the unique group key to the metadata
-                        meta_df['group'] = group_key
+                        meta_df['group_id'] = group_key
 
                         # Appending to existing results from the while loop
                         alg_df = alg_df.append(meta_df,ignore_index=True)
@@ -361,13 +361,13 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             else:
                 break
             # Adding the group confidence to any data point that has the same group key
-            alg_df.loc[alg_df['group'] == group_key,'group_confidence'] = previous_confidence
+            alg_df.loc[alg_df['group_id'] == group_key,'group_confidence'] = previous_confidence
 
             # Moving on to next file
             k = k + 1
 
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
-    alg_df = alg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group', 'group_confidence']]
+    alg_df = alg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
 
     # Saving insights to local DB (just a .csv for now)
     alg_df.to_csv('../data/device_insights.csv')

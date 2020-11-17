@@ -84,7 +84,7 @@ def initialize():
     # Check local database exists
     if not os.path.exists('../data/device_insights.csv'):
         logger.info('Device Insights Table Initializing!')
-        x = pd.DataFrame(columns=['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group','group_confidence'])
+        x = pd.DataFrame(columns=['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence'])
         x.to_csv('../data/device_insights.csv')
     if not os.path.exists('../models'):
         os.makedirs('../models')

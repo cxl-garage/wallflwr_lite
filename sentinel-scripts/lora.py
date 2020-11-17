@@ -28,7 +28,7 @@ def main(attempts=1):
 	try:
 		insights = pd.read_csv('../data/device_insights.csv')
 	except Exception as e:
-		insights = pd.DataFrame(columns=['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group','group_confidence'])
+		insights = pd.DataFrame(columns=['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence'])
 	#device_info = pd.read_csv('../_device_info.csv')
 
 
@@ -56,8 +56,8 @@ def main(attempts=1):
 	lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
 	x =  insights[insights['committed_lora']=='False']
 	x = x[x['class'] != 'blank']
-	x = x[x['group'] != 'NaN']
-	x = x.drop_duplicates(subset=['group'], keep='last')
+	x = x[x['group_id'] != 'NaN']
+	x = x.drop_duplicates(subset=['group_id'], keep='last')
 	x = x.reset_index()
 	logger.info(x)
 	k = 0
@@ -81,7 +81,7 @@ def main(attempts=1):
 				#time.sleep(5)
 				m = m + 1
 			time.sleep(0.5)
-			insights.loc[insights['group'] == x['group'][k],'committed_lora'] = True
+			insights.loc[insights['group_id'] == x['group_id'][k],'committed_lora'] = True
 			insights.to_csv('../data/device_insights.csv')
 			logger.info('LoRa Packet Sent!')
 		except Exception as e:
