@@ -235,7 +235,7 @@ while k < len(primary_algs):
 
     # Run Primary ALgorithm
     primary_df = edge_process.main(primary_alg,data_directory,opt.type)
-    logger.info('Model {} Complete'.format(primary_alg['alg_id']))
+    logger.info('Model {} Complete'.format(primary_alg['alg_id'][0]))
 
     # Run Secondary Model (if it exists)
     #if len(secondary_algs)! :
