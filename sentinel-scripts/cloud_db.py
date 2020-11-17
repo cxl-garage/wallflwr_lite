@@ -227,6 +227,7 @@ def device_info():
     print(device_information)
     device_information = device_information.reset_index(drop=True)
     device_information.to_csv('../_device_info.csv')
+    print('Device ID: {}'.format(str(device_information['device_id'][0])))
     os.environ['device_id'] = str(device_information['device_id'][0])
     os.environ['sudoPW'] = 'endextinction'
 
