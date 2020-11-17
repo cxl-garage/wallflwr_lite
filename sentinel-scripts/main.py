@@ -147,7 +147,7 @@ def initialize():
     return data_directory
 
 ### Function to make the RPi shut itself down
-def shutdown():
+def shutdown(cycle_time):
 
     # Pull the M0 Pin low to communicate sleep length...
     shutdown_pin.value = False
