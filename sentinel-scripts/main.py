@@ -41,6 +41,23 @@ import logging
 ## Setting relative path (necessary for backseat driving)
 os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
 
+# set up logging to file - see previous section for more details
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    datefmt='%m-%d %H:%M',
+                    filename='../../logs/{}_actions.log'.format(os.environ.get("device_name")),
+                    filemode='w')
+# define a Handler which writes INFO messages or higher to the sys.stderr
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+# set a format which is simpler for console use
+formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+# tell the handler to use this format
+console.setFormatter(formatter)
+# add the handler to the root logger
+logging.getLogger('').addHandler(console)
+logger = logging.getLogger('main')
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--test', action='store_true', help='Use onboard test data rather than SD card')
 parser.add_argument('--lora_off', action='store_true', help='Disable LoRa')
@@ -61,23 +78,6 @@ def initialize():
     f = open("../device.name", "r")
     lines = f.readlines()
     os.environ['device_name'] = lines[0].rstrip()
-
-    # set up logging to file - see previous section for more details
-    logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                        datefmt='%m-%d %H:%M',
-                        filename='../../logs/{}_actions.log'.format(os.environ.get("device_name")),
-                        filemode='w')
-    # define a Handler which writes INFO messages or higher to the sys.stderr
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    # set a format which is simpler for console use
-    formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
-    # tell the handler to use this format
-    console.setFormatter(formatter)
-    # add the handler to the root logger
-    logging.getLogger('').addHandler(console)
-    logger = logging.getLogger('main')
 
     # Check local database exists
     if not os.path.exists('../data/device_insights.csv'):
