@@ -263,6 +263,9 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
 
 # The main function script
 def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch = 10000, spacing = 10):
+    
+    alg_df = []
+    
     # Defining the results directory
     results_directory   = '../data/results/{}'.format(alg['alg_id'][0])
     try:
