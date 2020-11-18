@@ -273,4 +273,4 @@ else:
     logger.warning('Unable to upload to SQL/Google Cloud Storage')
 
 ## Shut down Raspberry Pi
-shutdown(os.environ.get("cycle_time"))
+# shutdown(os.environ.get("cycle_time"))
