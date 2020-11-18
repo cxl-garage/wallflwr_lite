@@ -362,7 +362,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                                 logger.info('7')
                                 # Appending the unique group key to the metadata
                                 meta_df['group_id'] = group_key
-
+                                logger.info(meta_df)
                                 # Appending to existing results from the while loop
                                 alg_df = alg_df.append(meta_df,ignore_index=True)
 
