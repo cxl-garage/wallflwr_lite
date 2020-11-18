@@ -292,6 +292,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     while x < len(directories):
         # Finding all files within the data directory
         directory_list = os.listdir(directories[x])
+        d
         logger.info('Checking Directory: {}'.format(directories[x]))
         # Loading in the algorithm directory from file
         alg_df = pd.read_csv('../data/device_insights.csv')
@@ -300,8 +301,8 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         k = 1
         spacing = [0]
         while k < len(directory_list):
-            time1 = int(os.path.getctime('{}/{}'.format(data_directory,directory_list[k])))
-            time2 = int(os.path.getctime('{}/{}'.format(data_directory,directory_list[k-1])))
+            time1 = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
+            time2 = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k-1])))
             try:
                 spacing.append(time1-time2)
             except Exception as e:
@@ -351,7 +352,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
 
                             if algorithm_type == 'detection':
                                 # Run the inference function, returns the bounded box metadata
-                                meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, data_directory,file, ai_sensitivity, results_directory,class_names)
+                                meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, directories[x], file, ai_sensitivity, results_directory,class_names)
 
                                 # Appending the unique group key to the metadata
                                 meta_df['group_id'] = group_key
