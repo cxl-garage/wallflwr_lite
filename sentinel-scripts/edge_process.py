@@ -298,12 +298,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         directory_list = os.listdir(directories[x])
         logger.info('Checking Directory: {}'.format(directories[x]))
         # Loading in the algorithm directory from file
-        test = 1
-        if test ==1:
-             alg_df = pd.read_csv('../data/device_insights.csv')
-             test = test +1
-
-        
+        alg_df = pd.read_csv('../data/device_insights.csv')
 
         ## Loop to understand the files potential relationship to other files (via time)
         k = 1
@@ -372,6 +367,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                                 logger.info(meta_df)
                                 # Appending to existing results from the while loop
                                 alg_df = alg_df.append(meta_df,ignore_index=True)
+                                tempalg_df=alg_df
                                 logger.info(alg_df)
 
                                 # Adding group confidence from linked confidence between inferences
@@ -392,12 +388,13 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                         break
                     # Adding the group confidence to any data point that has the same group key
                     alg_df.loc[alg_df['group_id'] == group_key,'group_confidence'] = previous_confidence
-
+                    
             # Moving on to next file
             k = k + 1
         x = x + 1
     logger.info("11")
     logger.info(alg_df)
+    logger.info(tempalg_df)
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
     alg_df = alg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
     logger.info("12")
