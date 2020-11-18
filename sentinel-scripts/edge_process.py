@@ -365,7 +365,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                                 logger.info(meta_df)
                                 # Appending to existing results from the while loop
                                 alg_df = alg_df.append(meta_df,ignore_index=True)
-
+                                logger.info(alg_df)
 
                                 # Adding group confidence from linked confidence between inferences
                                 m = 0
