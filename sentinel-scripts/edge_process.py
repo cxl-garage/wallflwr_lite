@@ -264,7 +264,6 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
 # The main function script
 def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch = 10000, spacing = 10):
     
-    alg_df = []
     
     # Defining the results directory
     results_directory   = '../data/results/{}'.format(alg['alg_id'][0])
@@ -299,7 +298,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         directory_list = os.listdir(directories[x])
         logger.info('Checking Directory: {}'.format(directories[x]))
         # Loading in the algorithm directory from file
-        alg_df = pd.read_csv('../data/device_insights.csv')
+        # alg_df = pd.read_csv('../data/device_insights.csv')
 
         ## Loop to understand the files potential relationship to other files (via time)
         k = 1
