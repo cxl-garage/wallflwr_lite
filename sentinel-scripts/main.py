@@ -273,7 +273,7 @@ else:
     logger.warning('Unable to upload to SQL/Google Cloud Storage')
 
 ## Shut down Raspberry Pi
-if os.environ.get("cycle_time") == 1:
+if os.environ.get("cycle_time") == '1':
     shutdown(os.environ.get("cycle_time"))
 else:
     logger.info('Processing complete, device idling (shutdown disabled)')
