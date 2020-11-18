@@ -345,7 +345,6 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                             break
                         if k > len(directory_list):
                             logger.info('4')
-                            k = k + 1
                             break
                     except Exception as e:
                         k = k + 1
