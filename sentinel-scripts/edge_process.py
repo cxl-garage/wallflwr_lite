@@ -327,11 +327,13 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             else:
                 # Checking if number of files checked has exceeded the "batch" variable (in production this should be inf)
                 if k == batch:
+                    logger.info('1')
                     break
 
                 # Looping through files that is only broken if the spacing between files is above "spacing" variable seconds
                 while 1:
                     # Defining a unique key for this group of insights
+                    logger.info('2')
                     group_key = str(uuid.uuid1())
 
 
@@ -339,22 +341,25 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                         # Break loop if the previous gap between files timestamp was greater than "spacing" variable
                         if spacing[k] > 10:
                             k = k + 1
+                            logger.info('3')
                             break
                         if k > len(directory_list):
-                            b
-                        k = k + 1
+                            logger.info('4')
+                            k = k + 1
+                            break
                     except Exception as e:
                         k = k + 1
+                        logger.info('5')
                         break
 
                     ## Check that the file is actually a processable photo
                     #  Feature: Add ability to process videos
                     if file.endswith(".jpeg") or file.endswith(".JPG") or file.endswith(".jpg") or file.endswith(".JPEG") or file.endswith(".png") or file.endswith(".PNG"):
-
+                            logger.info('6')
                             if algorithm_type == 'detection':
                                 # Run the inference function, returns the bounded box metadata
                                 meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, directories[x], file, ai_sensitivity, results_directory,class_names)
-
+                                logger.info('7')
                                 # Appending the unique group key to the metadata
                                 meta_df['group_id'] = group_key
 
