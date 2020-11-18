@@ -292,7 +292,6 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     while x < len(directories):
         # Finding all files within the data directory
         directory_list = os.listdir(directories[x])
-        d
         logger.info('Checking Directory: {}'.format(directories[x]))
         # Loading in the algorithm directory from file
         alg_df = pd.read_csv('../data/device_insights.csv')
