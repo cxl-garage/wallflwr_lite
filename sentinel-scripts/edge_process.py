@@ -337,8 +337,11 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                 while 1:
                     # Defining a unique key for this group of insights
                     logger.info('2')
-                    group_key = alg_df['group_id'].iloc[-1] + 1
-
+                        try:
+                            group_key = alg_df['group_id'].iloc[-1] + 1
+                        except Exception as e:
+                            group_key = 1
+                   
 
                     try:
                         # Break loop if the previous gap between files timestamp was greater than "spacing" variable
