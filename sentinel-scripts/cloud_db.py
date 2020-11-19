@@ -275,3 +275,4 @@ def insights():
         logger.info('Successfully added to SQL')
     except Exception as e:
         logger.error('Issue committing data to SQL')
+        logger.error(e)
