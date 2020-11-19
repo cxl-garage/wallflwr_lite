@@ -294,13 +294,14 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
 
     x = 0
     directories = [str(data_directory),'../data/repo']
+    # Loading in the algorithm directory from file
+    alg_df = pd.read_csv('../data/device_insights.csv')
+    tempalg_df= alg_df
     while x < len(directories):
         # Finding all files within the data directory
         directory_list = os.listdir(directories[x])
         logger.info('Checking Directory: {}'.format(directories[x]))
-        # Loading in the algorithm directory from file
-        alg_df = pd.read_csv('../data/device_insights.csv')
-        tempalg_df= alg_df
+
         ## Loop to understand the files potential relationship to other files (via time)
         k = 1
         spacing = [0]
