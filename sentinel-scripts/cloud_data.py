@@ -59,8 +59,8 @@ def upload_images():
         logger.warning('No images to upload')
         return
     k = 0
+    device_id = str(os.environ.get('device_id'))
     device_name = str(os.environ.get('device_name')).replace(" ","_")
-    device_id=os.environ.get['device_id']
     query = 'gsutil -m cp -r -n "../data/results/{}/{}/*" "gs://insights-{}/{}/{}/"'.format(int(x['alg_id'][k]),x['class'][k],device_id,int(x['alg_id'][k]),x['class'][k])
     os.system(query)
     #query = 'gsutil -m cp -r -n "../data/results/{}/{}/original/*" "gs://insights-{}/{}/{}/original/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
