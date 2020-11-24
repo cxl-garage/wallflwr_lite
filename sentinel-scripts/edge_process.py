@@ -398,6 +398,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             k = k + 1
         x = x + 1
     logger.info("11")
+    
     logger.info(alg_df)
     logger.info(tempalg_df)
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
