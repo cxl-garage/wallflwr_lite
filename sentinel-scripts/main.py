@@ -35,7 +35,6 @@ import cloud_data
 import cloud_db
 import pandas as pd
 import requests
-import edge_process
 import logging
 
 ## Setting relative path (necessary for backseat driving)
@@ -217,7 +216,7 @@ def delete_files():
 
 # Initialize the device (check that local device is ready)
 data_directory = initialize()
-
+import edge_process
 # Reading in information about algorithms that have to run on device
 primary_algs = pd.read_csv('../models/_primary_algs.txt')
 secondary_algs = pd.read_csv('../models/_secondary_algs.txt')

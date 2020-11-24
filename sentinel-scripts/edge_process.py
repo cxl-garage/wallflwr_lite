@@ -1,4 +1,4 @@
-##### Tyto AI: Conservation X Labs   #####
+1##### Tyto AI: Conservation X Labs   #####
 ## Author: Sam Kelly
 
 # This code is currently proprietary, further licensing will be decided in the near future
@@ -19,12 +19,14 @@ import datetime as dt
 import sys
 import shutil
 import uuid
-#import edgetpu
-#from edgetpu.detection.engine import DetectionEngine
-from pycoral.adapters import common
-from pycoral.adapters import detect
-from pycoral.utils.dataset import read_label_file
-from pycoral.utils.edgetpu import make_interpreter
+if os.environ.get('version').startswith('0'):
+    import edgetpu
+    from edgetpu.detection.engine import DetectionEngine
+if os.environ.get('version').startswith('1'):
+    from pycoral.adapters import common
+    from pycoral.adapters import detect
+    from pycoral.utils.dataset import read_label_file
+    from pycoral.utils.edgetpu import make_interpreter
 import cloud_data
 import pandas as pd
 from PIL import Image
@@ -157,7 +159,10 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
 
     try:
         # Attempt to open the image and resize it to correct size.
-        current_file = Image.open(file_path) #.resize((cnn_h, cnn_w), Image.NEAREST)
+        if os.environ.get('version').startswith('1'):
+            current_file = Image.open(file_path) #.resize((cnn_h, cnn_w), Image.NEAREST)
+        if os.environ.get('version').startswith('0'):
+            current_file = Image.open(file_path).resize((cnn_h,cnn_w), Image.NEAREST)
         # Make sure image is in RGB format
         if current_file.mode != 'RGB':
             current_file = current_file.convert('RGB')
@@ -178,8 +183,11 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
     tic = time.process_time()
 
     # Run Tensorflow Lite on the Image
-    interpreter.invoke()
-    ans = detect.get_objects(interpreter,threshold,scale) #athreshold,keep_aspect_ratio =True, relative_coord=True,top_k=1)
+    if os.environ.get('version').startswith('1'):
+        interpreter.invoke()
+        ans = detect.get_objects(interpreter,threshold,scale) #athreshold,keep_aspect_ratio =True, relative_coord=True,top_k=1)
+    if os.environ.get('version').startswith('0'):
+        ans = interpreter.DetectWithImage(current_file,threshold=threshold,keep_aspect_ratio = True, relative_coord=True,top_k=1)
     toc = time.process_time()
     #logger.info('Time to run algorithm: {} seconds'.format(toc - tic))
 
@@ -205,12 +213,16 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
         # There may be multiple detections within one image, hence the for loop
         for obj in ans:
 
-            boxes = obj.bbox
+            if os.environ.get('version').startswith('1'):
+                boxes = obj.bbox
             #logger.info(boxes)
             #logger.info(boxes[0])
-            boxes = [boxes[0]/width,boxes[1]/height,boxes[2]/width,boxes[3]/height]
+                boxes = [boxes[0]/width,boxes[1]/height,boxes[2]/width,boxes[3]/height]
             #logger.info(boxes)
-            classes = obj.id
+                classes = obj.id
+            if os.environ.get('version').startswith('0'):
+                boxes = obj.bounded_box.flatten()
+                classes = obj.label_id
             scores = obj.score
             insight_id = int(k)
             # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -303,9 +315,11 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     ai_sensitivity = alg['sensitivity'][0]
 
     # Loading the model into tensorflow engine
-    #interpreter = DetectionEngine(model)
-    interpreter = make_interpreter(model)
-    interpreter.allocate_tensors()
+    if os.environ.get('version').startswith('0'):
+        interpreter = DetectionEngine(model)
+    if os.environ.get('version').startswith('1'):
+        interpreter = make_interpreter(model)
+        interpreter.allocate_tensors()
 
     x = 0
     directories = [str(data_directory),'../data/repo']
@@ -315,7 +329,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     while x < len(directories):
         # Finding all files within the data directory
         directory_list = os.listdir(directories[x])
-        print(directory_list)
+        #print(directory_list)
         logger.info('Checking Directory: {}'.format(directories[x]))
 
         ## Loop to understand the files potential relationship to other files (via time)
