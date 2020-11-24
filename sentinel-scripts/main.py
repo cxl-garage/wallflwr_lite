@@ -8,21 +8,21 @@ This script is the main process that controls the Sentinel Device in the field
 """
 
 
-import digitalio
-import board
-from digitalio import DigitalInOut, Direction, Pull
+#import digitalio
+#import board
+#from digitalio import DigitalInOut, Direction, Pull
 
 # Pull the M0 Pin Low to keep the Pi on...
-shutdown_pin  = DigitalInOut(board.D14)
-shutdown_pin.direction = Direction.OUTPUT
-shutdown_pin.value = True
+#shutdown_pin  = DigitalInOut(board.D14)
+#shutdown_pin.direction = Direction.OUTPUT
+#shutdown_pin.value = True
 
 
 import sys
 import os
 import io
 import time
-import lora
+#import lora
 #import desmodus_draculae
 import numpy as np
 import csv
@@ -39,7 +39,7 @@ import edge_process
 import logging
 
 ## Setting relative path (necessary for backseat driving)
-os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
+os.chdir("/home/mendel/wallflwr_lite/sentinel-scripts")
 
 # set up logging to file - see previous section for more details
 logging.basicConfig(level=logging.INFO,
@@ -95,7 +95,7 @@ def initialize():
     # Check if device is connected to internet
     if connect() == True:
         logger.info('Internet Connection Successful')
-
+        
         # Pull latest master branch from git
         #os.system('git pull')
         #logger.info('Pulled from Git')
@@ -104,6 +104,7 @@ def initialize():
 
         # Pull device info and write it to memory as a CSV
         cloud_db.device_info()
+        cloud_data.check_bucket_exists()
         if opt.update_off == False:
             logger.info('Checking for new algorithms')
             cloud_db.check_algs()
