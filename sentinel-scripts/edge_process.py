@@ -302,19 +302,6 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         directory_list = os.listdir(directories[x])
         logger.info('Checking Directory: {}'.format(directories[x]))
 
-        ## Loop to understand the files potential relationship to other files (via time)
-        k = 1
-        spacing = [0]
-        while k < len(directory_list):
-            time1 = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
-            time2 = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k-1])))
-            try:
-                spacing.append(time1-time2)
-            except Exception as e:
-                spacing.append(999)
-                logger.error('Failed to subtract the time')
-            k = k + 1
-
         # initializing variables to enable grouping of files
         previous_confidence = 0
         previous_class = ''
