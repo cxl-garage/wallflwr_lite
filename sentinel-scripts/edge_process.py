@@ -323,6 +323,24 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         while k < len(directory_list):
             # Specifying the specific file to be processed
             file = directory_list[k]
+
+            # if k > 0:
+            #     fileBefore = directory_list[k-1]
+            # else:
+            #     fileBefore = directory_list[k]
+
+            timeFile = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
+            timeFileBefore = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k-1])))
+            logger.info('HERE')
+            logger.info(timeFile)
+            logger.info(timeFileBefore)
+
+            # try:
+            #     group_key = alg_df['group_id'].iloc[-1] + 1
+            # except Exception as e:
+            #     group_key = 1
+
+
             logger.info('File: {}'.format(file))
             group_key=1
             # Checking that the file hasn't already been processed by this algorithm
@@ -331,16 +349,13 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             else:
                 # Checking if number of files checked has exceeded the "batch" variable (in production this should be inf)
                 if k == batch:
-                    logger.info('1')
                     break
             ## Check that the file is actually a processable photo
             #  Feature: Add ability to process videos
             if file.endswith(".jpeg") or file.endswith(".JPG") or file.endswith(".jpg") or file.endswith(".JPEG") or file.endswith(".png") or file.endswith(".PNG"):
-                    logger.info('6')
                     if algorithm_type == 'detection':
                         # Run the inference function, returns the bounded box metadata
                         meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, directories[x], file, ai_sensitivity, results_directory,class_names)
-                        logger.info('7')
                         # Appending the unique group key to the metadata
                         meta_df['group_id'] = group_key
                         logger.info(meta_df)
@@ -371,17 +386,14 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             # Moving on to next file
             k = k + 1
         x = x + 1
-    logger.info("11")
 
     logger.info(alg_df)
     logger.info(tempalg_df)
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
     alg_df = tempalg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
-    logger.info("12")
     logger.info(alg_df)
     # Saving insights to local DB (just a .csv for now)
     alg_df.to_csv('../data/device_insights.csv')
-    logger.info("13")
     logger.info(alg_df)
     return alg_df
 
