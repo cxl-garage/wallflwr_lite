@@ -173,8 +173,10 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
         delete_command = 'sudo rm -f {}'.format(file_path)
         os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), delete_command))
         return meta_df
-    width, height = current_file.size
-    _, scale = common.set_resized_input(interpreter, current_file.size, lambda size: current_file.resize(size, Image.ANTIALIAS))
+    if os.environ.get('version').startswith('0'):
+        width, height = current_file.size
+    if os.environ.get('version').startswith('1'):
+        _, scale = common.set_resized_input(interpreter, current_file.size, lambda size: current_file.resize(size, Image.ANTIALIAS))
     toc = time.process_time()
     #logger.info('Time to resize image: {} seconds'.format(toc - tic))
 
@@ -289,8 +291,8 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
 
 # The main function script
 def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch = 10000, spacing = 10):
-    
-    
+
+
     # Defining the results directory
     results_directory   = '../data/results/{}'.format(alg['alg_id'][0])
     try:
@@ -372,7 +374,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                         group_key = alg_df['group_id'].iloc[-1] + 1
                     except Exception as e:
                         group_key = 1
-                   
+
 
                     try:
                         # Break loop if the previous gap between files timestamp was greater than "spacing" variable
@@ -383,7 +385,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                         if k > len(directory_list):
                             logger.info('All files processed')
                             #break
-                        k = k + 1 
+                        k = k + 1
                     except Exception as e:
                         k = k + 1
                         logger.error('Error in grouping code')
@@ -424,7 +426,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                         #break
                     # Adding the group confidence to any data point that has the same group key
                     alg_df.loc[alg_df['group_id'] == group_key,'group_confidence'] = previous_confidence
-                    
+
             # Moving on to next file
             k = k + 1
         x = x + 1
