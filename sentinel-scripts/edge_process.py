@@ -223,7 +223,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
             #logger.info(boxes)
                 classes = obj.id
             if os.environ.get('version').startswith('0'):
-                boxes = obj.bounded_box.flatten()
+                boxes = obj.bounding_box.flatten()
                 classes = obj.label_id
             scores = obj.score
             insight_id = int(k)
