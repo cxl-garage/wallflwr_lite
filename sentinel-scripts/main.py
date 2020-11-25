@@ -7,17 +7,6 @@
 This script is the main process that controls the Sentinel Device in the field
 """
 
-
-#import digitalio
-#import board
-#from digitalio import DigitalInOut, Direction, Pull
-
-# Pull the M0 Pin Low to keep the Pi on...
-#shutdown_pin  = DigitalInOut(board.D14)
-#shutdown_pin.direction = Direction.OUTPUT
-#shutdown_pin.value = True
-
-
 import sys
 import os
 import io
@@ -38,7 +27,10 @@ import requests
 import logging
 
 ## Setting relative path (necessary for backseat driving)
-os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
+try:
+    os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
+except:
+    os.chdir("/home/mendel/wallflwr_lite/sentinel-scripts")
 
 # set up logging to file - see previous section for more details
 logging.basicConfig(level=logging.INFO,
@@ -94,7 +86,7 @@ def initialize():
     # Check if device is connected to internet
     if connect() == True:
         logger.info('Internet Connection Successful')
-        
+
         # Pull latest master branch from git
         #os.system('git pull')
         #logger.info('Pulled from Git')
@@ -217,6 +209,16 @@ def delete_files():
 # Initialize the device (check that local device is ready)
 data_directory = initialize()
 import edge_process
+if os.environ.get('version').startswith('0'):
+    import digitalio
+    import board
+    from digitalio import DigitalInOut, Direction, Pull
+
+    # Pull the M0 Pin Low to keep the Pi on...
+    shutdown_pin  = DigitalInOut(board.D14)
+    shutdown_pin.direction = Direction.OUTPUT
+    shutdown_pin.value = True
+
 # Reading in information about algorithms that have to run on device
 primary_algs = pd.read_csv('../models/_primary_algs.txt')
 secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
