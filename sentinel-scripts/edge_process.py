@@ -326,8 +326,10 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             logger.info(timeFile - timeFileBefore)
 
             if (timeFile - timeFileBefore) < 30:
+                logger.info('im inside')
                 try:
                     group_key = alg_df['group_id'].iloc[-1] 
+                    logger.info(group_key)
                 except Exception as e:
                     group_key = 1
             else:
