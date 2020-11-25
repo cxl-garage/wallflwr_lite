@@ -360,6 +360,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             # Checking that the file hasn't already been processed by this algorithm
             if ((alg_df['alg_id'] == alg['alg_id'][0]) & (alg_df['image_id'] == file)).any():
                 logger.info('File already processed')
+                k = k + 1
                 continue
             else:
                 # Checking if number of files checked has exceeded the "batch" variable (in production this should be inf)
