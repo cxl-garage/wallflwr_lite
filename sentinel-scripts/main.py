@@ -38,7 +38,7 @@ import requests
 import logging
 
 ## Setting relative path (necessary for backseat driving)
-os.chdir("/home/mendel/wallflwr_lite/sentinel-scripts")
+os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
 
 # set up logging to file - see previous section for more details
 logging.basicConfig(level=logging.INFO,
