@@ -324,7 +324,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             # Specifying the specific file to be processed
             file = directory_list[k]
             logger.info('File: {}'.format(file))
-
+            group_key=1
             # Checking that the file hasn't already been processed by this algorithm
             if ((alg_df['alg_id'] == alg['alg_id'][0]) & (alg_df['image_id'] == file)).any():
                 logger.info('File already processed')
@@ -333,72 +333,46 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                 if k == batch:
                     logger.info('1')
                     break
+            ## Check that the file is actually a processable photo
+            #  Feature: Add ability to process videos
+            if file.endswith(".jpeg") or file.endswith(".JPG") or file.endswith(".jpg") or file.endswith(".JPEG") or file.endswith(".png") or file.endswith(".PNG"):
+                    logger.info('6')
+                    if algorithm_type == 'detection':
+                        # Run the inference function, returns the bounded box metadata
+                        meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, directories[x], file, ai_sensitivity, results_directory,class_names)
+                        logger.info('7')
+                        # Appending the unique group key to the metadata
+                        meta_df['group_id'] = group_key
+                        logger.info(meta_df)
+                        # Appending to existing results from the while loop
+                        alg_df = alg_df.append(meta_df,ignore_index=True)
+                        tempalg_df=alg_df
+                        logger.info(alg_df)
 
-                # Looping through files that is only broken if the spacing between files is above "spacing" variable seconds
-                while 1:
-                    # Defining a unique key for this group of insights
-                    logger.info('2')
-                    try:
-                        group_key = alg_df['group_id'].iloc[-1] + 1
-                    except Exception as e:
-                        group_key = 1
-                   
-
-                    try:
-                        # Break loop if the previous gap between files timestamp was greater than "spacing" variable
-                        if spacing[k] > 10:
-                            k = k + 1
-                            logger.info('3')
-                            break
-                        if k > len(directory_list):
-                            logger.info('4')
-                            break
-                        k = k + 1 
-                    except Exception as e:
-                        k = k + 1
-                        logger.info('5')
-                        break
-
-                    ## Check that the file is actually a processable photo
-                    #  Feature: Add ability to process videos
-                    if file.endswith(".jpeg") or file.endswith(".JPG") or file.endswith(".jpg") or file.endswith(".JPEG") or file.endswith(".png") or file.endswith(".PNG"):
-                            logger.info('6')
-                            if algorithm_type == 'detection':
-                                # Run the inference function, returns the bounded box metadata
-                                meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, directories[x], file, ai_sensitivity, results_directory,class_names)
-                                logger.info('7')
-                                # Appending the unique group key to the metadata
-                                meta_df['group_id'] = group_key
-                                logger.info(meta_df)
-                                # Appending to existing results from the while loop
-                                alg_df = alg_df.append(meta_df,ignore_index=True)
-                                tempalg_df=alg_df
-                                logger.info(alg_df)
-
-                                # Adding group confidence from linked confidence between inferences
-                                m = 0
-                                while m < len(meta_df):
-                                    # if the previous data inference within the same group had the same class, add the confidences.
-                                    # note that this will only run if all detections within the current image are also the same as the previous image
-                                    if previous_class == meta_df['class'][m]:
-                                        try:
-                                            previous_confidence = meta_df['confidence'][m] + previous_confidence
-                                        except Exception as e:
-                                            previous_confidence = previous_confidence
-                                    previous_class = meta_df['class'][m]
-                                    m = m+1
-                            else:
-                                logger.error('Type of algorithm not yet supported')
+                        # Adding group confidence from linked confidence between inferences
+                        m = 0
+                        while m < len(meta_df):
+                            # if the previous data inference within the same group had the same class, add the confidences.
+                            # note that this will only run if all detections within the current image are also the same as the previous image
+                            if previous_class == meta_df['class'][m]:
+                                try:
+                                    previous_confidence = meta_df['confidence'][m] + previous_confidence
+                                except Exception as e:
+                                    previous_confidence = previous_confidence
+                            previous_class = meta_df['class'][m]
+                            m = m+1
                     else:
-                        break
-                    # Adding the group confidence to any data point that has the same group key
-                    alg_df.loc[alg_df['group_id'] == group_key,'group_confidence'] = previous_confidence
+                        logger.error('Type of algorithm not yet supported')
+            else:
+                break
+            # Adding the group confidence to any data point that has the same group key
+            alg_df.loc[alg_df['group_id'] == group_key,'group_confidence'] = previous_confidence
                     
             # Moving on to next file
             k = k + 1
         x = x + 1
     logger.info("11")
-    
+
     logger.info(alg_df)
     logger.info(tempalg_df)
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
