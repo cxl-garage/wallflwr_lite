@@ -339,10 +339,6 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                     group_key = 1
 
 
-            try:
-                group_key = alg_df['group_id'].iloc[-1] + 1
-            except Exception as e:
-                group_key = 1
 
 
             logger.info('File: {}'.format(file))
