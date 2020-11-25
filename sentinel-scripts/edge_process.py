@@ -335,6 +335,8 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             logger.info(k)
             logger.info(timeFile)
             logger.info(timeFileBefore)
+            logger.info('DIFFERENCE')
+            logger.info(timeFile - timeFileBefore)
 
             if (timeFile - timeFileBefore) < 30:
                 try:
