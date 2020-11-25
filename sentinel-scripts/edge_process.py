@@ -324,14 +324,15 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             # Specifying the specific file to be processed
             file = directory_list[k]
 
-            # if k > 0:
-            #     fileBefore = directory_list[k-1]
-            # else:
-            #     fileBefore = directory_list[k]
-
-            timeFile = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
-            timeFileBefore = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k-1])))
+            if k > 0: 
+                timeFile = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
+                timeFileBefore = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
+            else:
+                timeFile = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
+                timeFileBefore = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k-1])))
             logger.info('HERE')
+            logger.info(x)
+            logger.info(k)
             logger.info(timeFile)
             logger.info(timeFileBefore)
 
