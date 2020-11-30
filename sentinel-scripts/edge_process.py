@@ -293,7 +293,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     interpreter = DetectionEngine(model)
 
     x = 0
-    directories = [str(data_directory),'../data/repo']
+    directories = [str(data_directory)]
     # Loading in the algorithm directory from file
     alg_df = pd.read_csv('../data/device_insights.csv')
     tempalg_df= alg_df
@@ -301,9 +301,11 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         # Finding all files within the data directory
         original_directory_list = os.listdir(directories[x])
         logger.info('Checking Directory: {}'.format(directories[x]))
+
+        #Renaming the photos
         i = 0
         while i < len(original_directory_list):
-            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}.JPG'.format(uuid.uuid1()))
+            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}.JPG'.format(directories[x],uuid.uuid1()))
             i = i+1
         
         directory_list = os.listdir(directories[x])
