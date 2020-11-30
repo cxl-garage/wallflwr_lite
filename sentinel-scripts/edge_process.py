@@ -309,9 +309,8 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         ## Looping through all files on the SD Card
         while k < len(directory_list):
             # Specifying the specific file to be processed
+            os.rename(r'{}/{}'.format(directories[x],directory_list[k]),r'{}/{}'.format(directories[x], uuid.uuid1()))
             file = directory_list[k]
-            # '{}/{}'.format(directories[x],directory_list[k])
-            # os.rename(r'file path\OLD file name.file type',r'file path\NEW file name.file type')
             logger.info("HERE WE GO")
             logger.info('{}/{}'.format(directories[x],directory_list[k]))
 
