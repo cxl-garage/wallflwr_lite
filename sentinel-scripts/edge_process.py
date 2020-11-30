@@ -310,8 +310,8 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         while k < len(directory_list):
             # Specifying the specific file to be processed
             logger.info('{}/{}'.format(directories[x],directory_list[k]))
-            os.rename('{}/{}'.format(directories[x],directory_list[k]),'{}/{}.JPG'.format(directories[x], uuid.uuid1()))
-            file = directory_list[k]
+            file = '{}.JPG'.format(uuid.uuid1())
+            os.rename('{}/{}'.format(directories[x],directory_list[k]),'{}/{}.JPG'.format(directories[x], file))
             logger.info(file)
             logger.info("HERE WE GO")
             logger.info('{}/{}'.format(directories[x],directory_list[k]))
