@@ -303,7 +303,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         logger.info('Checking Directory: {}'.format(directories[x]))
         i = 0
         while i < len(original_directory_list):
-            os.rename('{}/{}'.format(directories[x],original_directory_list[k]),'{}.JPG'.format(uuid.uuid1()))
+            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}.JPG'.format(uuid.uuid1()))
             i = i+1
         
         directory_list = os.listdir(directories[x])
