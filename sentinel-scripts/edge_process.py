@@ -332,17 +332,20 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             logger.info('timeFile - timeFileBefore')
             logger.info(timeFile - timeFileBefore)
 
-            if (timeFile - timeFileBefore) < 30:
+            #If it is the first photo in the directory, we can assume it is a new group 
+            #If it is the first ever photo in the csv, we set the key to 1
+            if k=0:
                 try:
-                    group_key = alg_df['group_id'].iloc[-1] 
+                    group_key = alg_df['group_id'].iloc[-1]+1 
                     logger.info(group_key)
                 except Exception as e:
                     group_key = 1
+            #If the gap between photos after the first is smaller than 30 seconds, it is the same group
+            else (timeFile - timeFileBefore) < 30:
+                group_key = alg_df['group_id'].iloc[-1] 
+            #If the gap is larger than 30 seconds, then we define a new group key
             else:
-                try:
-                    group_key = alg_df['group_id'].iloc[-1] + 1
-                except Exception as e:
-                    group_key = 1
+                group_key = alg_df['group_id'].iloc[-1] + 1
 
 
 
