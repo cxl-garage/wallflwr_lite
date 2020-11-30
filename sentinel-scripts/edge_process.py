@@ -334,7 +334,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
 
             #If it is the first photo in the directory, we can assume it is a new group 
             #If it is the first ever photo in the csv, we set the key to 1
-            if k=0:
+            if k == 0:
                 try:
                     group_key = alg_df['group_id'].iloc[-1]+1 
                     logger.info(group_key)
