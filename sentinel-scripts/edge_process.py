@@ -313,7 +313,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             # '{}/{}'.format(directories[x],directory_list[k])
             # os.rename(r'file path\OLD file name.file type',r'file path\NEW file name.file type')
             logger.info("HERE WE GO")
-            logger.info('{}/{}'.format(directories[x],directory_list[k])
+            logger.info('{}/{}'.format(directories[x],directory_list[k]))
 
             if k > 0: 
                 timeFile = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
