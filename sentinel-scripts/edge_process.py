@@ -310,6 +310,10 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         while k < len(directory_list):
             # Specifying the specific file to be processed
             file = directory_list[k]
+            # '{}/{}'.format(directories[x],directory_list[k])
+            # os.rename(r'file path\OLD file name.file type',r'file path\NEW file name.file type')
+            logger.info("HERE WE GO")
+            logger.info(os.path.getctime('{}/{}'.format(directories[x],directory_list[k]))
 
             if k > 0: 
                 timeFile = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
@@ -317,16 +321,10 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             else:
                 timeFile = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
                 timeFileBefore = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
-            logger.info('HERE')
-            logger.info(x)
-            logger.info(k)
-            logger.info(timeFile)
-            logger.info(timeFileBefore)
-            logger.info('DIFFERENCE')
+            logger.info('timeFile - timeFileBefore')
             logger.info(timeFile - timeFileBefore)
 
             if (timeFile - timeFileBefore) < 30:
-                logger.info('im inside')
                 try:
                     group_key = alg_df['group_id'].iloc[-1] 
                     logger.info(group_key)
