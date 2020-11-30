@@ -302,7 +302,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         original_directory_list = os.listdir(directories[x])
         logger.info('Checking Directory: {}'.format(directories[x]))
         while k < len(original_directory_list):
-            os.rename('{}/{}'.format(directories[x],directory_list[k]),'{}.JPG'.format(uuid.uuid1()))
+            os.rename('{}/{}'.format(directories[x],original_directory_list[k]),'{}.JPG'.format(uuid.uuid1()))
         
         directory_list = os.listdir(directories[x])
         # initializing variables to enable grouping of files
