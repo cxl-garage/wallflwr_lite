@@ -317,11 +317,11 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             logger.info('{}/{}'.format(directories[x],directory_list[k]))
 
             if k > 0: 
-                timeFile = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
+                timeFile = int(os.path.getctime('{}/{}'.format(directories[x], file)))
                 timeFileBefore = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k-1])))
             else:
-                timeFile = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
-                timeFileBefore = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
+                timeFile = int(os.path.getctime('{}/{}'.format(directories[x], file)))
+                timeFileBefore = int(os.path.getctime('{}/{}'.format(directories[x], file)))
             logger.info('timeFile - timeFileBefore')
             logger.info(timeFile - timeFileBefore)
 
