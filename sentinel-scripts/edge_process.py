@@ -201,7 +201,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
             scores = obj.score
             insight_id = int(k)
             # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-            time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getctime('{}'.format(file_path)))))
+            time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
 
             logger.info('Class: {}'.format(class_names[0][classes]))
             logger.info('Confidence: {}'.format(scores))
@@ -242,7 +242,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
         # Note: we still save the information about the image being processed, (negative data is still valuable) and thus it is still assigned an insight_id
         insight_id = int(k)
         # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getctime('{}'.format(file_path)))))
+        time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
         meta = {'committed_sql':0,'committed_images':0,
         'committed_lora': 0,'insight_id':insight_id,'alg_id':alg['alg_id'][0],
         'time_stamp': time_stamp,'class_id':99,'class':'blank',
@@ -299,9 +299,12 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     tempalg_df= alg_df
     while x < len(directories):
         # Finding all files within the data directory
-        directory_list = os.listdir(directories[x])
+        original_directory_list = os.listdir(directories[x])
         logger.info('Checking Directory: {}'.format(directories[x]))
-
+        while k < len(original_directory_list):
+            os.rename('{}/{}'.format(directories[x],directory_list[k]),'{}.JPG'.format(uuid.uuid1()))
+        
+        directory_list = os.listdir(directories[x])
         # initializing variables to enable grouping of files
         previous_confidence = 0
         previous_class = ''
@@ -309,19 +312,19 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         ## Looping through all files on the SD Card
         while k < len(directory_list):
             # Specifying the specific file to be processed
-            logger.info('{}/{}'.format(directories[x],directory_list[k]))
-            file = '{}.JPG'.format(uuid.uuid1())
-            os.rename('{}/{}'.format(directories[x],directory_list[k]),'{}/{}'.format(directories[x], file))
+            # logger.info('{}/{}'.format(directories[x],directory_list[k]))
+            file = directory_list[k]
+            # os.rename('{}/{}'.format(directories[x],directory_list[k]),'{}/{}'.format(directories[x], file))
             logger.info(file)
-            logger.info("HERE WE GO")
-            logger.info('{}/{}'.format(directories[x],directory_list[k]))
+            # logger.info("HERE WE GO")
+            # logger.info('{}/{}'.format(directories[x],directory_list[k]))
 
             if k > 0: 
-                timeFile = int(os.path.getctime('{}/{}'.format(directories[x], file)))
-                timeFileBefore = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k-1])))
+                timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
+                timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x],directory_list[k-1])))
             else:
-                timeFile = int(os.path.getctime('{}/{}'.format(directories[x], file)))
-                timeFileBefore = int(os.path.getctime('{}/{}'.format(directories[x], file)))
+                timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
+                timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
             logger.info('timeFile - timeFileBefore')
             logger.info(timeFile - timeFileBefore)
 
