@@ -454,7 +454,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                 group_confidence = 0
                 m = 0
                 class_id = group['class_id'][0]
-                while m = len(group):
+                while m == len(group):
                     if class_id == group['class_id'][m]:
                         group_confidence = (1-group_confidence)*group['confidence'][m]
                     else:
