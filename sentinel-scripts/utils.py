@@ -25,6 +25,12 @@ import pandas as pd
 import requests
 import logging
 
+import digitalio
+import board
+from digitalio import DigitalInOut, Direction, Pull
+
+logger = logging.getLogger('main')
+
 ### Initialize the device (check that local device is ready)
 def initialize(opt):
 
