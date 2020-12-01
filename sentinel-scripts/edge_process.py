@@ -338,7 +338,10 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         #Renaming the photos
         i = 0
         while i < len(original_directory_list):
-            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}.JPG'.format(directories[x],uuid.uuid1()))
+            #Preserve the file type
+            fileExtension = original_directory_list[i].split(".")[1]
+            #Rename the file
+            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}.{}'.format(directories[x],uuid.uuid1(),fileExtension))
             i = i+1
         
         directory_list = os.listdir(directories[x])
