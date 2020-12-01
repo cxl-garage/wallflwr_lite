@@ -334,7 +334,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         original_directory_list = os.listdir(directories[x])
 
         logger.info('Checking Directory: {}'.format(directories[x]))
-
+        logger.info('Directory length: {}'.format(len(original_directory_list)))
         #Renaming the photos
         i = 0
         while i < len(original_directory_list):
@@ -432,11 +432,8 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             k = k + 1
         x = x + 1
 
-    logger.info(alg_df)
-    logger.info(tempalg_df)
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
     alg_df = tempalg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
-    logger.info(alg_df)
     # Saving insights to local DB (just a .csv for now)
     alg_df.to_csv('../data/device_insights.csv')
     logger.info(alg_df)
