@@ -1,4 +1,4 @@
-##### Tyto AI: Conservation X Labs   #####
+1##### Tyto AI: Conservation X Labs   #####
 ## Author: Sam Kelly
 
 # This code is currently proprietary, further licensing will be decided in the near future
@@ -19,8 +19,14 @@ import datetime as dt
 import sys
 import shutil
 import uuid
-import edgetpu
-from edgetpu.detection.engine import DetectionEngine
+if os.environ.get('version').startswith('0'):
+    import edgetpu
+    from edgetpu.detection.engine import DetectionEngine
+if os.environ.get('version').startswith('1'):
+    from pycoral.adapters import common
+    from pycoral.adapters import detect
+    from pycoral.utils.dataset import read_label_file
+    from pycoral.utils.edgetpu import make_interpreter
 import cloud_data
 import pandas as pd
 from PIL import Image
@@ -59,7 +65,7 @@ def load_labels(path):
 # Util function from Google
 def set_input_tensor(interpreter, image):
   """Sets the input tensor."""
-  #print('Interpreter:', interpreter)
+  print('Interpreter:', interpreter)
   tensor_index = interpreter.get_input_details()[0]['index']
   input_tensor = interpreter.tensor(tensor_index)()[0]
   input_tensor[:, :] = image
@@ -98,12 +104,12 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, insig
     im.save(filename)
 
     # make sure bounding boxes are within bounds of image
-    for j in range(0,4) :
-        if aoi[j] >= .50 :
-            aoi[j] = aoi[j] + crop_buffer
-        else :
-            aoi[j] = aoi[j] - crop_buffer
-        aoi[j] = max(min(aoi[j],1),0)
+    #for j in range(0,4) :
+    #    if aoi[j] >= .50 :
+    #        aoi[j] = aoi[j] + crop_buffer
+    #    else :
+    #        aoi[j] = aoi[j] - crop_buffer
+    #    aoi[j] = max(min(aoi[j],1),0)
 
     # Convert bounded box coordinates from relative to absolute
     im_width, im_height = im.size
@@ -111,18 +117,20 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, insig
     top = int(aoi[1] * im_height)
     right = int(aoi[2] * im_width)
     bottom = int(aoi[3] * im_height)
-
+    #logging.info([left,top,right,bottom])
+    height = bottom-top
+    width = right-left
     # Saving image to file if the bounded box is sufficiently big
-    if right-left > 15 and bottom -top > 15 :
+    if height > 15 and width > 15 :
         # this is all some funkiness to reshape everything to a pretty square without distorting (good for gui.py)
-        height = bottom-top
-        width =  right - left
-                    #cropped_im = im.crop((left, top, right, bottom))
+        #height = bottom-top
+        #width =  right - left
+        #cropped_im = im.crop((left, top, right, bottom))
         if height < width:
             cropped_im = im.crop((left, (top+height/2)-(width/2), right, (top+height/2)+(width/2)))
         if width <= height:
             cropped_im = im.crop(((left+(width/2))-(height/2), top, (left+(width/2))+(height/2), bottom))
-        cropped_im = cropped_im.resize((200,200))
+        cropped_im = cropped_im.resize((150,150))
 
         # Checking saving directory exists, and making it if necessary
         if not os.path.exists('{}/{}/'.format(results_directory,class_names[0][classes])):
@@ -151,28 +159,39 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
 
     try:
         # Attempt to open the image and resize it to correct size.
-        current_file = Image.open(file_path).resize((cnn_h, cnn_w), Image.NEAREST)
+        if os.environ.get('version').startswith('1'):
+            current_file = Image.open(file_path) #.resize((cnn_h, cnn_w), Image.NEAREST)
+        if os.environ.get('version').startswith('0'):
+            current_file = Image.open(file_path).resize((cnn_h,cnn_w), Image.NEAREST)
         # Make sure image is in RGB format
         if current_file.mode != 'RGB':
             current_file = current_file.convert('RGB')
-
+        #logging.info('Successfully Loaded: {}'.format(file))
     # If file cannot be opened, it will be deleted from the SD card
     except Exception as e:
         logger.error('Issue opening {}'.format(file_path))
         delete_command = 'sudo rm -f {}'.format(file_path)
         os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), delete_command))
         return meta_df
+    if os.environ.get('version').startswith('0'):
+        width, height = current_file.size
+    if os.environ.get('version').startswith('1'):
+        _, scale = common.set_resized_input(interpreter, current_file.size, lambda size: current_file.resize(size, Image.ANTIALIAS))
     toc = time.process_time()
-    logger.info('Time to resize image: {} seconds'.format(toc - tic))
+    #logger.info('Time to resize image: {} seconds'.format(toc - tic))
 
 
     # Set up timer to check processing time
     tic = time.process_time()
 
     # Run Tensorflow Lite on the Image
-    ans = interpreter.DetectWithImage(current_file,threshold=threshold,keep_aspect_ratio =True, relative_coord=True,top_k=1)
+    if os.environ.get('version').startswith('1'):
+        interpreter.invoke()
+        ans = detect.get_objects(interpreter,threshold,scale) #athreshold,keep_aspect_ratio =True, relative_coord=True,top_k=1)
+    if os.environ.get('version').startswith('0'):
+        ans = interpreter.DetectWithImage(current_file,threshold=threshold,keep_aspect_ratio = True, relative_coord=True,top_k=1)
     toc = time.process_time()
-    logger.info('Time to run algorithm: {} seconds'.format(toc - tic))
+    #logger.info('Time to run algorithm: {} seconds'.format(toc - tic))
 
     # Set up timer to check time to save images
     tic = time.process_time()
@@ -196,15 +215,23 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
         # There may be multiple detections within one image, hence the for loop
         for obj in ans:
 
-            boxes = obj.bounding_box.flatten()
-            classes = obj.label_id
+            if os.environ.get('version').startswith('1'):
+                boxes = obj.bbox
+            #logger.info(boxes)
+            #logger.info(boxes[0])
+                boxes = [boxes[0]/width,boxes[1]/height,boxes[2]/width,boxes[3]/height]
+            #logger.info(boxes)
+                classes = obj.id
+            if os.environ.get('version').startswith('0'):
+                boxes = obj.bounding_box.flatten()
+                classes = obj.label_id
             scores = obj.score
             insight_id = int(k)
             # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
             time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
 
-            logger.info('Class: {}'.format(class_names[0][classes]))
-            logger.info('Confidence: {}'.format(scores))
+            logger.info('File: {}, Class: {}, Confidence: {}'.format(file,class_names[0][classes],scores))
+            #logger.info('Confidence: {}'.format(scores))
 
             ## Processing outputs into the correct format for pandas DF
             meta = {'committed_sql':0,'committed_images':0,
@@ -254,7 +281,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
 
 
     toc = time.process_time()
-    logger.info('Time to save images and metadata: {} seconds'.format(toc - tic))
+    #logger.info('Time to save images and metadata: {} seconds'.format(toc - tic))
 
 
     return meta_df
@@ -264,8 +291,8 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
 
 # The main function script
 def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch = 10000, spacing = 10):
-    
-    
+
+
     # Defining the results directory
     results_directory   = '../data/results/{}'.format(alg['alg_id'][0])
     try:
@@ -290,7 +317,11 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     ai_sensitivity = alg['sensitivity'][0]
 
     # Loading the model into tensorflow engine
-    interpreter = DetectionEngine(model)
+    if os.environ.get('version').startswith('0'):
+        interpreter = DetectionEngine(model)
+    if os.environ.get('version').startswith('1'):
+        interpreter = make_interpreter(model)
+        interpreter.allocate_tensors()
 
     x = 0
     directories = [str(data_directory)]
@@ -299,7 +330,9 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     tempalg_df= alg_df
     while x < len(directories):
         # Finding all files within the data directory
+
         original_directory_list = os.listdir(directories[x])
+
         logger.info('Checking Directory: {}'.format(directories[x]))
 
         #Renaming the photos
@@ -318,6 +351,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             # Specifying the specific file to be processed
             # logger.info('{}/{}'.format(directories[x],directory_list[k]))
             file = directory_list[k]
+
             # os.rename('{}/{}'.format(directories[x],directory_list[k]),'{}/{}'.format(directories[x], file))
             logger.info(file)
             # logger.info("HERE WE GO")
@@ -346,8 +380,6 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             #If the gap is larger than 30 seconds, then we define a new group key
             else:
                 group_key = alg_df['group_id'].iloc[-1] + 1
-
-
 
 
             logger.info('File: {}'.format(file))
@@ -405,6 +437,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     # Saving insights to local DB (just a .csv for now)
     alg_df.to_csv('../data/device_insights.csv')
     logger.info(alg_df)
+
     return alg_df
 
 

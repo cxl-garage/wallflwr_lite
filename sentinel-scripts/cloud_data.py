@@ -21,8 +21,23 @@ import pandas as pd
 import requests
 import json
 import logging
+#from google.cloud import storage
+#client = storage.Client()
+
 
 logger = logging.getLogger('cloud_data')
+
+def check_bucket_exists():
+    x = 'insights-{}'.format(os.environ.get('device_id'))
+    #try:
+    #   bucket = client.get_bucket(x)
+    #   logging.info('Bucket Exists')
+    #except:
+    #   logging.info('Bucket doesnt exist, creating now...')
+    os.system('gsutil mb gs://{}'.format(x))
+    #   bucket = client.get_bucket(x)
+    #   logging.info('Bucket Created and Confirmed')
+    
 
 ### Downloads the actual .tflite files to the device
 def download_alg(file):

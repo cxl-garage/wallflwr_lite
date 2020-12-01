@@ -1,3 +1,4 @@
 device.name
 models/
 data/
+sentinel-scripts/__pycache__
