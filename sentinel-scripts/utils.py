@@ -26,7 +26,7 @@ import requests
 import logging
 
 ### Initialize the device (check that local device is ready)
-def initialize(opt, shutdown_pin):
+def initialize(opt):
 
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
@@ -144,7 +144,7 @@ def delete_files():
     logger.info('Files Deleted')
 
 ### Function to make the RPi shut itself down
-def shutdown(cycle_time):
+def shutdown(cycle_time, shutdown_pin):
 
     # Pull the M0 Pin low to communicate sleep length...
     shutdown_pin.value = False

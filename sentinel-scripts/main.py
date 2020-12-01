@@ -52,7 +52,7 @@ opt = parser.parse_args()
 ######## BEGINNING OF THE WORK ########
 
 # Initialize the device (check that local device is ready)
-data_directory = utils.initialize(opt, shutdown_pin)
+data_directory = utils.initialize(opt)
 import edge_process
 if os.environ.get('version').startswith('0'):
     import digitalio
@@ -121,6 +121,6 @@ else:
 
 ## Shut down Raspberry Pi
 if os.environ.get("cycle_time") == '1':
-    utils.shutdown(os.environ.get("cycle_time"))
+    utils.shutdown(os.environ.get("cycle_time"), shutdown_pin)
 else:
     logger.info('Processing complete, device idling (shutdown disabled)')
