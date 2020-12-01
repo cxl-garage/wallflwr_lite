@@ -88,5 +88,5 @@ def upload_images():
 def upload_log():
     device_id = str(os.environ.get('device_id'))
     logger.info('Uploading log')
-    query = 'gsutil -m cp -r -n "../../logs/results/cronlog" "gs://insights-{}/logs/test/"'.format(device_id)
+    query = 'gsutil -m cp -r -n "../../logs/cronlog" "gs://insights-{}/logs/test/"'.format(device_id)
     os.system(query)
