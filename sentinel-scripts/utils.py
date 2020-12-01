@@ -26,7 +26,7 @@ import requests
 import logging
 
 ### Initialize the device (check that local device is ready)
-def initialize(opt):
+def initialize(opt, shutdown_pin):
 
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,

@@ -52,7 +52,7 @@ opt = parser.parse_args()
 ######## BEGINNING OF THE WORK ########
 
 # Initialize the device (check that local device is ready)
-data_directory = utils.initialize(opt)
+data_directory = utils.initialize(opt, shutdown_pin)
 import edge_process
 if os.environ.get('version').startswith('0'):
     import digitalio
