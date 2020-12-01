@@ -331,7 +331,10 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         except Exception as e:
             logging.error('No TPU Found. Trying again')
         k = k + 1
-    utils.shutdown(0)
+    shutdown_pin  = DigitalInOut(board.D14)
+    shutdown_pin.direction = Direction.OUTPUT
+    shutdown_pin.value = True
+    utils.shutdown(0, shutdown_pin)
 
     x = 0
     directories = [str(data_directory)]
