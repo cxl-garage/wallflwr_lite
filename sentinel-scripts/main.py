@@ -64,6 +64,7 @@ if os.environ.get('version').startswith('0'):
     shutdown_pin.direction = Direction.OUTPUT
     shutdown_pin.value = True
 
+
 # Reading in information about algorithms that have to run on device
 primary_algs = pd.read_csv('../models/_primary_algs.txt')
 secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
@@ -81,7 +82,7 @@ while k < len(primary_algs):
     logger.info('Model {} Starting'.format(primary_alg['alg_id'][0]))
 
     # Run Primary ALgorithm
-    primary_df = edge_process.main(primary_alg,data_directory,opt.type)
+    primary_df = edge_process.main(primary_alg,data_directory,opt.type, shutdown_pin)
     logger.info('Model {} Complete'.format(primary_alg['alg_id'][0]))
 
     # Run Secondary Model (if it exists)
