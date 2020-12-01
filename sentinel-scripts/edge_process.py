@@ -228,7 +228,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
             scores = obj.score
             insight_id = int(k)
             # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-            time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getctime('{}'.format(file_path)))))
+            time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
 
             logger.info('File: {}, Class: {}, Confidence: {}'.format(file,class_names[0][classes],scores))
             #logger.info('Confidence: {}'.format(scores))
@@ -269,7 +269,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
         # Note: we still save the information about the image being processed, (negative data is still valuable) and thus it is still assigned an insight_id
         insight_id = int(k)
         # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getctime('{}'.format(file_path)))))
+        time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
         meta = {'committed_sql':0,'committed_images':0,
         'committed_lora': 0,'insight_id':insight_id,'alg_id':alg['alg_id'][0],
         'time_stamp': time_stamp,'class_id':99,'class':'blank',
@@ -324,29 +324,24 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         interpreter.allocate_tensors()
 
     x = 0
-    directories = [str(data_directory),'../data/repo']
+    directories = [str(data_directory)]
     # Loading in the algorithm directory from file
     alg_df = pd.read_csv('../data/device_insights.csv')
     tempalg_df= alg_df
     while x < len(directories):
         # Finding all files within the data directory
-        directory_list = os.listdir(directories[x])
-        #print(directory_list)
+
+        original_directory_list = os.listdir(directories[x])
+
         logger.info('Checking Directory: {}'.format(directories[x]))
 
-        ## Loop to understand the files potential relationship to other files (via time)
-        k = 1
-        spacing = [0]
-        while k < len(directory_list):
-            time1 = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k])))
-            time2 = int(os.path.getctime('{}/{}'.format(directories[x],directory_list[k-1])))
-            try:
-                spacing.append(time1-time2)
-            except Exception as e:
-                spacing.append(999)
-                logger.error('Failed to subtract the time')
-            k = k + 1
-
+        #Renaming the photos
+        i = 0
+        while i < len(original_directory_list):
+            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}.JPG'.format(directories[x],uuid.uuid1()))
+            i = i+1
+        
+        directory_list = os.listdir(directories[x])
         # initializing variables to enable grouping of files
         previous_confidence = 0
         previous_class = ''
@@ -354,93 +349,95 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         ## Looping through all files on the SD Card
         while k < len(directory_list):
             # Specifying the specific file to be processed
+            # logger.info('{}/{}'.format(directories[x],directory_list[k]))
             file = directory_list[k]
-            #logger.info('File: {}'.format(file))
 
+            # os.rename('{}/{}'.format(directories[x],directory_list[k]),'{}/{}'.format(directories[x], file))
+            logger.info(file)
+            # logger.info("HERE WE GO")
+            # logger.info('{}/{}'.format(directories[x],directory_list[k]))
+
+            if k > 0: 
+                timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
+                timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x],directory_list[k-1])))
+            else:
+                timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
+                timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
+            logger.info('timeFile - timeFileBefore')
+            logger.info(timeFile - timeFileBefore)
+
+            #If it is the first photo in the directory, we can assume it is a new group 
+            #If it is the first ever photo in the csv, we set the key to 1
+            if k == 0:
+                try:
+                    group_key = alg_df['group_id'].iloc[-1]+1 
+                    logger.info(group_key)
+                except Exception as e:
+                    group_key = 1
+            #If the gap between photos after the first is smaller than 30 seconds, it is the same group
+            elif (timeFile - timeFileBefore) < 30:
+                group_key = alg_df['group_id'].iloc[-1] 
+            #If the gap is larger than 30 seconds, then we define a new group key
+            else:
+                group_key = alg_df['group_id'].iloc[-1] + 1
+
+
+            logger.info('File: {}'.format(file))
             # Checking that the file hasn't already been processed by this algorithm
             if ((alg_df['alg_id'] == alg['alg_id'][0]) & (alg_df['image_id'] == file)).any():
                 logger.info('File already processed')
+                k = k + 1
+                continue
             else:
                 # Checking if number of files checked has exceeded the "batch" variable (in production this should be inf)
                 if k == batch:
-                    logger.info('Batch Limit Reached')
                     break
+            ## Check that the file is actually a processable photo
+            #  Feature: Add ability to process videos
+            if file.endswith(".jpeg") or file.endswith(".JPG") or file.endswith(".jpg") or file.endswith(".JPEG") or file.endswith(".png") or file.endswith(".PNG"):
+                    if algorithm_type == 'detection':
+                        # Run the inference function, returns the bounded box metadata
+                        meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, directories[x], file, ai_sensitivity, results_directory,class_names)
+                        # Appending the unique group key to the metadata
+                        meta_df['group_id'] = group_key
+                        logger.info(meta_df)
+                        # Appending to existing results from the while loop
+                        alg_df = alg_df.append(meta_df,ignore_index=True)
+                        tempalg_df=alg_df
+                        logger.info(alg_df)
 
-                # Looping through files that is only broken if the spacing between files is above "spacing" variable seconds
-                if True: #while 1:
-                    # Defining a unique key for this group of insights
-                    #logger.info('2')
-                    try:
-                        group_key = alg_df['group_id'].iloc[-1] + 1
-                    except Exception as e:
-                        group_key = 1
-
-
-                    try:
-                        # Break loop if the previous gap between files timestamp was greater than "spacing" variable
-                        if spacing[k] > 10:
-                            k = k + 1
-                            logger.info('End of Group')
-                            #break
-                        if k > len(directory_list):
-                            logger.info('All files processed')
-                            #break
-                        k = k + 1
-                    except Exception as e:
-                        k = k + 1
-                        logger.error('Error in grouping code')
-                        #break
-
-                    ## Check that the file is actually a processable photo
-                    #  Feature: Add ability to process videos
-                    if file.endswith(".jpeg") or file.endswith(".JPG") or file.endswith(".jpg") or file.endswith(".JPEG") or file.endswith(".png") or file.endswith(".PNG"):
-                            #logger.info('6')
-                            if algorithm_type == 'detection':
-                                # Run the inference function, returns the bounded box metadata
-                                meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, directories[x], file, ai_sensitivity, results_directory,class_names)
-                                #logger.info('7')
-                                # Appending the unique group key to the metadata
-                                meta_df['group_id'] = group_key
-                                #logger.info(meta_df)
-                                # Appending to existing results from the while loop
-                                alg_df = alg_df.append(meta_df,ignore_index=True)
-                                tempalg_df=alg_df
-                                #logger.info(alg_df)
-
-                                # Adding group confidence from linked confidence between inferences
-                                m = 0
-                                while m < len(meta_df):
-                                    # if the previous data inference within the same group had the same class, add the confidences.
-                                    # note that this will only run if all detections within the current image are also the same as the previous image
-                                    if previous_class == meta_df['class'][m]:
-                                        try:
-                                            previous_confidence = meta_df['confidence'][m] + previous_confidence
-                                        except Exception as e:
-                                            previous_confidence = previous_confidence
-                                    previous_class = meta_df['class'][m]
-                                    m = m+1
-                            else:
-                                logger.error('Type of algorithm not yet supported')
+                        # Adding group confidence from linked confidence between inferences
+                        m = 0
+                        while m < len(meta_df):
+                            # if the previous data inference within the same group had the same class, add the confidences.
+                            # note that this will only run if all detections within the current image are also the same as the previous image
+                            if previous_class == meta_df['class'][m]:
+                                try:
+                                    previous_confidence = meta_df['confidence'][m] + previous_confidence
+                                except Exception as e:
+                                    previous_confidence = previous_confidence
+                            previous_class = meta_df['class'][m]
+                            m = m+1
                     else:
-                        logger.error('Unsupported format')
-                        #break
-                    # Adding the group confidence to any data point that has the same group key
-                    alg_df.loc[alg_df['group_id'] == group_key,'group_confidence'] = previous_confidence
-
+                        logger.error('Type of algorithm not yet supported')
+            else:
+                break
+            # Adding the group confidence to any data point that has the same group key
+            alg_df.loc[alg_df['group_id'] == group_key,'group_confidence'] = previous_confidence
+                    
             # Moving on to next file
             k = k + 1
         x = x + 1
-    #logger.info("")
-    #logger.info(alg_df)
-    #logger.info(tempalg_df)
+
+    logger.info(alg_df)
+    logger.info(tempalg_df)
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
     alg_df = tempalg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
-    #logger.info("12")
     logger.info(alg_df)
     # Saving insights to local DB (just a .csv for now)
     alg_df.to_csv('../data/device_insights.csv')
-    logger.info('Saved to csv')
-    #logger.info(alg_df)
+    logger.info(alg_df)
+
     return alg_df
 
 
