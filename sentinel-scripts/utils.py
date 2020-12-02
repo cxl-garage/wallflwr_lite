@@ -25,6 +25,15 @@ import pandas as pd
 import requests
 import logging
 
+### Checking if device has internet access
+def connect(url='http://www.google.com/', timeout=3):
+    try:
+        r = requests.head(url, timeout=timeout)
+        return True
+    except requests.ConnectionError as ex:
+        #print(ex)
+        return False
+
 ### Initialize the device (check that local device is ready)
 def initialize(opt):
     # set up logging to file - see previous section for more details
@@ -79,13 +88,13 @@ def initialize(opt):
             cloud_db.check_algs()
     else:
         logger.warning('Internet Connection not available')
-    device_information = pd.read_csv('../_device_info.csv')
-    print('Device ID: {}'.format(str(device_information['device_id'][0])))
-    os.environ['device_id'] = str(device_information['device_id'][0])
-    os.environ['cycle_time'] = str(device_information['cycle_time'][0])
-    os.environ['sudoPW'] = 'endextinction'
-    os.environ['shutdown'] = str(device_information['shutdown'][0])
-    os.environ['version'] = str(device_information['version'][0])
+        device_information = pd.read_csv('../_device_info.csv')
+        print('Device ID: {}'.format(str(device_information['device_id'][0])))
+        os.environ['device_id'] = str(device_information['device_id'][0])
+        os.environ['cycle_time'] = str(device_information['cycle_time'][0])
+        os.environ['sudoPW'] = 'endextinction'
+        os.environ['shutdown'] = str(device_information['shutdown'][0])
+        os.environ['version'] = str(device_information['version'][0])
 
     # Loop to run consistently run on RasPi
     if opt.test == False:
@@ -121,14 +130,6 @@ def initialize(opt):
         logger.warning('Running in test mode')
     return data_directory
 
-### Checking if device has internet access
-def connect(url='http://www.google.com/', timeout=3):
-    try:
-        r = requests.head(url, timeout=timeout)
-        return True
-    except requests.ConnectionError as ex:
-        #print(ex)
-        return False
 
 
 ### Deletes files from SD Card
