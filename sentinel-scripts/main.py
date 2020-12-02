@@ -90,7 +90,7 @@ utils.delete_files()
 #lora.main()
 
 # If internet connection exists, upload data to cloud
-if connect() == True:
+if utils.connect() == True:
 
     # Upload metadata to SQL database
     if opt.sql_off == False:
