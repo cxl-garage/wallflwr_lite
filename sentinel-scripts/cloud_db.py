@@ -234,12 +234,6 @@ def device_info():
     print(device_information)
     device_information = device_information.reset_index(drop=True)
     device_information.to_csv('../_device_info.csv')
-    print('Device ID: {}'.format(str(device_information['device_id'][0])))
-    os.environ['device_id'] = str(device_information['device_id'][0])
-    os.environ['cycle_time'] = str(device_information['cycle_time'][0])
-    os.environ['sudoPW'] = 'endextinction'
-    os.environ['shutdown'] = str(device_information['shutdown'][0])
-    os.environ['version'] = str(device_information['version'][0])
 
 
 ### Upload insights captured on device to SQL DB

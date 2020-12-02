@@ -27,18 +27,6 @@ import logging
 
 ### Initialize the device (check that local device is ready)
 def initialize(opt):
-
-    # Set up hardware pins
-    if os.environ.get('version').startswith('0'):
-        import digitalio
-        import board
-        from digitalio import DigitalInOut, Direction, Pull
-
-        # Pull the M0 Pin Low to keep the Pi on...
-        shutdown_pin  = DigitalInOut(board.D14)
-        shutdown_pin.direction = Direction.OUTPUT
-        shutdown_pin.value = True
-        
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
@@ -91,8 +79,13 @@ def initialize(opt):
             cloud_db.check_algs()
     else:
         logger.warning('Internet Connection not available')
-
-
+    device_information = pd.read_csv('../_device_info.csv')
+    print('Device ID: {}'.format(str(device_information['device_id'][0])))
+    os.environ['device_id'] = str(device_information['device_id'][0])
+    os.environ['cycle_time'] = str(device_information['cycle_time'][0])
+    os.environ['sudoPW'] = 'endextinction'
+    os.environ['shutdown'] = str(device_information['shutdown'][0])
+    os.environ['version'] = str(device_information['version'][0])
 
     # Loop to run consistently run on RasPi
     if opt.test == False:
