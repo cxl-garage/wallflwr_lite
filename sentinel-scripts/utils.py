@@ -25,14 +25,8 @@ import pandas as pd
 import requests
 import logging
 
-import digitalio
-import board
-from digitalio import DigitalInOut, Direction, Pull
-
-logger = logging.getLogger('main')
-
 ### Initialize the device (check that local device is ready)
-def initialize(opt):
+def initialize():
 
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
@@ -110,7 +104,7 @@ def initialize(opt):
                 m = m + 1
             if k == 3:
                 logger.error('SD Card Not Found')
-                utils.shutdown()
+                shutdown()
             if os.path.isdir('../data/camera/DCIM') == True:
                 break
             else:
@@ -150,7 +144,7 @@ def delete_files():
     logger.info('Files Deleted')
 
 ### Function to make the RPi shut itself down
-def shutdown(cycle_time, shutdown_pin):
+def shutdown(cycle_time):
 
     # Pull the M0 Pin low to communicate sleep length...
     shutdown_pin.value = False
