@@ -43,7 +43,7 @@ def initialize(opt):
     console.setFormatter(formatter)
     # add the handler to the root logger
     logging.getLogger('').addHandler(console)
-    logger = logging.getLogger('utils')
+    logger = logging.getLogger('initialize')
 
     f = open("../device.name", "r")
     lines = f.readlines()
@@ -129,6 +129,7 @@ def connect(url='http://www.google.com/', timeout=3):
 
 ### Deletes files from SD Card
 def delete_files():
+    logger = logging.getLogger('deleter')
     # Load local insights "database" (currently just a csv) as a pandas dataframe
     insights = pd.read_csv('../data/device_insights.csv')
 
@@ -145,7 +146,7 @@ def delete_files():
 
 ### Function to make the RPi shut itself down
 def shutdown(cycle_time):
-
+    logger = logging.getLogger('shutter')
     # Pull the M0 Pin low to communicate sleep length...
     shutdown_pin.value = False
     logger.info('Send command to M0 to shut down')
