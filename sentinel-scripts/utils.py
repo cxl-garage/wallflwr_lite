@@ -104,7 +104,7 @@ def initialize(opt):
                 m = m + 1
             if k == 3:
                 logger.error('SD Card Not Found')
-                shutdown()
+                shutdown(0)
             if os.path.isdir('../data/camera/DCIM') == True:
                 break
             else:
