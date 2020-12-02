@@ -34,8 +34,12 @@ def connect(url='http://www.google.com/', timeout=3):
         #print(ex)
         return False
 
-### Initialize the device (check that local device is ready)
+    ### Initialize the device (check that local device is ready)
 def initialize(opt):
+    f = open("../device.name", "r")
+    lines = f.readlines()
+    os.environ['device_name'] = lines[0].rstrip()
+    
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
@@ -53,9 +57,6 @@ def initialize(opt):
     logging.getLogger('').addHandler(console)
     logger = logging.getLogger('initialize')
 
-    f = open("../device.name", "r")
-    lines = f.readlines()
-    os.environ['device_name'] = lines[0].rstrip()
 
     # Check local database exists
     if not os.path.exists('../data/device_insights.csv'):
