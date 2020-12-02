@@ -54,15 +54,6 @@ opt = parser.parse_args()
 # Initialize the device (check that local device is ready)
 data_directory = utils.initialize(opt)
 import edge_process
-if os.environ.get('version').startswith('0'):
-    import digitalio
-    import board
-    from digitalio import DigitalInOut, Direction, Pull
-
-    # Pull the M0 Pin Low to keep the Pi on...
-    shutdown_pin  = DigitalInOut(board.D14)
-    shutdown_pin.direction = Direction.OUTPUT
-    shutdown_pin.value = True
 
 
 # Reading in information about algorithms that have to run on device
