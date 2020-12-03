@@ -85,18 +85,18 @@ def initialize(opt):
         from git import Repo
         repo = Repo('../')
         print(repo.tags)
-        print(repo.versions)
         assert not repo.bare
-        o = repo.remotes.origin
-        if 1:#os.environ.get('release') != '1.0':
-            repo.heads.master.set_tracking_branch(o.refs.master)
-            repo.heads.master.checkout()
-            o.commit('v0.9')
-            o.pull()
-            sha = repo.head.object.hexsha
-            logger.info('Pulled from Git ({})'.format(sha))
-        else:
-            logger.error('Version not known! Please contact the db administrator (OR YOU ARE IN DEBUG?)')
+        repo.git.checkout('c81f7a6')
+        #o = repo.remotes.origin
+        #if 1:#os.environ.get('release') != '1.0':
+            #repo.heads.master.set_tracking_branch(o.refs.master)
+            #repo.heads.master.checkout()
+            #o.commit('v0.9')
+            #o.pull()
+            #sha = repo.head.object.hexsha
+            #logger.info('Pulled from Git ({})'.format(sha))
+        #else:
+        #    logger.error('Version not known! Please contact the db administrator (OR YOU ARE IN DEBUG?)')
 
 
         cloud_data.check_bucket_exists()
