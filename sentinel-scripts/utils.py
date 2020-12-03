@@ -39,7 +39,7 @@ def initialize(opt):
     f = open("../device.name", "r")
     lines = f.readlines()
     os.environ['device_name'] = lines[0].rstrip()
-    
+
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
@@ -56,6 +56,7 @@ def initialize(opt):
     # add the handler to the root logger
     logging.getLogger('').addHandler(console)
     logger = logging.getLogger('initialize')
+
 
 
     # Check local database exists
@@ -76,8 +77,14 @@ def initialize(opt):
         logger.info('Internet Connection Successful')
 
         # Pull latest master branch from git
-        #os.system('git pull')
-        #logger.info('Pulled from Git')
+        from git import Repo
+        repo = Repo('../')
+        assert not repo.bare
+        o = repo.remotes.origin
+        repo.heads.master.set_tracking_branch(o.refs.master)
+        repo.heads.master.checkout()
+        o.pull()
+        logger.info('Pulled from Git')
 
         logger.info('Device Name: {}'.format(os.environ.get('device_name')))
 
