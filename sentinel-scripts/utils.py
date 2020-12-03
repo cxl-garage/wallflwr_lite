@@ -97,6 +97,7 @@ def initialize(opt):
         elif os.environ.get('release') == 'debug':
             logger.info('In Debug mode, Git is manually controlled!')
         else:
+            k = 0
             for tag in repo.tags:
                 if str(tag) == str(os.environ.get('release')):
                     checkout_tag = tag
@@ -105,8 +106,10 @@ def initialize(opt):
                     repo.git.checkout(checkout_commit)
                     logger.info('Pulled {} version (SHA: {})'.format(checkout_tag,checkout_commit))
                     break
-                logger.error('Version not known')
-                commit_to_checkout = repo.head.object.hexsha
+                if k = len(repo.tags)
+                    logger.error('Version not known')
+                    commit_to_checkout = repo.head.object.hexsha
+                k = k + 1
 
 
         cloud_data.check_bucket_exists()
