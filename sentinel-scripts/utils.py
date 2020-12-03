@@ -87,7 +87,6 @@ def initialize(opt):
         from git import Repo
         repo = Repo('../')
         assert not repo.bare
-
         repo.remotes.origin.pull()
         commit_to_tag = {tag.commit.hexsha: tag for tag in repo.tags}
         commit, release_tag = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)[0]
@@ -110,7 +109,7 @@ def initialize(opt):
         else:
             logger.info('In Debug mode, Git is manually controlled!')
 
-            
+
         cloud_data.check_bucket_exists()
         if opt.update_off == False:
             logger.info('Checking for new algorithms')
