@@ -21,13 +21,21 @@ cd /home/pi/wallflwr_lite/sentinel-scripts
 # python3 main.py
 
 
-FILE_TO_WATCH=./log.out
-SEARCH_PATTERN='Ready for new connections'
+# FILE_TO_WATCH=./log.out
+# SEARCH_PATTERN='Ready for new connections'
 
-tail -f -n0 ${FILE_TO_WATCH} | grep -qe ${SEARCH_PATTERN}
+# tail -f -n0 ${FILE_TO_WATCH} | grep -qe ${SEARCH_PATTERN}
 
-if [ $? == 1 ]; then
-    echo "Search terminated without finding the pattern"
-fi
+# if [ $? == 1 ]; then
+#     echo "Search terminated without finding the pattern"
+# fi
 
-python3 main.py
+# python3 main.py
+
+
+while ! grep -m1 'Ready for new connections' < /log.out; do
+    sleep 1
+    echo HEYO
+done
+
+echo Continue
