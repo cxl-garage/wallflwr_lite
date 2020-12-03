@@ -100,14 +100,15 @@ def initialize(opt):
         else:
             try:
                 for tag in repo.tags:
+                    print(tag)
                     if tag == os.environ.get('version'):
                         commit_to_checkout = tag
                         print(commit_to_checkout)
-                        tag_to_checkout = release_tag.name
+                        tag_to_checkout = tag.name
             except Exception as e:
                 logger.error('Version not known')
                 commit_to_checkout = repo.head.object.hexsha
-            repo.git.checkout(version_to_checkout)
+            repo.git.checkout(tag_to_checkout)
             logger.info('Pulled {} version (SHA: {})'.format(tag_to_checkout,commit_to_checkout))
 
 
