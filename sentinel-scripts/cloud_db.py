@@ -228,7 +228,7 @@ def device_info():
     db_ip   = os.environ.get("DB_PRIP")
     cloud_sql_connection_name = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
     URL = 'mysql+pymysql://{}:{}@{}/{}'.format(db_user,db_pass,db_ip,db_name)
-    engine = sqlalchemy.create_engine(URL, pool_size=5,max_overflow=2,pool_timeout=30,pool_recycle=1800,)
+    engine = sqlalchemy.create_engine(URL, pool_size=5,max_overflow=2,pool_timeout=60,pool_recycle=1800,)
     query = "SELECT * FROM devices WHERE device_name = \'{}\'".format(os.environ.get('device_name'))
     print(query)
     device_information = pd.read_sql(query,con=engine)
