@@ -89,13 +89,14 @@ def initialize(opt):
         assert not repo.bare
         repo.remotes.origin.pull()
         commit_to_tag = {tag.commit.hexsha: tag for tag in repo.tags}
-        commit, release_tag = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)[0]
         if os.environ.get('version') == 'latest':
-            commit_to_checkout = commit[0]
+            commit_to_checkout = = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)[0]
             tag_to_checkout = 'latest'
             repo.git.checkout(version_to_checkout)
             logger.info('Pulled {} version (SHA: {})'.format(tag_to_checkout,commit_to_checkout))
-        elif os.environ.get('version') != 'debug':
+        elif os.environ.get('version') == 'debug':
+            logger.info('In Debug mode, Git is manually controlled!')
+        else:
             try:
                 for tag in repo.tags:
                     if tag == os.environ.get('version'):
@@ -106,8 +107,6 @@ def initialize(opt):
                 commit_to_checkout = repo.head.object.hexsha
             repo.git.checkout(version_to_checkout)
             logger.info('Pulled {} version (SHA: {})'.format(tag_to_checkout,commit_to_checkout))
-        else:
-            logger.info('In Debug mode, Git is manually controlled!')
 
 
         cloud_data.check_bucket_exists()
