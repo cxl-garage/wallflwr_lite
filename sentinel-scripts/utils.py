@@ -90,9 +90,10 @@ def initialize(opt):
         repo.remotes.origin.pull()
         commit_to_tag = {tag.commit.hexsha: tag for tag in repo.tags}
         if os.environ.get('version') == 'latest':
-            commit_to_checkout = = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)[0]
+            commit_to_checkout = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)[0]
+            print(commit_to_checkout)
             tag_to_checkout = 'latest'
-            repo.git.checkout(version_to_checkout)
+            repo.git.checkout(commit_to_checkout)
             logger.info('Pulled {} version (SHA: {})'.format(tag_to_checkout,commit_to_checkout))
         elif os.environ.get('version') == 'debug':
             logger.info('In Debug mode, Git is manually controlled!')
@@ -101,6 +102,7 @@ def initialize(opt):
                 for tag in repo.tags:
                     if tag == os.environ.get('version'):
                         commit_to_checkout = tag
+                        print(commit_to_checkout)
                         tag_to_checkout = release_tag.name
             except Exception as e:
                 logger.error('Version not known')
