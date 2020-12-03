@@ -89,20 +89,19 @@ def initialize(opt):
         assert not repo.bare
         repo.remotes.origin.pull()
         commit_to_tag = {tag.commit.hexsha: tag for tag in repo.tags}
-        if os.environ.get('version') == 'latest':
+        if os.environ.get('release') == 'latest':
             commit_to_checkout = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)[0]
             print(commit_to_checkout)
             tag_to_checkout = 'latest'
             repo.git.checkout(commit_to_checkout)
             logger.info('Pulled {} version (SHA: {})'.format(tag_to_checkout,commit_to_checkout))
-        elif os.environ.get('version') == 'debug':
+        elif os.environ.get('release') == 'debug':
             logger.info('In Debug mode, Git is manually controlled!')
         else:
-            repo.git.checkout(str(os.environ.get('version')))
             try:
                 for tag in repo.tags:
                     print(tag)
-                    if str(tag) == str(os.environ.get('version')):
+                    if str(tag) == str(os.environ.get('release')):
                         commit_to_checkout = tag
                         print(commit_to_checkout)
                         tag_to_checkout = tag.name
