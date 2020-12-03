@@ -88,26 +88,25 @@ def initialize(opt):
         repo = Repo('../')
         assert not repo.bare
         repo.remotes.origin.pull()
-        commit_to_tag = {tag.commit.hexsha: tag for tag in repo.tags}
+        commits = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)
         if os.environ.get('release') == 'latest':
-            commit_to_checkout = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)[0]
             print(commit_to_checkout)
-            tag_to_checkout = 'latest'
-            repo.git.checkout(commit_to_checkout)
-            logger.info('Pulled {} version (SHA: {})'.format(tag_to_checkout,commit_to_checkout))
+            checkout_tag = 'latest'
+            repo.git.checkout(commits[0])
+            logger.info('Pulled {} version (SHA: {})'.format(checkout_tag,commits[0]))
         elif os.environ.get('release') == 'debug':
             logger.info('In Debug mode, Git is manually controlled!')
         else:
-            try:
+            while 1:
                 for tag in repo.tags:
                     print(tag)
                     if str(tag) == str(os.environ.get('release')):
-                        commit_to_checkout = tag
-                        print(commit_to_checkout)
-                        tag_to_checkout = tag.name
-                        repo.git.checkout(tag_to_checkout)
-                        logger.info('Pulled {} version (SHA: {})'.format(tag_to_checkout,commit_to_checkout))
-            except Exception as e:
+                        checkout_tag = tag
+                        checkout_commit = tag.commit.hexsha
+                        print(checkout_commit)
+                        repo.git.checkout(checkout_commit)
+                        logger.info('Pulled {} version (SHA: {})'.format(checkout_tag,checkout_commit))
+                        break
                 logger.error('Version not known')
                 commit_to_checkout = repo.head.object.hexsha
 
