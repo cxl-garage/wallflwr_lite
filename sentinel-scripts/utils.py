@@ -84,6 +84,7 @@ def initialize(opt):
         cloud_db.device_info()
 
         # Pull latest master branch from git
+        logger.info('Specified Version: {}'.format(str(os.environ.get('release'))))
         from git import Repo
         repo = Repo('../')
         assert not repo.bare
@@ -96,16 +97,15 @@ def initialize(opt):
         elif os.environ.get('release') == 'debug':
             logger.info('In Debug mode, Git is manually controlled!')
         else:
-            while 1:
-                for tag in repo.tags:
-                    print(tag)
-                    if str(tag) == str(os.environ.get('release')):
-                        checkout_tag = tag
-                        checkout_commit = tag.commit.hexsha
-                        print(checkout_commit)
-                        repo.git.checkout(checkout_commit)
-                        logger.info('Pulled {} version (SHA: {})'.format(checkout_tag,checkout_commit))
-                        break
+            for tag in repo.tags:
+                print(tag)
+                if str(tag) == str(os.environ.get('release')):
+                    checkout_tag = tag
+                    checkout_commit = tag.commit.hexsha
+                    print(checkout_commit)
+                    repo.git.checkout(checkout_commit)
+                    logger.info('Pulled {} version (SHA: {})'.format(checkout_tag,checkout_commit))
+                    break
                 logger.error('Version not known')
                 commit_to_checkout = repo.head.object.hexsha
 
