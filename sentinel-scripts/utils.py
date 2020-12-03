@@ -34,12 +34,14 @@ def connect(url='http://www.google.com/', timeout=3):
         #print(ex)
         return False
 
+
+
     ### Initialize the device (check that local device is ready)
 def initialize(opt):
     f = open("../device.name", "r")
     lines = f.readlines()
     os.environ['device_name'] = lines[0].rstrip()
-    
+
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
@@ -56,6 +58,7 @@ def initialize(opt):
     # add the handler to the root logger
     logging.getLogger('').addHandler(console)
     logger = logging.getLogger('initialize')
+
 
 
     # Check local database exists
@@ -75,18 +78,44 @@ def initialize(opt):
     if connect() == True:
         logger.info('Internet Connection Successful')
 
-        # Pull latest master branch from git
-        #os.system('git pull')
-        #logger.info('Pulled from Git')
-
         logger.info('Device Name: {}'.format(os.environ.get('device_name')))
 
         # Pull device info and write it to memory as a CSV
         cloud_db.device_info()
+
+        # Pull latest master branch from git
+        logger.info('Checking git for updates')
+        from git import Repo
+        repo = Repo('../')
+        assert not repo.bare
+        repo.remotes.origin.pull()
+        if os.environ.get('release') == 'debug':
+            logger.info('In Debug mode, Git is manually controlled!')
+        else:
+            k = 1
+            for tag in repo.tags:
+                if str(tag) == str(os.environ.get('release')):
+                    checkout_tag = tag
+                    checkout_commit = tag.commit.hexsha
+                    if checkout_commit != repo.head.object.hexsha:
+                        repo.git.checkout(checkout_commit)
+                        logger.info('Checked out {} version (SHA: {})'.format(checkout_tag,checkout_commit))
+                    else:
+                        logger.info('Already up-to-date')
+                    break
+                if k == len(repo.tags):
+                    logger.error('Version not known')
+                    commit_to_checkout = repo.head.object.hexsha
+                k = k + 1
+
+
         cloud_data.check_bucket_exists()
         if opt.update_off == False:
             logger.info('Checking for new algorithms')
             cloud_db.check_algs()
+
+
+
     else:
         logger.warning('Internet Connection not available')
         device_information = pd.read_csv('../_device_info.csv')
