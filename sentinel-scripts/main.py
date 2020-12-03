@@ -262,7 +262,7 @@ if connect() == True:
     # Upload images to Google Cloud Storage
     if opt.gcs_off == False:
         cloud_data.upload_images()
-        cloud_data.upload_log()
+        # cloud_data.upload_log()
 
     # Send email notification (if requested by SQL table eventually)
     if opt.email ==True:
