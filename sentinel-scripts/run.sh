@@ -36,8 +36,9 @@ cd /home/pi/wallflwr_lite/sentinel-scripts
 bash cloud_proxy.sh
 
 while ! grep -m1 'Ready for new connections' < ./log.out; do
-    sleep 1
-    echo HEYO
+    sleep 2
+    echo Connecting...
 done
 
-echo Continue
+echo Connected to SQL
+python3 main.py
