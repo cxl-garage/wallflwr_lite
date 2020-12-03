@@ -94,8 +94,9 @@ def initialize(opt):
         if os.environ.get('version') == 'latest':
             commit_to_checkout = commit[0]
             tag_to_checkout = 'latest'
-            logger.info('Pulling latest version!')
-        else:
+            repo.git.checkout(version_to_checkout)
+            logger.info('Pulled {} version (SHA: {})'.format(tag_to_checkout,commit_to_checkout))
+        elif os.environ.get('version') != 'debug':
             try:
                 for tag in repo.tags:
                     if tag == os.environ.get('version'):
@@ -104,9 +105,12 @@ def initialize(opt):
             except Exception as e:
                 logger.error('Version not known')
                 commit_to_checkout = repo.head.object.hexsha
-        repo.git.checkout(version_to_checkout)
-        logger.info('Pulled {} version (SHA: {})'.format(tag_to_checkout,commit_to_checkout))
+            repo.git.checkout(version_to_checkout)
+            logger.info('Pulled {} version (SHA: {})'.format(tag_to_checkout,commit_to_checkout))
+        else:
+            logger.info('In Debug mode, Git is manually controlled!')
 
+            
         cloud_data.check_bucket_exists()
         if opt.update_off == False:
             logger.info('Checking for new algorithms')
