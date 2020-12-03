@@ -34,6 +34,8 @@ def connect(url='http://www.google.com/', timeout=3):
         #print(ex)
         return False
 
+
+
     ### Initialize the device (check that local device is ready)
 def initialize(opt):
     f = open("../device.name", "r")
@@ -86,6 +88,11 @@ def initialize(opt):
         repo = Repo('../')
         print(repo.tags)
         assert not repo.bare
+        repo.remotes.origin.pull()
+        commit_to_tag = {tag.commit.hexsha: tag for tag in repo.tags}
+        print(commit_to_tag)
+        _, release_tag = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)[0]
+        print(release_tag)
         repo.git.checkout('c81f7a6')
         #o = repo.remotes.origin
         #if 1:#os.environ.get('release') != '1.0':
