@@ -98,7 +98,6 @@ def initialize(opt):
             logger.info('In Debug mode, Git is manually controlled!')
         else:
             for tag in repo.tags:
-                print(tag)
                 if str(tag) == str(os.environ.get('release')):
                     checkout_tag = tag
                     checkout_commit = tag.commit.hexsha
