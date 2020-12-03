@@ -5,7 +5,7 @@ exec 1>log.out 2>&1
 echo “Started cloud proxy”
 cd /
 cd /home/pi/wallflwr_lite/sentinel-scripts
-./cloud_sql_proxy -instances=sentinel-project-278421:us-east4:algorithm-library=tcp:1234 -credential_file=../../credentials/sentinelDB.json  & 
+./cloud_sql_proxy -instances=sentinel-project-278421:us-east4:algorithm-library=tcp:1234 -credential_file=../../credentials/sentinelDB.json -term_timeout=30s  & 
 
 
 
