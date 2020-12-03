@@ -106,7 +106,7 @@ def initialize(opt):
                     repo.git.checkout(checkout_commit)
                     logger.info('Pulled {} version (SHA: {})'.format(checkout_tag,checkout_commit))
                     break
-                if k = len(repo.tags)
+                if k == len(repo.tags):
                     logger.error('Version not known')
                     commit_to_checkout = repo.head.object.hexsha
                 k = k + 1
