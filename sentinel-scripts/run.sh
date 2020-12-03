@@ -1,6 +1,8 @@
 cd /
 cd /home/pi/wallflwr_lite/sentinel-scripts
 
+#Ping until we have internet
+while true; do    ping -c 1 8.8.8.8 && break; sleep 10; done
 #This will start the cloud proxy
 bash cloud_proxy.sh
 
