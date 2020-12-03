@@ -86,25 +86,26 @@ def initialize(opt):
         # Pull latest master branch from git
         from git import Repo
         repo = Repo('../')
-        print(repo.tags)
         assert not repo.bare
+
         repo.remotes.origin.pull()
         commit_to_tag = {tag.commit.hexsha: tag for tag in repo.tags}
-        print(commit_to_tag)
-        _, release_tag = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)[0]
-        print(release_tag)
-        repo.git.checkout('c81f7a6')
-        #o = repo.remotes.origin
-        #if 1:#os.environ.get('release') != '1.0':
-            #repo.heads.master.set_tracking_branch(o.refs.master)
-            #repo.heads.master.checkout()
-            #o.commit('v0.9')
-            #o.pull()
-            #sha = repo.head.object.hexsha
-            #logger.info('Pulled from Git ({})'.format(sha))
-        #else:
-        #    logger.error('Version not known! Please contact the db administrator (OR YOU ARE IN DEBUG?)')
-
+        commit, release_tag = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)[0]
+        if os.environ.get('version') == 'latest':
+            commit_to_checkout = commit[0]
+            tag_to_checkout = 'latest'
+            logger.info('Pulling latest version!')
+        else:
+            try:
+                for tag in repo.tags:
+                    if tag == os.environ.get('version'):
+                        commit_to_checkout = tag
+                        tag_to_checkout = release_tag.name
+            except Exception as e:
+                logger.error('Version not known')
+                commit_to_checkout = repo.head.object.hexsha
+        repo.git.checkout(version_to_checkout)
+        logger.info('Pulled {} version (SHA: {})'.format(tag_to_checkout,commit_to_checkout))
 
         cloud_data.check_bucket_exists()
         if opt.update_off == False:
