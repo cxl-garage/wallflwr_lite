@@ -88,11 +88,10 @@ def initialize(opt):
         repo = Repo('../')
         assert not repo.bare
         repo.remotes.origin.pull()
-        commits = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)
         if os.environ.get('release') == 'latest':
             print(commit_to_checkout)
             checkout_tag = 'latest'
-            repo.git.checkout(commits[0])
+             _, commits = sorted([(tag.commit.committed_datetime, tag) for tag in repo.tags], reverse=True,)[0]
             logger.info('Pulled {} version (SHA: {})'.format(checkout_tag,commits[0]))
         elif os.environ.get('release') == 'debug':
             logger.info('In Debug mode, Git is manually controlled!')
