@@ -98,7 +98,7 @@ def initialize(opt):
         elif os.environ.get('version') == 'debug':
             logger.info('In Debug mode, Git is manually controlled!')
         else:
-            repo.git.checkout(str(os.environ.get('version'))
+            repo.git.checkout(str(os.environ.get('version')))
             try:
                 for tag in repo.tags:
                     print(tag)
