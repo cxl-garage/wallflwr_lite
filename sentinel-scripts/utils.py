@@ -102,7 +102,6 @@ def initialize(opt):
                 if str(tag) == str(os.environ.get('release')):
                     checkout_tag = tag
                     checkout_commit = tag.commit.hexsha
-                    print(checkout_commit)
                     repo.git.checkout(checkout_commit)
                     logger.info('Pulled {} version (SHA: {})'.format(checkout_tag,checkout_commit))
                     break
