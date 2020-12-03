@@ -90,10 +90,10 @@ def initialize(opt):
         repo = Repo('../')
         assert not repo.bare
         o = repo.remotes.origin
-        if os.environ.get('release') != '1.0':
+        if 1:#os.environ.get('release') != '1.0':
             repo.heads.master.set_tracking_branch(o.refs.master)
-            repo.heads.commit('v0.9')
             repo.heads.master.checkout()
+            o.commit('v0.9')
             o.pull()
             sha = repo.head.object.hexsha
             logger.info('Pulled from Git ({})'.format(sha))
