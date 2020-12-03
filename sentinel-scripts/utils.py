@@ -84,7 +84,9 @@ def initialize(opt):
         repo.heads.master.set_tracking_branch(o.refs.master)
         repo.heads.master.checkout()
         o.pull()
-        logger.info('Pulled from Git')
+        sha = repo.head.object.hexsha
+        logger.info('Pulled from Git ({})'.format(sha))
+
 
         logger.info('Device Name: {}'.format(os.environ.get('device_name')))
 
