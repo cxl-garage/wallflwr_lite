@@ -76,18 +76,6 @@ def initialize(opt):
     if connect() == True:
         logger.info('Internet Connection Successful')
 
-        # Pull latest master branch from git
-        from git import Repo
-        repo = Repo('../')
-        assert not repo.bare
-        o = repo.remotes.origin
-        repo.heads.master.set_tracking_branch(o.refs.master)
-        repo.heads.master.checkout()
-        o.pull()
-        sha = repo.head.object.hexsha
-        logger.info('Pulled from Git ({})'.format(sha))
-
-
         logger.info('Device Name: {}'.format(os.environ.get('device_name')))
 
         # Pull device info and write it to memory as a CSV
@@ -96,6 +84,23 @@ def initialize(opt):
         if opt.update_off == False:
             logger.info('Checking for new algorithms')
             cloud_db.check_algs()
+
+        # Pull latest master branch from git
+        from git import Repo
+        repo = Repo('../')
+        assert not repo.bare
+        o = repo.remotes.origin
+        if os.environ.get('release') != '1.0':
+            repo.heads.master.set_tracking_branch(o.refs.master)
+            repo.heads.commit('v0.9')
+            repo.heads.master.checkout()
+            o.pull()
+            sha = repo.head.object.hexsha
+            logger.info('Pulled from Git ({})'.format(sha))
+        else:
+            logger.error('Version not known! Please contact the db administrator (OR YOU ARE IN DEBUG?)')
+
+
     else:
         logger.warning('Internet Connection not available')
         device_information = pd.read_csv('../_device_info.csv')
