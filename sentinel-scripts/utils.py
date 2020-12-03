@@ -99,7 +99,7 @@ def initialize(opt):
                     checkout_commit = tag.commit.hexsha
                     if checkout_commit != repo.head.object.hexsha:
                         repo.git.checkout(checkout_commit)
-                        logger.info('Pulled {} version (SHA: {})'.format(checkout_tag,checkout_commit))
+                        logger.info('Checked out {} version (SHA: {})'.format(checkout_tag,checkout_commit))
                     else:
                         logger.info('Already up-to-date')
                     break
