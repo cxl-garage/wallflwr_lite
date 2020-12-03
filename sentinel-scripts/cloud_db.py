@@ -239,6 +239,7 @@ def device_info():
     os.environ['sudoPW'] = 'endextinction'
     os.environ['shutdown'] = str(device_information['shutdown'][0])
     os.environ['version'] = str(device_information['version'][0])
+    os.environ['release'] = str(device_information['release'][0])
 
 
 ### Upload insights captured on device to SQL DB
