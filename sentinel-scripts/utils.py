@@ -97,7 +97,7 @@ def initialize(opt):
         elif os.environ.get('release') == 'debug':
             logger.info('In Debug mode, Git is manually controlled!')
         else:
-            k = 0
+            k = 1
             for tag in repo.tags:
                 if str(tag) == str(os.environ.get('release')):
                     checkout_tag = tag
