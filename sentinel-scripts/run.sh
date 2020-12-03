@@ -31,7 +31,9 @@ cd /home/pi/wallflwr_lite/sentinel-scripts
 # fi
 
 # python3 main.py
-
+cd /
+cd /home/pi/wallflwr_lite/sentinel-scripts
+bash cloud_proxy.sh
 
 while ! grep -m1 'Ready for new connections' < ./log.out; do
     sleep 1
