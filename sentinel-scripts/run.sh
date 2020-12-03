@@ -33,7 +33,7 @@ cd /home/pi/wallflwr_lite/sentinel-scripts
 # python3 main.py
 
 
-while ! grep -m1 'Ready for new connections' < /log.out; do
+while ! grep -m1 'Ready for new connections' < ./log.out; do
     sleep 1
     echo HEYO
 done
