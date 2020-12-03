@@ -84,7 +84,7 @@ def initialize(opt):
         cloud_db.device_info()
 
         # Pull latest master branch from git
-        logger.info('Specified Version: {}'.format(str(os.environ.get('release'))))
+        logger.info('Checking git for updates')
         from git import Repo
         repo = Repo('../')
         assert not repo.bare
@@ -97,8 +97,11 @@ def initialize(opt):
                 if str(tag) == str(os.environ.get('release')):
                     checkout_tag = tag
                     checkout_commit = tag.commit.hexsha
-                    repo.git.checkout(checkout_commit)
-                    logger.info('Pulled {} version (SHA: {})'.format(checkout_tag,checkout_commit))
+                    if checkout_commit != repo.head.object.hexsha:
+                        repo.git.checkout(checkout_commit)
+                        logger.info('Pulled {} version (SHA: {})'.format(checkout_tag,checkout_commit))
+                    else:
+                        logger.info('Already up-to-date')
                     break
                 if k == len(repo.tags):
                     logger.error('Version not known')
