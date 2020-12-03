@@ -2,6 +2,9 @@ cd /
 cd /home/pi/wallflwr_lite/sentinel-scripts
 
 #This will start the cloud proxy
+echo Before
+sleep 5s
+echo After
 bash cloud_proxy.sh
 
 #This while loop checks until the connection is made with the cloud SQL
