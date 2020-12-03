@@ -80,14 +80,12 @@ def initialize(opt):
 
         # Pull device info and write it to memory as a CSV
         cloud_db.device_info()
-        cloud_data.check_bucket_exists()
-        if opt.update_off == False:
-            logger.info('Checking for new algorithms')
-            cloud_db.check_algs()
 
         # Pull latest master branch from git
         from git import Repo
         repo = Repo('../')
+        print(repo.tags)
+        print(repo.versions)
         assert not repo.bare
         o = repo.remotes.origin
         if 1:#os.environ.get('release') != '1.0':
@@ -99,6 +97,13 @@ def initialize(opt):
             logger.info('Pulled from Git ({})'.format(sha))
         else:
             logger.error('Version not known! Please contact the db administrator (OR YOU ARE IN DEBUG?)')
+
+
+        cloud_data.check_bucket_exists()
+        if opt.update_off == False:
+            logger.info('Checking for new algorithms')
+            cloud_db.check_algs()
+
 
 
     else:
