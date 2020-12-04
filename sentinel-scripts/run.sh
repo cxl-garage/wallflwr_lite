@@ -14,13 +14,18 @@ if [ $COUNTER -lt 3 ]
 then
     #This will start the cloud proxy ONLY if there is internet
     bash cloud_proxy.sh
+
+    #This while loop checks until the connection is made with the cloud SQL
+    COUNTER2=0
+    while [  $COUNTER -lt 10 ] | [! grep -m1 'Ready for new connections' < ./log.out] ; do
+        sleep 2
+        echo Connecting...
+        echo $COUNTER2
+        let COUNTER2=COUNTER2+1 
+    done
 fi
 
-#This while loop checks until the connection is made with the cloud SQL
-while ! grep -m1 'Ready for new connections' < ./log.out; do
-    sleep 2
-    echo Connecting...
-done
+
 
 #Once connected it will run the main.py script
 echo Connected to SQL
