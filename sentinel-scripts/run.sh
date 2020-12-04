@@ -4,7 +4,7 @@ cd /home/pi/wallflwr_lite/sentinel-scripts
 #Ping until we have internet (it will try for 30 seconds)
 COUNTER=0
 while [  $COUNTER -lt 3 ]; do
-    ping -c 1 8.8.8.8 && break
+    ping -c 1 8.8.8.832121 && break
     sleep 10
     let COUNTER=COUNTER+1 
 done
