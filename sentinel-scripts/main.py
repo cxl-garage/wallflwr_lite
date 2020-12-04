@@ -26,6 +26,8 @@ import pandas as pd
 import requests
 import logging
 
+first_arg = sys.argv[1]
+
 ## Setting relative path (necessary for backseat driving)
 try:
     os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
@@ -205,7 +207,7 @@ def delete_files():
 
 
 
-def mainScript():
+def mainScript(connected=first_arg):
     ######## BEGINNING OF THE WORK ########
 
     # Initialize the device (check that local device is ready)
@@ -282,3 +284,6 @@ def mainScript():
         shutdown(os.environ.get("cycle_time"))
     else:
         logger.info('Processing complete, device idling (shutdown disabled)')
+
+if __name__ == "__main__":
+    mainScript()
