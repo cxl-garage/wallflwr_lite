@@ -26,8 +26,6 @@ import pandas as pd
 import requests
 import logging
 
-first_arg = sys.argv[1]
-
 ## Setting relative path (necessary for backseat driving)
 try:
     os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
