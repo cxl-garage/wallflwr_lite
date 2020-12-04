@@ -9,9 +9,12 @@ while [  $COUNTER -lt 3 ]; do
     let COUNTER=COUNTER+1 
 done
 echo $COUNTER
-# while true; do    ping -c 1 8.8.8.8 && break; sleep 10; done
-#This will start the cloud proxy
-bash cloud_proxy.sh
+
+if [ $COUNTER -lt 3 ]
+then
+    #This will start the cloud proxy ONLY if there is internet
+    bash cloud_proxy.sh
+fi
 
 #This while loop checks until the connection is made with the cloud SQL
 while ! grep -m1 'Ready for new connections' < ./log.out; do
@@ -21,4 +24,4 @@ done
 
 #Once connected it will run the main.py script
 echo Connected to SQL
-python3 main.py mainScript "hello"
+python3 main.py 
