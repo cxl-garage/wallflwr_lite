@@ -205,7 +205,7 @@ def delete_files():
 
 
 
-def mainScript(connected):
+def mainScript():
     ######## BEGINNING OF THE WORK ########
 
     # Initialize the device (check that local device is ready)
@@ -282,6 +282,3 @@ def mainScript(connected):
         shutdown(os.environ.get("cycle_time"))
     else:
         logger.info('Processing complete, device idling (shutdown disabled)')
-
-if __name__ == '__main__':
-    globals()[sys.argv[1]](sys.argv[2])
