@@ -25,11 +25,12 @@ then
             break 
         else
             let COUNTER2=COUNTER2+1 
-            sleep 3
+            sleep 2
             echo Connecting...
             if ! grep -m1 'Ready for new connections' < ./log.out;
             then
                 echo SQL Connected
+                let COUNTER2=99
                 break
             fi
         fi
