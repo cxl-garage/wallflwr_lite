@@ -16,13 +16,28 @@ then
     bash cloud_proxy.sh
 
 
-        #This while loop checks until the connection is made with the cloud SQL
-    while  [[ ! grep -m1 'Ready for new connections' < ./log.out ]] ; do 
-        sleep 2
-        echo Connecting...
-        # echo $COUNTER2
-        # let COUNTER2=COUNTER2+1 
+    #This while loop checks until the connection is made with the cloud SQL
+    COUNTER2=0
+    while [  $COUNTER2 -lt 10 ]; do
+        if [ $COUNTER2 -eq 9 ]
+        then
+            break 
+        else
+            let COUNTER2=COUNTER2+1 
+            sleep 3
+            if ! grep -m1 'Ready for new connections' < ./log.out;
+            then
+                break
+            fi
+        fi
+        
     done
+    # while  [ ! grep -m1 'Ready for new connections' < ./log.out ] ; do 
+    #     sleep 2
+    #     echo Connecting...
+    #     # echo $COUNTER2
+    #     # let COUNTER2=COUNTER2+1 
+    # done
 fi
 
 # #This while loop checks until the connection is made with the cloud SQL
