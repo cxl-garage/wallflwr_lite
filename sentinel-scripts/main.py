@@ -205,7 +205,7 @@ def delete_files():
 
 
 
-def mainScript():
+def mainScript(connected):
     ######## BEGINNING OF THE WORK ########
 
     # Initialize the device (check that local device is ready)
