@@ -283,6 +283,5 @@ def mainScript():
     else:
         logger.info('Processing complete, device idling (shutdown disabled)')
 
-
 if __name__ == '__main__':
-    mainScript()
+    globals()[sys.argv[1]](sys.argv[2])
