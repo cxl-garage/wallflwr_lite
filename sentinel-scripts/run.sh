@@ -1,14 +1,14 @@
 cd /
 cd /home/pi/wallflwr_lite/sentinel-scripts
 
-#Ping until we have internet
+#Ping until we have internet (it will try for 30 seconds)
 COUNTER=0
-while [  $COUNTER -lt 6 ]; do
+while [  $COUNTER -lt 3 ]; do
     ping -c 1 8.8.8.8333 && break
     sleep 10
     let COUNTER=COUNTER+1 
 done
-echo COUNTER
+echo $COUNTER
 # while true; do    ping -c 1 8.8.8.8 && break; sleep 10; done
 #This will start the cloud proxy
 bash cloud_proxy.sh
