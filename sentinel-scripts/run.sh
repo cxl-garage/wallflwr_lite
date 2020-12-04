@@ -17,6 +17,7 @@ then
 
     #This while loop checks until the connection is made with the cloud SQL
     COUNTER2=0
+    
     while [  $COUNTER -lt 10 ] | [! grep -m1 'Ready for new connections' < ./log.out] ; do
         sleep 2
         echo Connecting...
