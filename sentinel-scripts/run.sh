@@ -2,7 +2,14 @@ cd /
 cd /home/pi/wallflwr_lite/sentinel-scripts
 
 #Ping until we have internet
-while true; do    ping -c 1 8.8.8.8 && break; sleep 10; done
+COUNTER=0
+while [  $COUNTER -lt 6 ]; do
+    ping -c 1 8.8.8.8333 && break
+    sleep 10
+    let COUNTER=COUNTER+1 
+done
+echo COUNTER
+# while true; do    ping -c 1 8.8.8.8 && break; sleep 10; done
 #This will start the cloud proxy
 bash cloud_proxy.sh
 
@@ -15,3 +22,4 @@ done
 #Once connected it will run the main.py script
 echo Connected to SQL
 python3 main.py
+
