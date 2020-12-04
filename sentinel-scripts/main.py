@@ -282,3 +282,7 @@ def mainScript():
         shutdown(os.environ.get("cycle_time"))
     else:
         logger.info('Processing complete, device idling (shutdown disabled)')
+
+
+if __name__ == '__main__':
+    mainScript()
