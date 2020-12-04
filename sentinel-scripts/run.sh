@@ -21,5 +21,4 @@ done
 
 #Once connected it will run the main.py script
 echo Connected to SQL
-python3 main.py 
-
+python3 main.py "hello"
