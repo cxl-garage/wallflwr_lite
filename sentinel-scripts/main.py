@@ -205,80 +205,80 @@ def delete_files():
 
 
 
+def mainScript():
+    ######## BEGINNING OF THE WORK ########
 
-######## BEGINNING OF THE WORK ########
+    # Initialize the device (check that local device is ready)
+    data_directory = initialize()
+    import edge_process
+    if os.environ.get('version').startswith('0'):
+        import digitalio
+        import board
+        from digitalio import DigitalInOut, Direction, Pull
 
-# Initialize the device (check that local device is ready)
-data_directory = initialize()
-import edge_process
-if os.environ.get('version').startswith('0'):
-    import digitalio
-    import board
-    from digitalio import DigitalInOut, Direction, Pull
+        # Pull the M0 Pin Low to keep the Pi on...
+        shutdown_pin  = DigitalInOut(board.D14)
+        shutdown_pin.direction = Direction.OUTPUT
+        shutdown_pin.value = True
 
-    # Pull the M0 Pin Low to keep the Pi on...
-    shutdown_pin  = DigitalInOut(board.D14)
-    shutdown_pin.direction = Direction.OUTPUT
-    shutdown_pin.value = True
+    # Reading in information about algorithms that have to run on device
+    primary_algs = pd.read_csv('../models/_primary_algs.txt')
+    secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
 
-# Reading in information about algorithms that have to run on device
-primary_algs = pd.read_csv('../models/_primary_algs.txt')
-secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
+    if len(os.listdir(data_directory)) == 0:
+        logger.warning('No files to process')
 
-if len(os.listdir(data_directory)) == 0:
-    logger.warning('No files to process')
+    ## Process data until there are no data left in the data directory
+    #while len(os.listdir(data_directory)) != 0:
 
-## Process data until there are no data left in the data directory
-#while len(os.listdir(data_directory)) != 0:
+    ## Running loop of all algorithms that have to run on device
+    k = 0
+    while k < len(primary_algs):
+        primary_alg = primary_algs.iloc[[k]]
+        logger.info('Model {} Starting'.format(primary_alg['alg_id'][0]))
 
-## Running loop of all algorithms that have to run on device
-k = 0
-while k < len(primary_algs):
-    primary_alg = primary_algs.iloc[[k]]
-    logger.info('Model {} Starting'.format(primary_alg['alg_id'][0]))
+        # Run Primary ALgorithm
+        primary_df = edge_process.main(primary_alg,data_directory,opt.type)
+        logger.info('Model {} Complete'.format(primary_alg['alg_id'][0]))
 
-    # Run Primary ALgorithm
-    primary_df = edge_process.main(primary_alg,data_directory,opt.type)
-    logger.info('Model {} Complete'.format(primary_alg['alg_id'][0]))
+        # Run Secondary Model (if it exists)
+        #if len(secondary_algs)! :
+        #    secondary_df = edge_process.main(secondary_algs,data_directory,opt.type)
+            #print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
 
-    # Run Secondary Model (if it exists)
-    #if len(secondary_algs)! :
-    #    secondary_df = edge_process.main(secondary_algs,data_directory,opt.type)
-        #print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
+        k = k+1
 
-    k = k+1
+    # Delete all processed files from SD Card
+    delete_files()
 
-# Delete all processed files from SD Card
-delete_files()
+    # Run LoRa Routine
+    #lora.main()
 
-# Run LoRa Routine
-#lora.main()
+    # If internet connection exists, upload data to cloud
+    if connect() == True:
 
-# If internet connection exists, upload data to cloud
-if connect() == True:
+        # Upload metadata to SQL database
+        if opt.sql_off == False:
+            cloud_db.insights()
 
-    # Upload metadata to SQL database
-    if opt.sql_off == False:
-        cloud_db.insights()
+        # Upload images to Google Cloud Storage
+        if opt.gcs_off == False:
+            cloud_data.upload_images()
+            # cloud_data.upload_log()
 
-    # Upload images to Google Cloud Storage
-    if opt.gcs_off == False:
-        cloud_data.upload_images()
-        # cloud_data.upload_log()
+        # Send email notification (if requested by SQL table eventually)
+        if opt.email ==True:
+            cloud_data.notification(type=email)
 
-    # Send email notification (if requested by SQL table eventually)
-    if opt.email ==True:
-        cloud_data.notification(type=email)
+        # Send text notification (if requested by SQL table eventually)
+        if opt.text ==True:
+            cloud_data.notification(type=text)
 
-    # Send text notification (if requested by SQL table eventually)
-    if opt.text ==True:
-        cloud_data.notification(type=text)
+    else:
+        logger.warning('Unable to upload to SQL/Google Cloud Storage')
 
-else:
-    logger.warning('Unable to upload to SQL/Google Cloud Storage')
-
-## Shut down Raspberry Pi
-if os.environ.get("cycle_time") == '1':
-    shutdown(os.environ.get("cycle_time"))
-else:
-    logger.info('Processing complete, device idling (shutdown disabled)')
+    ## Shut down Raspberry Pi
+    if os.environ.get("cycle_time") == '1':
+        shutdown(os.environ.get("cycle_time"))
+    else:
+        logger.info('Processing complete, device idling (shutdown disabled)')
