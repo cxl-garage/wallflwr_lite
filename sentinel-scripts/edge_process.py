@@ -329,9 +329,10 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                 interpreter.allocate_tensors()
             break
         except Exception as e:
-            logging.error('No TPU Found. Trying again')
+            logging.error('No TPU Found. Rebooting...')
+            utils.shutdown(0)
         k = k + 1
-    utils.shutdown(0)
+
 
     x = 0
     directories = [str(data_directory)]
