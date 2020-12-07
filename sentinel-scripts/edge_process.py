@@ -327,7 +327,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             break
         except Exception as e:
             logging.error('No TPU Found. Rebooting...')
-            utils.shutdown(0)
+            #utils.shutdown(0)
         k = k + 1
 
 
