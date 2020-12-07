@@ -154,7 +154,7 @@ def initialize(opt):
                 time.sleep(1)
             k = k + 1
             time.sleep(1)
-            data_directory = os.listdir('../data/camera/DCIM/')[0]
+        data_directory = os.listdir('../data/camera/DCIM/')[0]
     else:
         data_directory = '../data/test'
         logger.warning('Running in test mode')
