@@ -131,7 +131,7 @@ def initialize(opt):
         list_of_devices = []
 
         for file in os.listdir('/dev'):
-            if file.startswith("s"):
+            if file.startswith("sd") and file.endswith("1"):
                 list_of_devices.append(os.path.join("/dev", file))
         logger.info('Mounting SD card')
         k = 0
