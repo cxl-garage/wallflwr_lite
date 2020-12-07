@@ -353,7 +353,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             i = i+1
 
         directory_list = os.listdir(directories[x])
-        directory_list = ['{}/{}'.format(directories[x],i for i in directory_list)]
+        directory_list = ['{}/{}'.format(directories[x],i) for i in directory_list)]
         directory_list.sort(key=lambda x: os.path.getmtime(x))
 
         # initializing variables to enable grouping of files
@@ -364,6 +364,8 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         while k < len(directory_list):
             # Specifying the specific file to be processed
             file = directory_list[k]
+
+            # Put back into base file name (no path-- just made things easier)
             file = os.path.basename(file)
             if k > 0:
                 timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
