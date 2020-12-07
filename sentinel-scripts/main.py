@@ -74,7 +74,7 @@ while k < len(primary_algs):
     logger.info('Model {} Starting'.format(primary_alg['alg_id'][0]))
 
     # Run Primary ALgorithm
-    primary_df = edge_process.main(primary_alg,data_directory,opt.type, shutdown_pin)
+    primary_df = edge_process.main(primary_alg,data_directory,opt.type)
     logger.info('Model {} Complete'.format(primary_alg['alg_id'][0]))
 
     # Run Secondary Model (if it exists)
@@ -115,6 +115,6 @@ else:
 
 ## Shut down Raspberry Pi
 if os.environ.get("cycle_time") == '1':
-    utils.shutdown(os.environ.get("cycle_time"), shutdown_pin)
+    utils.shutdown(os.environ.get("cycle_time"))
 else:
     logger.info('Processing complete, device idling (shutdown disabled)')

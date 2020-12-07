@@ -292,7 +292,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
 
 
 # The main function script
-def main(alg,data_directory,quantize_type,shutdown_pin, algorithm_type = 'detection', batch = 10000, spacing = 10):
+def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch = 10000, spacing = 10):
 
 
     # Defining the results directory
@@ -331,7 +331,7 @@ def main(alg,data_directory,quantize_type,shutdown_pin, algorithm_type = 'detect
         except Exception as e:
             logging.error('No TPU Found. Trying again')
         k = k + 1
-    utils.shutdown(0, shutdown_pin)
+    utils.shutdown(0)
 
     x = 0
     directories = [str(data_directory)]
