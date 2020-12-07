@@ -154,10 +154,11 @@ def initialize(opt):
                 time.sleep(1)
             k = k + 1
             time.sleep(1)
-        data_directory = '../data/camera/DCIM/100MEDIA'
+            data_directory = os.listdir('../data/camera/DCIM/')[0]
     else:
         data_directory = '../data/test'
         logger.warning('Running in test mode')
+    os.environ['data_directory'] = data_directory
     return data_directory
 
 
@@ -172,7 +173,7 @@ def delete_files():
     k = 0
     while k < len(insights):
         try:
-            delete_command = 'sudo rm -f ../data/camera/DCIM/100MEDIA/{}'.format(insights['image_id'][k])
+            delete_command = 'sudo rm -f {}/{}'.format(os.environ.get('data_directory'),insights['image_id'][k])
             os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), delete_command))
         except Exception as e:
             logger.warning('Issue deleting file')
