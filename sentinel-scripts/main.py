@@ -63,6 +63,9 @@ secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
 if len(os.listdir(data_directory)) == 0:
     logger.warning('No files to process')
 
+# Run LoRa Routine
+lora.main()
+
 ## Process data until there are no data left in the data directory
 #while len(os.listdir(data_directory)) != 0:
 
@@ -87,7 +90,7 @@ while k < len(primary_algs):
 utils.delete_files()
 
 # Run LoRa Routine
-lora.main()
+#lora.main()
 
 # If internet connection exists, upload data to cloud
 if utils.connect() == True:
