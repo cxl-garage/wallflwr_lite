@@ -363,13 +363,12 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         ## Looping through all files on the SD Card
         while k < len(directory_list):
             # Specifying the specific file to be processed
-            file = directory_list[k]
-
             # Put back into base file name (no path-- just made things easier)
-            file = os.path.basename(file)
+            file = os.path.basename(directory_list[k])
+            previous_file = os.path.basename(directory_list[k-1])
             if k > 0:
                 timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
-                timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x],directory_list[k-1])))
+                timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x],previous_file)))
             else:
                 timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
                 timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
