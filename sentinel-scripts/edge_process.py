@@ -353,7 +353,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             i = i+1
 
         directory_list = os.listdir(directories[x])
-        directory_list = ['{}/{}'.format(directories[x],i) for i in directory_list)]
+        directory_list = ['{}/{}'.format(directories[x],i) for i in directory_list]
         directory_list.sort(key=lambda x: os.path.getmtime(x))
 
         # initializing variables to enable grouping of files
