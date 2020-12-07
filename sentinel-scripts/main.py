@@ -12,7 +12,7 @@ import os
 import io
 import time
 import utils
-#import lora
+import lora
 #import desmodus_draculae
 import numpy as np
 import csv
@@ -87,7 +87,7 @@ while k < len(primary_algs):
 utils.delete_files()
 
 # Run LoRa Routine
-#lora.main()
+lora.main()
 
 # If internet connection exists, upload data to cloud
 if utils.connect() == True:
