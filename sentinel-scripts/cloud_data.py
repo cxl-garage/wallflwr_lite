@@ -82,7 +82,7 @@ def upload_images():
     os.system(query)
 
     ## Delete all files in the results folder
-    query = 'rm -r ../data/results/{}/{}/*'.format(x['alg_id'][k]),x['class'][k])
+    query = 'rm -r ../data/results/{}/{}/*'.format(x['alg_id'][k],x['class'][k])
     os.system(query)
     #query = 'gsutil -m cp -r -n "../data/results/{}/{}/original/*" "gs://insights-{}/{}/{}/original/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
     #os.system(query)
