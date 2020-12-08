@@ -193,6 +193,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
     if os.environ.get('version').startswith('0'):
         ans = interpreter.DetectWithImage(current_file,threshold=threshold,keep_aspect_ratio = True, relative_coord=True,top_k=1)
     toc = time.process_time()
+
     #logger.info('Time to run algorithm: {} seconds'.format(toc - tic))
 
     # Set up timer to check time to save images
