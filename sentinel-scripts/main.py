@@ -83,6 +83,8 @@ while k < len(primary_algs):
 
     k = k+1
 
+edge_process.group_confidence_calculation()
+
 # Delete all processed files from SD Card
 utils.delete_files()
 
