@@ -54,8 +54,9 @@ def main(attempts=1):
 	ttn_config = TTN(devaddr, nwkey, app, country='US')
 
 	lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
+	#print(insights)
 	logger.info(len(insights))
-	x =  insights[insights['committed_lora']==0.0]
+	x =  insights[insights['committed_lora']!=True]
 	logger.info(len(x))
 	x = x[x['class'] != 'blank']
 	logger.info(len(x))
