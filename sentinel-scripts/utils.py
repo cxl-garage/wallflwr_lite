@@ -77,14 +77,14 @@ def initialize(opt):
 
 
     # Check if device is connected to internet
-    if connect() == True:
+    if connect() == True or opt.wilderness != True:
         logger.info('Internet Connection Successful')
 
         logger.info('Device Name: {}'.format(os.environ.get('device_name')))
 
         # Pull device info and write it to memory as a CSV
         cloud_db.device_info()
-        
+
         # Pull latest master branch from git
         logger.info('Checking git for updates')
         from git import Repo

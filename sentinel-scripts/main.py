@@ -37,6 +37,7 @@ logger = logging.getLogger('main')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--test', action='store_true', help='Use onboard test data rather than SD card')
+parser.add_argument('--wilderness', action='store_true', help='No internet scenario')
 parser.add_argument('--lora_off', action='store_true', help='Disable LoRa')
 parser.add_argument('--gcs_off', action='store_true', help='Disable Upload of Pictures')
 parser.add_argument('--sql_off', action='store_true', help='Disable Upload to SQL DB')
@@ -87,11 +88,8 @@ while k < len(primary_algs):
 # Delete all processed files from SD Card
 utils.delete_files()
 
-# Run LoRa Routine
-lora.main()
-
 # If internet connection exists, upload data to cloud
-if utils.connect() == True:
+if utils.connect() == True or opt.wilderness != True:
 
     # Upload metadata to SQL database
     if opt.sql_off == False:
@@ -111,7 +109,9 @@ if utils.connect() == True:
         cloud_data.notification(type=text)
 
 else:
-    logger.warning('Unable to upload to SQL/Google Cloud Storage')
+    logger.warning('Unable to connect, running LoRa')
+    # Run LoRa Routine
+    lora.main()
 
 ## Shut down Raspberry Pi
 if os.environ.get("cycle_time") == '1':
