@@ -84,7 +84,7 @@ def group_confidence_calculation():
     # Finding all group id's and putting them in list
     alg_df = pd.read_csv('../data/device_insights.csv')
     group_keys = alg_df.group_id.unique()
-    logger.info(group_keys)
+    logger.info(alg_df)
     # Loop through each group id. (Should do a for loop, but I get confused by those things)
     y = 0
     while y < len(group_keys):
