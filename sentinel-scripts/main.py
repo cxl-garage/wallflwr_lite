@@ -88,7 +88,7 @@ while k < len(primary_algs):
 utils.delete_files()
 
 # Run LoRa Routine
-#lora.main()
+lora.main()
 
 # If internet connection exists, upload data to cloud
 if utils.connect() == True:
