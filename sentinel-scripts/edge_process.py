@@ -340,10 +340,13 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         while i < len(original_directory_list):
             #Preserve the file type
             fileExtension = original_directory_list[i].split(".")[1]
+            fileTime = time.strftime('%Y%m-%d%H-%M%S-', time.localtime(int(os.path.getmtime('{}'.format(original_directory_list[i])))))
             #Rename the file
-            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}.{}'.format(directories[x],uuid.uuid1(),fileExtension))
+            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}.{}'.format(directories[x],fileTime + uuid.uuid4(),fileExtension))
             i = i+1
         
+
+
         directory_list = os.listdir(directories[x])
         # initializing variables to enable grouping of files
         previous_confidence = 0
