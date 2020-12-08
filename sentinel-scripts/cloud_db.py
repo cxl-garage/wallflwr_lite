@@ -229,11 +229,17 @@ def device_info():
     URL = 'mysql+pymysql://{}:{}@{}/{}'.format(db_user,db_pass,db_ip,db_name)
     engine = sqlalchemy.create_engine(URL, pool_size=5,max_overflow=2,pool_timeout=30,pool_recycle=1800,)
     query = "SELECT * FROM devices WHERE device_name = \'{}\'".format(os.environ.get('device_name'))
-    print(query)
+    #print(query)
     device_information = pd.read_sql(query,con=engine)
-    print(device_information)
+    #print(device_information)
     device_information = device_information.reset_index(drop=True)
     device_information.to_csv('../_device_info.csv')
+
+    insights()
+    query = "SELECT * FROM insights WHERE device_name = \'{}\'".format(os.environ.get('device_name'))
+    insights = pd.read_sql(query,con=engine)
+    insights =x['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']
+    x.to_csv('../data/device_insights.csv')
     os.environ['device_id'] = str(device_information['device_id'][0])
     os.environ['cycle_time'] = str(device_information['cycle_time'][0])
     os.environ['sudoPW'] = 'endextinction'

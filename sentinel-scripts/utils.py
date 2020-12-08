@@ -84,7 +84,7 @@ def initialize(opt):
 
         # Pull device info and write it to memory as a CSV
         cloud_db.device_info()
-
+        
         # Pull latest master branch from git
         logger.info('Checking git for updates')
         from git import Repo
