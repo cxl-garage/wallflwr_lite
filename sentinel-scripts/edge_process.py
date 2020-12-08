@@ -91,6 +91,7 @@ def group_confidence_calculation():
         # Segment the group we are working with
         group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
         group = group.reset_index(drop=True)
+        print(group.columns)
         print(group[['insight_id,confidence, class_id, image_id', 'group_id', 'group_confidence']])
         # Confidence algorithm
         """
