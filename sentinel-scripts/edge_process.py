@@ -340,12 +340,9 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         i = 0
         while i < len(original_directory_list):
             #Preserve the file type
-            # file
-            # file_path = os.path.join(data_directory,file)
             fileExtension = original_directory_list[i].split(".")[1]
-            fileTime = time.strftime('%Y%m-%d%H-%M%S-', time.localtime(int(os.path.getmtime('{}/{}'.format(directories[x], original_directory_list[i])))))
-            logger.info('FILE TIMEE')
-            logger.info(fileTime)
+            #Finds the time of creation
+            fileTime = time.strftime('%Y%m-%d%H-%M%S', time.localtime(int(os.path.getmtime('{}/{}'.format(directories[x], original_directory_list[i])))))
             #Rename the file to TIME + DEVICE ID
             os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}-{}.{}'.format(directories[x],fileTime,os.environ.get('device_id'),fileExtension))
             i = i+1
