@@ -121,7 +121,7 @@ def group_confidence_calculation():
             ## If different animal is detected, reset the group confidence
             ## FEATURE: we should get smarter about this
             else:
-                group_confidence = 0
+                group_confidence = group_confidence/2
                 # Assign new class_id
                 class_id = group['class_id'][m]
             m = m + 1
