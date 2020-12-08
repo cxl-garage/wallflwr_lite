@@ -423,8 +423,9 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             ### Adding the group confidence to any data point that has the same group key
 
             # Finding all group id's and putting them in list
-            group_keys = alg_df.group_id.unique()
-            logger.info(group_keys)
+            groups = alg_df[alg_df['group_confidence'] != 'NaN']
+            group_keys = groups.group_id.unique()
+            #logger.info(group_keys)
             # Loop through each group id. (Should do a for loop, but I get confused by those things)
             y = 0
             while y < len(group_keys):
@@ -432,7 +433,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                 # Segment the group we are working with
                 group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
                 group = group.reset_index(drop=True)
-                logger.info(group)
+                #logger.info(group)
                 # Confidence algorithm
                 """
                 Variables
