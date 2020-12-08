@@ -92,7 +92,7 @@ def group_confidence_calculation():
         group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
         group = group.reset_index(drop=True)
         #print(group.columns)
-        print(group[['insight_id','confidence', 'class_id', 'group_id', 'group_confidence']])
+        #print(group[['insight_id','confidence', 'class_id', 'group_id', 'group_confidence']])
         # Confidence algorithm
         """
         Variables
@@ -132,7 +132,7 @@ def group_confidence_calculation():
                 class_id = group['class_id'][m]
             m = m + 1
             alg_df.loc[alg_df['group_id'] == group_keys[y],'group_confidence'] = group_confidence
-        logger.info('Group {} Confidence: {}'.format(group_keys[y], group_confidence))
+        #logger.info('Group {} Confidence: {}'.format(group_keys[y], group_confidence))
         y = y + 1
 
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
