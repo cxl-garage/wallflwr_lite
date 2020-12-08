@@ -77,7 +77,7 @@ def initialize(opt):
 
 
     # Check if device is connected to internet
-    if connect() == True or opt.wilderness != True:
+    if connect() == True and opt.wilderness != True:
         logger.info('Internet Connection Successful')
 
         logger.info('Device Name: {}'.format(os.environ.get('device_name')))

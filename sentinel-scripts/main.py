@@ -47,9 +47,6 @@ parser.add_argument('--tpu_off', action='store_true', help='Turn off TPU (just r
 parser.add_argument('--text', action='store_true', help='Send text notification')
 parser.add_argument('--email', action='store_true', help='Send email notification')
 opt = parser.parse_args()
-logger.info(opt)
-print(opt.wilderness)
-time.sleep(100)
 
 ######## BEGINNING OF THE WORK ########
 
@@ -90,7 +87,7 @@ while k < len(primary_algs):
 utils.delete_files()
 
 # If internet connection exists, upload data to cloud
-if utils.connect() == True or opt.wilderness != True:
+if utils.connect() == True and opt.wilderness != True:
 
     # Upload metadata to SQL database
     if opt.sql_off == False:
