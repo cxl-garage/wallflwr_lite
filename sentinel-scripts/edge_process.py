@@ -126,7 +126,7 @@ def group_confidence_calculation():
             # Assign new class_id
             class_id = group['class_id'][m]
             m = m + 1
-            log.info('Group {} Confidence: {}'.format(group_keys[y], group_confidence))
+            logger.info('Group {} Confidence: {}'.format(group_keys[y], group_confidence))
             alg_df.loc[alg_df['group_id'] == group_keys[y],'group_confidence'] = group_confidence
         y = y + 1
 
