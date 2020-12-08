@@ -48,6 +48,7 @@ parser.add_argument('--text', action='store_true', help='Send text notification'
 parser.add_argument('--email', action='store_true', help='Send email notification')
 opt = parser.parse_args()
 
+
 ######## BEGINNING OF THE WORK ########
 
 # Initialize the device (check that local device is ready)
@@ -99,7 +100,8 @@ if utils.connect() == True and opt.wilderness != True:
     # Upload images to Google Cloud Storage
     if opt.gcs_off == False:
         cloud_data.upload_images()
-        cloud_data.upload_log()
+        # cloud_data.upload_log()
+
 
     # Send email notification (if requested by SQL table eventually)
     if opt.email ==True:
@@ -119,3 +121,4 @@ if os.environ.get("cycle_time") == '1':
     utils.shutdown(os.environ.get("cycle_time"))
 else:
     logger.info('Processing complete, device idling (shutdown disabled)')
+
