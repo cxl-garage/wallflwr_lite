@@ -412,6 +412,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                         meta_df['group_id'] = group_key
                         # Appending to existing results from the while loop
                         alg_df = alg_df.append(meta_df,ignore_index=True)
+                        tempalg_df=alg_df
                     else:
                         logger.error('Type of algorithm not yet supported')
             else:
