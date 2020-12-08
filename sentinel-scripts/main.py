@@ -52,10 +52,10 @@ opt = parser.parse_args()
 
 # Initialize the device (check that local device is ready)
 data_directory = utils.initialize(opt)
+import edge_process
 if data_directory == 'noSD':
     logger.error('No SD card found, skipping ahead')
 else:
-    import edge_process
 
 
     # Reading in information about algorithms that have to run on device
@@ -85,7 +85,7 @@ else:
             #print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
 
         k = k+1
-    
+
     # Delete all processed files from SD Card
     utils.delete_files()
 
