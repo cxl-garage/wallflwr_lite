@@ -37,6 +37,7 @@ logger = logging.getLogger('main')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--test', action='store_true', help='Use onboard test data rather than SD card')
+parser.add_argument('--wilderness', action='store_true', help='No internet scenario')
 parser.add_argument('--lora_off', action='store_true', help='Disable LoRa')
 parser.add_argument('--gcs_off', action='store_true', help='Disable Upload of Pictures')
 parser.add_argument('--sql_off', action='store_true', help='Disable Upload to SQL DB')
@@ -46,8 +47,6 @@ parser.add_argument('--tpu_off', action='store_true', help='Turn off TPU (just r
 parser.add_argument('--text', action='store_true', help='Send text notification')
 parser.add_argument('--email', action='store_true', help='Send email notification')
 opt = parser.parse_args()
-#logger.info(opt)
-
 
 
 ######## BEGINNING OF THE WORK ########
@@ -55,44 +54,44 @@ opt = parser.parse_args()
 # Initialize the device (check that local device is ready)
 data_directory = utils.initialize(opt)
 import edge_process
+if data_directory != 'noSD':
+
+    # Reading in information about algorithms that have to run on device
+    primary_algs = pd.read_csv('../models/_primary_algs.txt')
+    secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
+
+    if len(os.listdir(data_directory)) == 0:
+        logger.warning('No files to process')
 
 
-# Reading in information about algorithms that have to run on device
-primary_algs = pd.read_csv('../models/_primary_algs.txt')
-secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
+    ## Process data until there are no data left in the data directory
+    #while len(os.listdir(data_directory)) != 0:
 
-if len(os.listdir(data_directory)) == 0:
-    logger.warning('No files to process')
+    ## Running loop of all algorithms that have to run on device
+    k = 0
+    while k < len(primary_algs):
+        primary_alg = primary_algs.iloc[[k]]
+        logger.info('Model {} Starting'.format(primary_alg['alg_id'][0]))
 
+        # Run Primary ALgorithm
+        primary_df = edge_process.main(primary_alg,data_directory,opt.type)
+        logger.info('Model {} Complete'.format(primary_alg['alg_id'][0]))
 
-## Process data until there are no data left in the data directory
-#while len(os.listdir(data_directory)) != 0:
+        # Run Secondary Model (if it exists)
+        #if len(secondary_algs)! :
+        #    secondary_df = edge_process.main(secondary_algs,data_directory,opt.type)
+            #print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
 
-## Running loop of all algorithms that have to run on device
-k = 0
-while k < len(primary_algs):
-    primary_alg = primary_algs.iloc[[k]]
-    logger.info('Model {} Starting'.format(primary_alg['alg_id'][0]))
+        k = k+1
 
-    # Run Primary ALgorithm
-    primary_df = edge_process.main(primary_alg,data_directory,opt.type)
-    logger.info('Model {} Complete'.format(primary_alg['alg_id'][0]))
+    # Delete all processed files from SD Card
+    utils.delete_files()
 
-    # Run Secondary Model (if it exists)
-    #if len(secondary_algs)! :
-    #    secondary_df = edge_process.main(secondary_algs,data_directory,opt.type)
-        #print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
+edge_process.group_confidence_calculation()
 
-    k = k+1
-
-# Delete all processed files from SD Card
-utils.delete_files()
-
-# Run LoRa Routine
-#lora.main()
 
 # If internet connection exists, upload data to cloud
-if utils.connect() == True:
+if utils.connect() == True and opt.wilderness != True:
 
     # Upload metadata to SQL database
     if opt.sql_off == False:
@@ -113,7 +112,9 @@ if utils.connect() == True:
         cloud_data.notification(type=text)
 
 else:
-    logger.warning('Unable to upload to SQL/Google Cloud Storage')
+    logger.warning('Unable to connect, running LoRa')
+    # Run LoRa Routine
+    lora.main()
 
 ## Shut down Raspberry Pi
 if os.environ.get("cycle_time") == '1':

@@ -77,14 +77,14 @@ def initialize(opt):
 
 
     # Check if device is connected to internet
-    if connect() == True:
+    if connect() == True and opt.wilderness != True:
         logger.info('Internet Connection Successful')
 
         logger.info('Device Name: {}'.format(os.environ.get('device_name')))
 
         # Pull device info and write it to memory as a CSV
         cloud_db.device_info()
-        
+
         # Pull latest master branch from git
         logger.info('Checking git for updates')
         from git import Repo
@@ -149,7 +149,7 @@ def initialize(opt):
                 m = m + 1
             if k == 3:
                 logger.error('SD Card Not Found')
-                shutdown(0)
+                return 'noSD'
             if os.path.isdir('../data/camera/DCIM') == True:
                 break
             else:
@@ -181,6 +181,7 @@ def delete_files():
             logger.warning('Issue deleting file')
         k = k+1
     logger.info('Files Deleted')
+
 
 ### Function to make the RPi shut itself down
 def shutdown(cycle_time):
