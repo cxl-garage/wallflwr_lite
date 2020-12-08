@@ -47,8 +47,9 @@ parser.add_argument('--tpu_off', action='store_true', help='Turn off TPU (just r
 parser.add_argument('--text', action='store_true', help='Send text notification')
 parser.add_argument('--email', action='store_true', help='Send email notification')
 opt = parser.parse_args()
-#logger.info(opt)
-
+logger.info(opt)
+print(opt.wilderness)
+time.sleep(100)
 
 ######## BEGINNING OF THE WORK ########
 
