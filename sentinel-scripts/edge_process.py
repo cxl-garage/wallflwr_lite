@@ -88,7 +88,6 @@ def group_confidence_calculation():
     # Loop through each group id. (Should do a for loop, but I get confused by those things)
     y = 0
     while y < len(group_keys):
-        logger.info('{} group confidence calculation'.format(y+1))
         # Segment the group we are working with
         group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
         group = group.reset_index(drop=True)
@@ -126,8 +125,8 @@ def group_confidence_calculation():
             # Assign new class_id
             class_id = group['class_id'][m]
             m = m + 1
-            logger.info('Group {} Confidence: {}'.format(group_keys[y], group_confidence))
             alg_df.loc[alg_df['group_id'] == group_keys[y],'group_confidence'] = group_confidence
+        logger.info('Group {} Confidence: {}'.format(group_keys[y], group_confidence))
         y = y + 1
 
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
