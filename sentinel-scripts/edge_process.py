@@ -330,6 +330,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             logging.error('No TPU Found. Rebooting...')
             #utils.shutdown(0)
         k = k + 1
+        
 
 
     x = 0
