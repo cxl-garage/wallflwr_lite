@@ -275,15 +275,15 @@ def device_info():
     device_information = device_information.reset_index(drop=True)
     device_information.to_csv('../_device_info.csv')
 
-    upload_insights()
-    query = "SELECT * FROM insights WHERE device_id = \'{}\'".format(os.environ.get('device_id'))
-    insights = pd.read_sql(query,con=engine)
-    print(insights)
-    insights = insights[['insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
-    insights['committed_sql'] = 1
-    insights['committed_images'] = 1
-    insights['committed_lora'] = 1
-    insights.to_csv('../data/device_insights.csv')
+    #upload_insights()
+    #query = "SELECT * FROM insights WHERE device_id = \'{}\'".format(os.environ.get('device_id'))
+    #insights = pd.read_sql(query,con=engine)
+    #print(insights)
+    #insights = insights[['insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
+    #insights['committed_sql'] = 1
+    #insights['committed_images'] = 1
+    #insights['committed_lora'] = 1
+    #insights.to_csv('../data/device_insights.csv')
     os.environ['device_id'] = str(device_information['device_id'][0])
     os.environ['cycle_time'] = str(device_information['cycle_time'][0])
     os.environ['sudoPW'] = 'endextinction'
