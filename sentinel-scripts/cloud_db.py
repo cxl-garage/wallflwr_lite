@@ -238,8 +238,8 @@ def device_info():
     insights()
     query = "SELECT * FROM insights WHERE device_name = \'{}\'".format(os.environ.get('device_name'))
     insights = pd.read_sql(query,con=engine)
-    insights =x['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']
-    x.to_csv('../data/device_insights.csv')
+    insights = insights['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']
+    insights.to_csv('../data/device_insights.csv')
     os.environ['device_id'] = str(device_information['device_id'][0])
     os.environ['cycle_time'] = str(device_information['cycle_time'][0])
     os.environ['sudoPW'] = 'endextinction'
