@@ -115,7 +115,7 @@ def group_confidence_calculation():
                 group_confidence = group_confidence + (1-group_confidence)*group['confidence'][m]
 
             ## If no animal is in the m'th frame, dont penalize or increase confidence
-            elif group['class_id'][m] == 99:
+        elif int(group['class_id'][m]) == 99:
                 group_confidence = group_confidence
 
             ## If different animal is detected, reset the group confidence
