@@ -49,6 +49,7 @@ opt = parser.parse_args()
 #logger.info(opt)
 
 
+
 ######## BEGINNING OF THE WORK ########
 
 # Initialize the device (check that local device is ready)
@@ -100,7 +101,8 @@ if utils.connect() == True:
     # Upload images to Google Cloud Storage
     if opt.gcs_off == False:
         cloud_data.upload_images()
-        cloud_data.upload_log()
+        # cloud_data.upload_log()
+
 
     # Send email notification (if requested by SQL table eventually)
     if opt.email ==True:
@@ -118,3 +120,4 @@ if os.environ.get("cycle_time") == '1':
     utils.shutdown(os.environ.get("cycle_time"))
 else:
     logger.info('Processing complete, device idling (shutdown disabled)')
+

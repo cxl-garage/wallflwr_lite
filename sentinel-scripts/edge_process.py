@@ -18,7 +18,6 @@ import re
 import datetime as dt
 import sys
 import shutil
-import uuid
 if os.environ.get('version').startswith('0'):
     import edgetpu
     from edgetpu.detection.engine import DetectionEngine
@@ -337,6 +336,8 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     # Loading in the algorithm directory from file
     alg_df = pd.read_csv('../data/device_insights.csv')
     tempalg_df= alg_df
+
+    
     while x < len(directories):
         # Finding all files within the data directory
 
@@ -349,8 +350,10 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         while i < len(original_directory_list):
             #Preserve the file type
             fileExtension = original_directory_list[i].split(".")[1]
-            #Rename the file
-            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}.{}'.format(directories[x],uuid.uuid1(),fileExtension))
+            #Finds the time of creation
+            fileTime = time.strftime('%Y%m-%d%H-%M%S', time.localtime(int(os.path.getmtime('{}/{}'.format(directories[x], original_directory_list[i])))))
+            #Rename the file to TIME + DEVICE ID
+            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}-{}.{}'.format(directories[x],fileTime,os.environ.get('device_id'),fileExtension))
             i = i+1
 
         directory_list = os.listdir(directories[x])

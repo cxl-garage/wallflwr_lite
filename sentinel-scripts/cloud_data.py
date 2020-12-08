@@ -85,9 +85,10 @@ def upload_images():
     insights = insights[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
     insights.to_csv('../data/device_insights.csv')
 
-def upload_log():
-    device_id = str(os.environ.get('device_id'))
-    logger.info('Uploading log')
-    query = 'gsutil -m cp -r -n "../../logs/results/cronlog" "gs://insights-{}/logs/test/"'.format(device_id)
-    os.system(query)
+
+# def upload_log():
+#     device_id = str(os.environ.get('device_id'))
+#     logger.info('Uploading log')
+#     query = 'gsutil -m cp -r -n "../../logs/cronlog" "gs://insights-{}/logs/"'.format(device_id)
+#     os.system(query)
 
