@@ -54,7 +54,7 @@ def main(attempts=1):
 	ttn_config = TTN(devaddr, nwkey, app, country='US')
 
 	lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
-	x =  insights[insights['committed_lora']=='False']
+	x =  int(insights[insights['committed_lora'])==0]
 	x = x[x['class'] != 'blank']
 	x = x[x['group_id'] != 'NaN']
 	x = x.drop_duplicates(subset=['group_id'], keep='last')
