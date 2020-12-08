@@ -465,7 +465,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                     # Assign new class_id
                     class_id = group['class_id'][m]
                     m = m + 1
-                alg_df.loc[alg_df['group_id'] == group_keys[y],'group_confidence'] = group_confidence
+                    alg_df.loc[alg_df['group_id'] == group_keys[y],'group_confidence'] = group_confidence
                 y = y + 1
             # Moving on to next file
             k = k + 1
