@@ -418,64 +418,67 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             else:
                 logger.error('File Format not yet supported')
                 break
-
-
-            ### Adding the group confidence to any data point that has the same group key
-
-            # Finding all group id's and putting them in list
-
-            group_keys = alg_df.group_id.unique()
-            logger.info(group_keys)
-            # Loop through each group id. (Should do a for loop, but I get confused by those things)
-            y = 0
-            while y < len(group_keys):
-                logger.info('{} group confidence calculation'.format(y+1))
-                # Segment the group we are working with
-                group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
-                group = group.reset_index(drop=True)
-                #logger.info(group)
-                # Confidence algorithm
-                """
-                Variables
-                - Number of possible classes
-                - Number of events
-                - Confidence of individual events
-                - Number of unique classes within the group
-
-                v1: Hyperbolic towards 1, with reset if different class
-                """
-
-
-                group_confidence = 0
-                m = 0
-                class_id = group['class_id'][0]
-                while m > len(group):
-
-                    ## If animal of same class is detected, increase confidence by (1-previous_confidence)*current_confidence
-                    if group['class_id'][m] == class_id:
-                        group_confidence = (1-group_confidence)*group['confidence'][m]
-
-                    ## If no animal is in the m'th frame, dont penalize or increase confidence
-                    elif group['class_id'][m] == 99:
-                        group_confidence = group_confidence
-
-                    ## If different animal is detected, reset the group confidence
-                    ## FEATURE: we should get smarter about this
-                    else:
-                        group_confidence = 0
-
-                    # Assign new class_id
-                    class_id = group['class_id'][m]
-                    m = m + 1
-                    log.info('Group {} Confidence: {}'.format(group_keys[y], group_confidence))
-                    alg_df.loc[alg_df['group_id'] == group_keys[y],'group_confidence'] = group_confidence
-                y = y + 1
             # Moving on to next file
             k = k + 1
         x = x + 1
 
+
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
     alg_df = tempalg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
+
+    ### Adding the group confidence to any data point that has the same group key
+    # Finding all group id's and putting them in list
+
+    group_keys = alg_df.group_id.unique()
+    logger.info(group_keys)
+    # Loop through each group id. (Should do a for loop, but I get confused by those things)
+    y = 0
+    while y < len(group_keys):
+        logger.info('{} group confidence calculation'.format(y+1))
+        # Segment the group we are working with
+        group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
+        group = group.reset_index(drop=True)
+        #logger.info(group)
+        # Confidence algorithm
+        """
+        Variables
+        - Number of possible classes
+        - Number of events
+        - Confidence of individual events
+        - Number of unique classes within the group
+
+        v1: Hyperbolic towards 1, with reset if different class
+        """
+
+
+        group_confidence = 0
+        m = 0
+        class_id = group['class_id'][0]
+        while m > len(group):
+
+            ## If animal of same class is detected, increase confidence by (1-previous_confidence)*current_confidence
+            if group['class_id'][m] == class_id:
+                group_confidence = (1-group_confidence)*group['confidence'][m]
+
+            ## If no animal is in the m'th frame, dont penalize or increase confidence
+            elif group['class_id'][m] == 99:
+                group_confidence = group_confidence
+
+            ## If different animal is detected, reset the group confidence
+            ## FEATURE: we should get smarter about this
+            else:
+                group_confidence = 0
+
+            # Assign new class_id
+            class_id = group['class_id'][m]
+            m = m + 1
+            log.info('Group {} Confidence: {}'.format(group_keys[y], group_confidence))
+            alg_df.loc[alg_df['group_id'] == group_keys[y],'group_confidence'] = group_confidence
+        y = y + 1
+
+    # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
+    alg_df = alg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
+
     # Saving insights to local DB (just a .csv for now)
     alg_df.to_csv('../data/device_insights.csv')
     logger.info(alg_df)
