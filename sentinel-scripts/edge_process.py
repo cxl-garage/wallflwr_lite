@@ -31,6 +31,8 @@ import pandas as pd
 from PIL import Image
 from PIL import ImageChops
 import logging
+import utils
+
 
 logger = logging.getLogger('cnn')
 
@@ -190,6 +192,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
     if os.environ.get('version').startswith('0'):
         ans = interpreter.DetectWithImage(current_file,threshold=threshold,keep_aspect_ratio = True, relative_coord=True,top_k=1)
     toc = time.process_time()
+
     #logger.info('Time to run algorithm: {} seconds'.format(toc - tic))
 
     # Set up timer to check time to save images
@@ -216,10 +219,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
 
             if os.environ.get('version').startswith('1'):
                 boxes = obj.bbox
-            #logger.info(boxes)
-            #logger.info(boxes[0])
                 boxes = [boxes[0]/width,boxes[1]/height,boxes[2]/width,boxes[3]/height]
-            #logger.info(boxes)
                 classes = obj.id
             if os.environ.get('version').startswith('0'):
                 boxes = obj.bounding_box.flatten()
@@ -315,12 +315,21 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     # Defining the minimum confidence required
     ai_sensitivity = alg['sensitivity'][0]
 
-    # Loading the model into tensorflow engine
-    if os.environ.get('version').startswith('0'):
-        interpreter = DetectionEngine(model)
-    if os.environ.get('version').startswith('1'):
-        interpreter = make_interpreter(model)
-        interpreter.allocate_tensors()
+    k = 0
+    while k < 3:
+        try:
+            # Loading the model into tensorflow engine
+            if os.environ.get('version').startswith('0'):
+                interpreter = DetectionEngine(model)
+            if os.environ.get('version').startswith('1'):
+                interpreter = make_interpreter(model)
+                interpreter.allocate_tensors()
+            break
+        except Exception as e:
+            logging.error('No TPU Found. Rebooting...')
+            #utils.shutdown(0)
+        k = k + 1
+
 
     x = 0
     directories = [str(data_directory)]
@@ -335,7 +344,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         original_directory_list = os.listdir(directories[x])
 
         logger.info('Checking Directory: {}'.format(directories[x]))
-
+        logger.info('Directory length: {}'.format(len(original_directory_list)))
         #Renaming the photos
         i = 0
         while i < len(original_directory_list):
@@ -346,10 +355,11 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             #Rename the file to TIME + DEVICE ID
             os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}-{}.{}'.format(directories[x],fileTime,os.environ.get('device_id'),fileExtension))
             i = i+1
-        
-
 
         directory_list = os.listdir(directories[x])
+        directory_list = ['{}/{}'.format(directories[x],i) for i in directory_list]
+        directory_list.sort(key=lambda x: os.path.getmtime(x))
+
         # initializing variables to enable grouping of files
         previous_confidence = 0
         previous_class = ''
@@ -357,40 +367,33 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         ## Looping through all files on the SD Card
         while k < len(directory_list):
             # Specifying the specific file to be processed
-            # logger.info('{}/{}'.format(directories[x],directory_list[k]))
-            file = directory_list[k]
-
-            # os.rename('{}/{}'.format(directories[x],directory_list[k]),'{}/{}'.format(directories[x], file))
-            logger.info(file)
-            # logger.info("HERE WE GO")
-            # logger.info('{}/{}'.format(directories[x],directory_list[k]))
-
-            if k > 0: 
+            # Put back into base file name (no path-- just made things easier)
+            file = os.path.basename(directory_list[k])
+            previous_file = os.path.basename(directory_list[k-1])
+            if k > 0:
                 timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
-                timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x],directory_list[k-1])))
+                timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x],previous_file)))
             else:
                 timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
                 timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
-            logger.info('timeFile - timeFileBefore')
-            logger.info(timeFile - timeFileBefore)
 
-            #If it is the first photo in the directory, we can assume it is a new group 
+            logger.info('Time Difference: {}'.format(timeFile - timeFileBefore))
+
+            #If it is the first photo in the directory, we can assume it is a new group
             #If it is the first ever photo in the csv, we set the key to 1
             if k == 0:
                 try:
-                    group_key = alg_df['group_id'].iloc[-1]+1 
+                    group_key = alg_df['group_id'].iloc[-1]+1
                     logger.info(group_key)
                 except Exception as e:
                     group_key = 1
             #If the gap between photos after the first is smaller than 30 seconds, it is the same group
             elif (timeFile - timeFileBefore) < 30:
-                group_key = alg_df['group_id'].iloc[-1] 
+                group_key = alg_df['group_id'].iloc[-1]
             #If the gap is larger than 30 seconds, then we define a new group key
             else:
                 group_key = alg_df['group_id'].iloc[-1] + 1
 
-
-            logger.info('File: {}'.format(file))
             # Checking that the file hasn't already been processed by this algorithm
             if ((alg_df['alg_id'] == alg['alg_id'][0]) & (alg_df['image_id'] == file)).any():
                 logger.info('File already processed')
@@ -400,6 +403,8 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                 # Checking if number of files checked has exceeded the "batch" variable (in production this should be inf)
                 if k == batch:
                     break
+
+
             ## Check that the file is actually a processable photo
             #  Feature: Add ability to process videos
             if file.endswith(".jpeg") or file.endswith(".JPG") or file.endswith(".jpg") or file.endswith(".JPEG") or file.endswith(".png") or file.endswith(".PNG"):
@@ -408,40 +413,58 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                         meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, directories[x], file, ai_sensitivity, results_directory,class_names)
                         # Appending the unique group key to the metadata
                         meta_df['group_id'] = group_key
-                        logger.info(meta_df)
                         # Appending to existing results from the while loop
                         alg_df = alg_df.append(meta_df,ignore_index=True)
                         tempalg_df=alg_df
-                        logger.info(alg_df)
-
-                        # Adding group confidence from linked confidence between inferences
-                        m = 0
-                        while m < len(meta_df):
-                            # if the previous data inference within the same group had the same class, add the confidences.
-                            # note that this will only run if all detections within the current image are also the same as the previous image
-                            if previous_class == meta_df['class'][m]:
-                                try:
-                                    previous_confidence = meta_df['confidence'][m] + previous_confidence
-                                except Exception as e:
-                                    previous_confidence = previous_confidence
-                            previous_class = meta_df['class'][m]
-                            m = m+1
                     else:
                         logger.error('Type of algorithm not yet supported')
             else:
+                logger.error('File Format not yet supported')
                 break
-            # Adding the group confidence to any data point that has the same group key
-            alg_df.loc[alg_df['group_id'] == group_key,'group_confidence'] = previous_confidence
-                    
+
+
+            ### Adding the group confidence to any data point that has the same group key
+
+            # Finding all group id's and putting them in list
+            group_keys = alg_df.group_id.unique()
+
+            # Loop through each group id. (Should do a for loop, but I get confused by those things)
+            y = 0
+            while y < len(group_keys):
+
+                # Segment the group we are working with
+                group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
+                group = group.reset_index(drop=True)
+                # Confidence algorithm
+                """
+                Variables
+                - Number of possible classes
+                - Number of events
+                - Confidence of individual events
+                - Number of unique classes within the group
+
+                v1: Hyperbolic towards 1, with reset if different class
+                """
+
+
+                group_confidence = 0
+                m = 0
+                class_id = group['class_id'][0]
+                while m == len(group):
+                    if class_id == group['class_id'][m]:
+                        group_confidence = (1-group_confidence)*group['confidence'][m]
+                    else:
+                        group_confidence = 0
+                    class_id = group['class_id'][m]
+                    m = m + 1
+                alg_df.loc[alg_df['group_id'] == group_keys[y],'group_confidence'] = group_confidence
+                y = y + 1
             # Moving on to next file
             k = k + 1
         x = x + 1
 
-    logger.info(alg_df)
-    logger.info(tempalg_df)
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
     alg_df = tempalg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
-    logger.info(alg_df)
     # Saving insights to local DB (just a .csv for now)
     alg_df.to_csv('../data/device_insights.csv')
     logger.info(alg_df)
