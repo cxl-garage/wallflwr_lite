@@ -222,7 +222,7 @@ def check_algs():
 
 
 ### Upload insights captured on device to SQL DB
-def insights():
+def upload_insights():
     logger.info('Uploading Insights to SQL')
 
     ## Getting the environmental variables
@@ -275,7 +275,7 @@ def device_info():
     device_information = device_information.reset_index(drop=True)
     device_information.to_csv('../_device_info.csv')
 
-    insights()
+    upload_insights()
     query = "SELECT * FROM insights WHERE device_name = \'{}\'".format(os.environ.get('device_name'))
     insights = pd.read_sql(query,con=engine)
     insights = insights['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']

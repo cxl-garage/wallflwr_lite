@@ -95,7 +95,7 @@ if utils.connect() == True:
 
     # Upload metadata to SQL database
     if opt.sql_off == False:
-        cloud_db.insights()
+        cloud_db.upload_insights()
 
     # Upload images to Google Cloud Storage
     if opt.gcs_off == False:
