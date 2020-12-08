@@ -53,10 +53,7 @@ opt = parser.parse_args()
 # Initialize the device (check that local device is ready)
 data_directory = utils.initialize(opt)
 import edge_process
-if data_directory == 'noSD':
-    logger.error('No SD card found, skipping ahead')
-else:
-
+if data_directory != 'noSD':
 
     # Reading in information about algorithms that have to run on device
     primary_algs = pd.read_csv('../models/_primary_algs.txt')
