@@ -52,41 +52,45 @@ opt = parser.parse_args()
 
 # Initialize the device (check that local device is ready)
 data_directory = utils.initialize(opt)
-import edge_process
+if data_directory == 'noSD':
+    logger.error('No SD card found, skipping ahead')
+else:
+    import edge_process
 
 
-# Reading in information about algorithms that have to run on device
-primary_algs = pd.read_csv('../models/_primary_algs.txt')
-secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
+    # Reading in information about algorithms that have to run on device
+    primary_algs = pd.read_csv('../models/_primary_algs.txt')
+    secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
 
-if len(os.listdir(data_directory)) == 0:
-    logger.warning('No files to process')
+    if len(os.listdir(data_directory)) == 0:
+        logger.warning('No files to process')
 
 
-## Process data until there are no data left in the data directory
-#while len(os.listdir(data_directory)) != 0:
+    ## Process data until there are no data left in the data directory
+    #while len(os.listdir(data_directory)) != 0:
 
-## Running loop of all algorithms that have to run on device
-k = 0
-while k < len(primary_algs):
-    primary_alg = primary_algs.iloc[[k]]
-    logger.info('Model {} Starting'.format(primary_alg['alg_id'][0]))
+    ## Running loop of all algorithms that have to run on device
+    k = 0
+    while k < len(primary_algs):
+        primary_alg = primary_algs.iloc[[k]]
+        logger.info('Model {} Starting'.format(primary_alg['alg_id'][0]))
 
-    # Run Primary ALgorithm
-    primary_df = edge_process.main(primary_alg,data_directory,opt.type)
-    logger.info('Model {} Complete'.format(primary_alg['alg_id'][0]))
+        # Run Primary ALgorithm
+        primary_df = edge_process.main(primary_alg,data_directory,opt.type)
+        logger.info('Model {} Complete'.format(primary_alg['alg_id'][0]))
 
-    # Run Secondary Model (if it exists)
-    #if len(secondary_algs)! :
-    #    secondary_df = edge_process.main(secondary_algs,data_directory,opt.type)
-        #print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
+        # Run Secondary Model (if it exists)
+        #if len(secondary_algs)! :
+        #    secondary_df = edge_process.main(secondary_algs,data_directory,opt.type)
+            #print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
 
-    k = k+1
+        k = k+1
+    
+    # Delete all processed files from SD Card
+    utils.delete_files()
 
 edge_process.group_confidence_calculation()
 
-# Delete all processed files from SD Card
-utils.delete_files()
 
 # If internet connection exists, upload data to cloud
 if utils.connect() == True and opt.wilderness != True:
