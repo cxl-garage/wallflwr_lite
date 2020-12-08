@@ -12,7 +12,7 @@ import os
 import io
 import time
 import utils
-#import lora
+import lora
 #import desmodus_draculae
 import numpy as np
 import csv
@@ -63,6 +63,7 @@ secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
 if len(os.listdir(data_directory)) == 0:
     logger.warning('No files to process')
 
+
 ## Process data until there are no data left in the data directory
 #while len(os.listdir(data_directory)) != 0:
 
@@ -73,7 +74,7 @@ while k < len(primary_algs):
     logger.info('Model {} Starting'.format(primary_alg['alg_id'][0]))
 
     # Run Primary ALgorithm
-    primary_df = edge_process.main(primary_alg,data_directory,opt.type, shutdown_pin)
+    primary_df = edge_process.main(primary_alg,data_directory,opt.type)
     logger.info('Model {} Complete'.format(primary_alg['alg_id'][0]))
 
     # Run Secondary Model (if it exists)
@@ -94,7 +95,7 @@ if utils.connect() == True:
 
     # Upload metadata to SQL database
     if opt.sql_off == False:
-        cloud_db.insights()
+        cloud_db.upload_insights()
 
     # Upload images to Google Cloud Storage
     if opt.gcs_off == False:
@@ -114,6 +115,6 @@ else:
 
 ## Shut down Raspberry Pi
 if os.environ.get("cycle_time") == '1':
-    utils.shutdown(os.environ.get("cycle_time"), shutdown_pin)
+    utils.shutdown(os.environ.get("cycle_time"))
 else:
     logger.info('Processing complete, device idling (shutdown disabled)')

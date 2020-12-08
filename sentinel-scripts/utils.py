@@ -62,6 +62,8 @@ def initialize(opt):
 
 
     # Check local database exists
+    if not os.path.exists('../data'):
+        os.makedirs('../data')
     if not os.path.exists('../data/device_insights.csv'):
         logger.info('Device Insights Table Initializing!')
         x = pd.DataFrame(columns=['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence'])
@@ -82,7 +84,7 @@ def initialize(opt):
 
         # Pull device info and write it to memory as a CSV
         cloud_db.device_info()
-
+        
         # Pull latest master branch from git
         logger.info('Checking git for updates')
         from git import Repo
@@ -131,7 +133,7 @@ def initialize(opt):
         list_of_devices = []
 
         for file in os.listdir('/dev'):
-            if file.startswith("s"):
+            if file.startswith("sd") and file.endswith("1"):
                 list_of_devices.append(os.path.join("/dev", file))
         logger.info('Mounting SD card')
         k = 0
@@ -154,10 +156,11 @@ def initialize(opt):
                 time.sleep(1)
             k = k + 1
             time.sleep(1)
-        data_directory = '../data/camera/DCIM/100MEDIA'
+        data_directory = '../data/camera/DCIM/{}'.format(os.listdir('../data/camera/DCIM/')[0])
     else:
         data_directory = '../data/test'
         logger.warning('Running in test mode')
+    os.environ['data_directory'] = data_directory
     return data_directory
 
 
@@ -172,7 +175,7 @@ def delete_files():
     k = 0
     while k < len(insights):
         try:
-            delete_command = 'sudo rm -f ../data/camera/DCIM/100MEDIA/{}'.format(insights['image_id'][k])
+            delete_command = 'sudo rm -f {}/{}'.format(os.environ.get('data_directory'),insights['image_id'][k])
             os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), delete_command))
         except Exception as e:
             logger.warning('Issue deleting file')

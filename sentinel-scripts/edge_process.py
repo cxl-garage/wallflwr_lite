@@ -193,6 +193,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
     if os.environ.get('version').startswith('0'):
         ans = interpreter.DetectWithImage(current_file,threshold=threshold,keep_aspect_ratio = True, relative_coord=True,top_k=1)
     toc = time.process_time()
+
     #logger.info('Time to run algorithm: {} seconds'.format(toc - tic))
 
     # Set up timer to check time to save images
@@ -219,10 +220,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
 
             if os.environ.get('version').startswith('1'):
                 boxes = obj.bbox
-            #logger.info(boxes)
-            #logger.info(boxes[0])
                 boxes = [boxes[0]/width,boxes[1]/height,boxes[2]/width,boxes[3]/height]
-            #logger.info(boxes)
                 classes = obj.id
             if os.environ.get('version').startswith('0'):
                 boxes = obj.bounding_box.flatten()
@@ -292,7 +290,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
 
 
 # The main function script
-def main(alg,data_directory,quantize_type,shutdown_pin, algorithm_type = 'detection', batch = 10000, spacing = 10):
+def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch = 10000, spacing = 10):
 
 
     # Defining the results directory
@@ -329,9 +327,10 @@ def main(alg,data_directory,quantize_type,shutdown_pin, algorithm_type = 'detect
                 interpreter.allocate_tensors()
             break
         except Exception as e:
-            logging.error('No TPU Found. Trying again')
+            logging.error('No TPU Found. Rebooting...')
+            #utils.shutdown(0)
         k = k + 1
-    utils.shutdown(0, shutdown_pin)
+
 
     x = 0
     directories = [str(data_directory)]
@@ -355,6 +354,9 @@ def main(alg,data_directory,quantize_type,shutdown_pin, algorithm_type = 'detect
             i = i+1
 
         directory_list = os.listdir(directories[x])
+        directory_list = ['{}/{}'.format(directories[x],i) for i in directory_list]
+        directory_list.sort(key=lambda x: os.path.getmtime(x))
+
         # initializing variables to enable grouping of files
         previous_confidence = 0
         previous_class = ''
@@ -362,22 +364,17 @@ def main(alg,data_directory,quantize_type,shutdown_pin, algorithm_type = 'detect
         ## Looping through all files on the SD Card
         while k < len(directory_list):
             # Specifying the specific file to be processed
-            # logger.info('{}/{}'.format(directories[x],directory_list[k]))
-            file = directory_list[k]
-
-            # os.rename('{}/{}'.format(directories[x],directory_list[k]),'{}/{}'.format(directories[x], file))
-            logger.info(file)
-            # logger.info("HERE WE GO")
-            # logger.info('{}/{}'.format(directories[x],directory_list[k]))
-
+            # Put back into base file name (no path-- just made things easier)
+            file = os.path.basename(directory_list[k])
+            previous_file = os.path.basename(directory_list[k-1])
             if k > 0:
                 timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
-                timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x],directory_list[k-1])))
+                timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x],previous_file)))
             else:
                 timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
                 timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
-            logger.info('timeFile - timeFileBefore')
-            logger.info(timeFile - timeFileBefore)
+
+            logger.info('Time Difference: {}'.format(timeFile - timeFileBefore))
 
             #If it is the first photo in the directory, we can assume it is a new group
             #If it is the first ever photo in the csv, we set the key to 1
@@ -394,8 +391,6 @@ def main(alg,data_directory,quantize_type,shutdown_pin, algorithm_type = 'detect
             else:
                 group_key = alg_df['group_id'].iloc[-1] + 1
 
-
-            logger.info('File: {}'.format(file))
             # Checking that the file hasn't already been processed by this algorithm
             if ((alg_df['alg_id'] == alg['alg_id'][0]) & (alg_df['image_id'] == file)).any():
                 logger.info('File already processed')
@@ -415,11 +410,8 @@ def main(alg,data_directory,quantize_type,shutdown_pin, algorithm_type = 'detect
                         meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, directories[x], file, ai_sensitivity, results_directory,class_names)
                         # Appending the unique group key to the metadata
                         meta_df['group_id'] = group_key
-                        logger.info(meta_df)
                         # Appending to existing results from the while loop
                         alg_df = alg_df.append(meta_df,ignore_index=True)
-                        tempalg_df=alg_df
-                        logger.info(alg_df)
                     else:
                         logger.error('Type of algorithm not yet supported')
             else:
@@ -438,7 +430,7 @@ def main(alg,data_directory,quantize_type,shutdown_pin, algorithm_type = 'detect
 
                 # Segment the group we are working with
                 group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
-
+                group = group.reset_index(drop=True)
                 # Confidence algorithm
                 """
                 Variables
