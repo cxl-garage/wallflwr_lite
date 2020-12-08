@@ -37,7 +37,7 @@ def check_bucket_exists():
     os.system('gsutil mb gs://{}'.format(x))
     #   bucket = client.get_bucket(x)
     #   logging.info('Bucket Created and Confirmed')
-    
+
 
 ### Downloads the actual .tflite files to the device
 def download_alg(file):
@@ -78,6 +78,8 @@ def upload_images():
     device_name = str(os.environ.get('device_name')).replace(" ","_")
     query = 'gsutil -m cp -r -n "../data/results/{}/{}/*" "gs://insights-{}/{}/{}/"'.format(int(x['alg_id'][k]),x['class'][k],device_id,int(x['alg_id'][k]),x['class'][k])
     os.system(query)
+    query = 'rm -r ../data/results/{}/{}/*'
+    os.system(query)
     #query = 'gsutil -m cp -r -n "../data/results/{}/{}/original/*" "gs://insights-{}/{}/{}/original/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
     #os.system(query)
     insights.loc[insights['insight_id'] == x['insight_id'][k],'committed_images'] = 1
@@ -90,4 +92,3 @@ def upload_log():
     logger.info('Uploading log')
     query = 'gsutil -m cp -r -n "../../logs/results/cronlog" "gs://insights-{}/logs/test/"'.format(device_id)
     os.system(query)
-

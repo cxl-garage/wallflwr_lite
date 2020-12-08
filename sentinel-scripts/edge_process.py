@@ -448,10 +448,21 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                 m = 0
                 class_id = group['class_id'][0]
                 while m == len(group):
-                    if class_id == group['class_id'][m]:
+
+                    ## If animal of same class is detected, increase confidence by (1-previous_confidence)*current_confidence
+                    if group['class_id'][m] == class_id:
                         group_confidence = (1-group_confidence)*group['confidence'][m]
+
+                    ## If no animal is in the m'th frame, dont penalize or increase confidence
+                    elif group['class_id'][m] == 99:
+                        group_confidence = group_confidence
+
+                    ## If different animal is detected, reset the group confidence
+                    ## FEATURE: we should get smarter about this
                     else:
                         group_confidence = 0
+
+                    # Assign new class_id
                     class_id = group['class_id'][m]
                     m = m + 1
                 alg_df.loc[alg_df['group_id'] == group_keys[y],'group_confidence'] = group_confidence
