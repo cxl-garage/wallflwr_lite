@@ -182,6 +182,7 @@ def delete_files():
         k = k+1
     logger.info('Files Deleted')
 
+
 ### Function to make the RPi shut itself down
 def shutdown(cycle_time):
     logger = logging.getLogger('shutter')
