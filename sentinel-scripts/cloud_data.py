@@ -76,9 +76,13 @@ def upload_images():
     k = 0
     device_id = str(os.environ.get('device_id'))
     device_name = str(os.environ.get('device_name')).replace(" ","_")
+
+    ## Upload all files in results folder
     query = 'gsutil -m cp -r -n "../data/results/{}/{}/*" "gs://insights-{}/{}/{}/"'.format(int(x['alg_id'][k]),x['class'][k],device_id,int(x['alg_id'][k]),x['class'][k])
     os.system(query)
-    query = 'rm -r ../data/results/{}/{}/*'
+
+    ## Delete all files in the results folder
+    query = 'rm -r ../data/results/{}/{}/*'.format(x['alg_id'][k]),x['class'][k])
     os.system(query)
     #query = 'gsutil -m cp -r -n "../data/results/{}/{}/original/*" "gs://insights-{}/{}/{}/original/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
     #os.system(query)
