@@ -92,7 +92,7 @@ def group_confidence_calculation():
         group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
         group = group.reset_index(drop=True)
         #print(group.columns)
-        print(group[['insight_id','confidence', 'class_id', 'image_id', 'group_id', 'group_confidence']])
+        print(group[['insight_id','confidence', 'class_id', 'group_id', 'group_confidence']])
         # Confidence algorithm
         """
         Variables
@@ -103,11 +103,17 @@ def group_confidence_calculation():
 
         v1: Hyperbolic towards 1, with reset if different class
         """
-
+        k = 0
+        while 1:
+            class_id = group['class_id'][k]
+            if int(class_id) != 99:
+                break
+            else:
+                k = k + 1
 
         group_confidence = 0
         m = 0
-        class_id = group['class_id'][0]
+
         while m < len(group):
 
             ## If animal of same class is detected, increase confidence by (1-previous_confidence)*current_confidence
