@@ -7,7 +7,7 @@
 This script processes data, and transforms the metadata into correct format for insight delivery
 """
 
-
+import datetime
 import argparse
 import time
 import numpy as np
@@ -287,7 +287,8 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
             scores = obj.score
             insight_id = int(k)
             # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-            time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
+            time_stamp = datetime.datetime.fromtimestamp(os.path.getmtime('{}'.format(file_path))).strftime('%Y-%m-%dT%H:%M:%S')
+            # time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
 
             logger.info('File: {}, Class: {}, Confidence: {}'.format(file,class_names[0][classes],scores))
             #logger.info('Confidence: {}'.format(scores))
@@ -328,7 +329,8 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
         # Note: we still save the information about the image being processed, (negative data is still valuable) and thus it is still assigned an insight_id
         insight_id = int(k)
         # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
+        time_stamp = datetime.datetime.fromtimestamp(os.path.getmtime('{}'.format(file_path))).strftime('%Y-%m-%dT%H:%M:%S')
+        # time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
         meta = {'committed_sql':0,'committed_images':0,
         'committed_lora': 0,'insight_id':insight_id,'alg_id':alg['alg_id'][0],
         'time_stamp': time_stamp,'class_id':99,'class':'blank',
