@@ -92,9 +92,9 @@ def upload_images():
     insights.to_csv('../data/device_insights.csv')
 
 
-# def upload_log():
-#     device_id = str(os.environ.get('device_id'))
-#     logger.info('Uploading log')
-#     query = 'gsutil -m cp -r -n "../../logs/cronlog" "gs://insights-{}/logs/"'.format(device_id)
-#     os.system(query)
+def upload_log(fileName):
+    device_id = str(os.environ.get('device_id'))
+    logger.info('Uploading log')
+    query = 'gsutil -m cp -r -n "../../logs/{}}" "gs://insights-{}/logs/"'.format(fileName,device_id)
+    os.system(query)
 
