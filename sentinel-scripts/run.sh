@@ -35,13 +35,7 @@ then
             let COUNTER2=COUNTER2+1 
             sleep 2
             echo Connecting...
-            #This is where the proxy connects
-            if ! grep -m1 'Ready for new connections' < ./log.out;
-            then
-                echo SQL Connected
-                let COUNTER2=99
-                break
-            fi
+            
             #This is just in case run.sh runs again with the proxy already running
             if ! grep -m1 'listen tcp 127.0.0.1:1234: bind: address already in use' < ./log.out;
             then
@@ -49,6 +43,15 @@ then
                 let COUNTER2=99
                 break
             fi
+
+            #This is where the proxy connects
+            if ! grep -m1 'Ready for new connections' < ./log.out;
+            then
+                echo SQL Connected
+                let COUNTER2=99
+                break
+            fi
+
         fi
         
     done
