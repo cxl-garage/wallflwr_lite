@@ -37,7 +37,7 @@ def check_bucket_exists():
     os.system('gsutil mb gs://{}'.format(x))
     #   bucket = client.get_bucket(x)
     #   logging.info('Bucket Created and Confirmed')
-    
+
 
 ### Downloads the actual .tflite files to the device
 def download_alg(file):
@@ -76,7 +76,13 @@ def upload_images():
     k = 0
     device_id = str(os.environ.get('device_id'))
     device_name = str(os.environ.get('device_name')).replace(" ","_")
+
+    ## Upload all files in results folder
     query = 'gsutil -m cp -r -n "../data/results/{}/{}/*" "gs://insights-{}/{}/{}/"'.format(int(x['alg_id'][k]),x['class'][k],device_id,int(x['alg_id'][k]),x['class'][k])
+    os.system(query)
+
+    ## Delete all files in the results folder
+    query = 'rm -r ../data/results/{}/{}/*'.format(x['alg_id'][k],x['class'][k])
     os.system(query)
     #query = 'gsutil -m cp -r -n "../data/results/{}/{}/original/*" "gs://insights-{}/{}/{}/original/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
     #os.system(query)
@@ -85,9 +91,10 @@ def upload_images():
     insights = insights[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
     insights.to_csv('../data/device_insights.csv')
 
-def upload_log():
-    device_id = str(os.environ.get('device_id'))
-    logger.info('Uploading log')
-    query = 'gsutil -m cp -r -n "../../logs/results/cronlog" "gs://insights-{}/logs/test/"'.format(device_id)
-    os.system(query)
+
+# def upload_log():
+#     device_id = str(os.environ.get('device_id'))
+#     logger.info('Uploading log')
+#     query = 'gsutil -m cp -r -n "../../logs/cronlog" "gs://insights-{}/logs/"'.format(device_id)
+#     os.system(query)
 

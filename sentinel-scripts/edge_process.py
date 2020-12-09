@@ -18,7 +18,6 @@ import re
 import datetime as dt
 import sys
 import shutil
-import uuid
 if os.environ.get('version').startswith('0'):
     import edgetpu
     from edgetpu.detection.engine import DetectionEngine
@@ -79,7 +78,67 @@ def get_output_tensor(interpreter, index):
   tensor = np.squeeze(interpreter.get_tensor(output_details['index']))
   return tensor
 
+def group_confidence_calculation():
+    ### Adding the group confidence to any data point that has the same group key
+    # Finding all group id's and putting them in list
+    alg_df = pd.read_csv('../data/device_insights.csv')
+    group_keys = alg_df.group_id.unique()
+    #logger.info(alg_df)
+    # Loop through each group id. (Should do a for loop, but I get confused by those things)
+    y = 0
+    while y < len(group_keys):
+        # Segment the group we are working with
+        group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
+        group = group.reset_index(drop=True)
+        #print(group.columns)
+        #print(group[['insight_id','confidence', 'class_id', 'group_id', 'group_confidence']])
+        # Confidence algorithm
+        """
+        Variables
+        - Number of possible classes
+        - Number of events
+        - Confidence of individual events
+        - Number of unique classes within the group
 
+        v1: Hyperbolic towards 1, with reset if different class
+        """
+        k = 0
+        while 1:
+            class_id = group['class_id'][k]
+            if int(class_id) != 99:
+                break
+            else:
+                k = k + 1
+
+        group_confidence = 0
+        m = 0
+
+        while m < len(group):
+
+            ## If animal of same class is detected, increase confidence by (1-previous_confidence)*current_confidence
+            if group['class_id'][m] == class_id:
+                group_confidence = group_confidence + (1-group_confidence)*group['confidence'][m]
+
+            ## If no animal is in the m'th frame, dont penalize or increase confidence
+            elif int(group['class_id'][m]) == 99:
+                group_confidence = group_confidence
+
+            ## If different animal is detected, reset the group confidence
+            ## FEATURE: we should get smarter about this
+            else:
+                group_confidence = group_confidence/2
+                # Assign new class_id
+                class_id = group['class_id'][m]
+            m = m + 1
+            alg_df.loc[alg_df['group_id'] == group_keys[y],'group_confidence'] = group_confidence
+        #logger.info('Group {} Confidence: {}'.format(group_keys[y], group_confidence))
+        y = y + 1
+
+    # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
+    alg_df = alg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
+
+    # Saving insights to local DB (just a .csv for now)
+    alg_df.to_csv('../data/device_insights.csv')
 
 ### Function to Save Cropped Images
 def bb_crop(data_directory, file, aoi, result, classes, results_directory, insight_id,class_names):
@@ -337,6 +396,8 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     # Loading in the algorithm directory from file
     alg_df = pd.read_csv('../data/device_insights.csv')
     tempalg_df= alg_df
+
+    
     while x < len(directories):
         # Finding all files within the data directory
 
@@ -349,8 +410,10 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         while i < len(original_directory_list):
             #Preserve the file type
             fileExtension = original_directory_list[i].split(".")[1]
-            #Rename the file
-            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}.{}'.format(directories[x],uuid.uuid1(),fileExtension))
+            #Finds the time of creation
+            fileTime = time.strftime('%Y%m-%d%H-%M%S', time.localtime(int(os.path.getmtime('{}/{}'.format(directories[x], original_directory_list[i])))))
+            #Rename the file to TIME + DEVICE ID
+            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}-{}.{}'.format(directories[x],fileTime,os.environ.get('device_id'),fileExtension))
             i = i+1
 
         directory_list = os.listdir(directories[x])
@@ -418,52 +481,14 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             else:
                 logger.error('File Format not yet supported')
                 break
-
-
-            ### Adding the group confidence to any data point that has the same group key
-
-            # Finding all group id's and putting them in list
-            group_keys = alg_df.group_id.unique()
-
-            # Loop through each group id. (Should do a for loop, but I get confused by those things)
-            y = 0
-            while y < len(group_keys):
-
-                # Segment the group we are working with
-                group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
-                group = group.reset_index(drop=True)
-                # Confidence algorithm
-                """
-                Variables
-                - Number of possible classes
-                - Number of events
-                - Confidence of individual events
-                - Number of unique classes within the group
-
-                v1: Hyperbolic towards 1, with reset if different class
-                """
-
-
-                group_confidence = 0
-                m = 0
-                class_id = group['class_id'][0]
-                while m == len(group):
-                    if class_id == group['class_id'][m]:
-                        group_confidence = (1-group_confidence)*group['confidence'][m]
-                    else:
-                        group_confidence = 0
-                    class_id = group['class_id'][m]
-                    m = m + 1
-                alg_df.loc[alg_df['group_id'] == group_keys[y],'group_confidence'] = group_confidence
-                y = y + 1
             # Moving on to next file
             k = k + 1
         x = x + 1
 
+
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
     alg_df = tempalg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
-    # Saving insights to local DB (just a .csv for now)
-    alg_df.to_csv('../data/device_insights.csv')
+
     logger.info(alg_df)
 
     return alg_df

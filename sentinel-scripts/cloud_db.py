@@ -33,6 +33,7 @@ logger = logging.getLogger('cloud_db')
 os.environ['DB_USER'] = 'sentinel_devices'
 os.environ['CLOUD_SQL_CONNECTION_NAME'] ='sentinel-project-278421:us-east4:algorithm-library'
 os.environ['FRAMEWORK'] = 'CXL_YoloV3_TF2_v1.0'
+# os.environ['DB_PRIP']   = '35.245.49.25'
 os.environ['DB_PRIP']   = '127.0.0.1:1234'
 os.environ['DB_NAME']   = 'algorithm_library'
 os.environ['DB_PASS']   = 'endextinction'
@@ -219,6 +220,28 @@ def check_algs():
         return
 
 
+
+### Function to make sure that the device is self-aware even after catastrophic (except memory card) failure
+# def device_info():
+#     db_user = os.environ.get("DB_USER")
+#     db_pass = os.environ.get("DB_PASS")
+#     db_name = os.environ.get("DB_NAME")
+#     db_ip   = os.environ.get("DB_PRIP")
+#     cloud_sql_connection_name = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
+#     URL = 'mysql+pymysql://{}:{}@{}/{}'.format(db_user,db_pass,db_ip,db_name)
+#     engine = sqlalchemy.create_engine(URL, pool_size=5,max_overflow=2,pool_timeout=60,pool_recycle=1800,)
+#     query = "SELECT * FROM devices WHERE device_name = \'{}\'".format(os.environ.get('device_name'))
+#     print(query)
+#     device_information = pd.read_sql(query,con=engine)
+#     print(device_information)
+#     device_information = device_information.reset_index(drop=True)
+#     device_information.to_csv('../_device_info.csv')
+#     print('Device ID: {}'.format(str(device_information['device_id'][0])))
+#     os.environ['device_id'] = str(device_information['device_id'][0])
+#     os.environ['cycle_time'] = str(device_information['cycle_time'][0])
+#     os.environ['sudoPW'] = 'endextinction'
+#     os.environ['shutdown'] = str(device_information['shutdown'][0])
+#     os.environ['version'] = str(device_information['version'][0])
 
 
 ### Upload insights captured on device to SQL DB
