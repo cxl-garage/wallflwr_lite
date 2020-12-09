@@ -1,4 +1,13 @@
-#!/bin/bash
-now=$(date +"%m_%d_%Y_%H_%M_%S")
+cd /
 
-echo "log_${now}"
+cd /home/pi/wallflwr_lite/sentinel-scripts
+
+
+python3 main.py --wilderness
+
+pip3 uninstall gitpython
+pip3 uninstall sqlalchemy
+
+
+python3 main.py
+

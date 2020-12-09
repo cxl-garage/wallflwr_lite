@@ -24,6 +24,7 @@ import cloud_db
 import pandas as pd
 import requests
 import logging
+from git import Repo
 
 ### Checking if device has internet access
 def connect(url='http://www.google.com/', timeout=3):
@@ -87,7 +88,6 @@ def initialize(opt):
 
         # Pull latest master branch from git
         logger.info('Checking git for updates')
-        from git import Repo
         repo = Repo('../')
         assert not repo.bare
         repo.remotes.origin.pull()
@@ -102,6 +102,7 @@ def initialize(opt):
                     if checkout_commit != repo.head.object.hexsha:
                         repo.git.checkout(checkout_commit)
                         logger.info('Checked out {} version (SHA: {})'.format(checkout_tag,checkout_commit))
+                        os.system('echo {} | sudo reboot'.format(os.environ.get('sudoPW')))
                     else:
                         logger.info('Already up-to-date')
                     break
@@ -128,6 +129,20 @@ def initialize(opt):
         os.environ['shutdown'] = str(device_information['shutdown'][0])
         os.environ['version'] = str(device_information['version'][0])
 
+
+    if os.environ.get('version').startswith('0'):
+        import edgetpu
+        from edgetpu.detection.engine import DetectionEngine
+    elif os.environ.get('version').startswith('1'):
+        from pycoral.adapters import common
+        from pycoral.adapters import detect
+        from pycoral.utils.dataset import read_label_file
+        from pycoral.utils.edgetpu import make_interpreter
+    else:
+        logger.error('Unable to mount EdgeTPU, skipping ahead and will reboot!')
+        return 'error'
+
+        
     # Loop to run consistently run on RasPi
     if opt.test == False:
         list_of_devices = []
@@ -149,7 +164,7 @@ def initialize(opt):
                 m = m + 1
             if k == 3:
                 logger.error('SD Card Not Found')
-                return 'noSD'
+                return 'error'
             if os.path.isdir('../data/camera/DCIM') == True:
                 break
             else:
@@ -161,6 +176,9 @@ def initialize(opt):
         data_directory = '../data/test'
         logger.warning('Running in test mode')
     os.environ['data_directory'] = data_directory
+
+
+
     return data_directory
 
 
@@ -180,6 +198,11 @@ def delete_files():
         except Exception as e:
             logger.warning('Issue deleting file')
         k = k+1
+
+    ## Delete all files in the results folder
+    query = 'rm -r ../data/results/*'
+    os.system(query)
+
     logger.info('Files Deleted')
 
 

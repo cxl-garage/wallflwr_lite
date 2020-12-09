@@ -7,6 +7,9 @@
 This script processes data, and transforms the metadata into correct format for insight delivery
 """
 
+
+import logging
+logger = logging.getLogger('cnn')
 import datetime
 import argparse
 import time
@@ -21,7 +24,7 @@ import shutil
 if os.environ.get('version').startswith('0'):
     import edgetpu
     from edgetpu.detection.engine import DetectionEngine
-if os.environ.get('version').startswith('1'):
+elif os.environ.get('version').startswith('1'):
     from pycoral.adapters import common
     from pycoral.adapters import detect
     from pycoral.utils.dataset import read_label_file
@@ -30,11 +33,8 @@ import cloud_data
 import pandas as pd
 from PIL import Image
 from PIL import ImageChops
-import logging
 import utils
 
-
-logger = logging.getLogger('cnn')
 
 
 # Allows for localized training. Still in Development (CODE FROM GOOGLE UNDER APACHE 2.0)
@@ -91,7 +91,6 @@ def group_confidence_calculation():
         group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
         group = group.reset_index(drop=True)
         #print(group.columns)
-        #print(group[['insight_id','confidence', 'class_id', 'group_id', 'group_confidence']])
         # Confidence algorithm
         """
         Variables
@@ -131,7 +130,8 @@ def group_confidence_calculation():
                 class_id = group['class_id'][m]
             m = m + 1
             alg_df.loc[alg_df['group_id'] == group_keys[y],'group_confidence'] = group_confidence
-        #logger.info('Group {} Confidence: {}'.format(group_keys[y], group_confidence))
+        logger.info('Group {} Confidence: {}'.format(group_keys[y], group_confidence))
+        print(group[['insight_id','confidence', 'class_id', 'group_id', 'group_confidence']])
         y = y + 1
 
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
@@ -394,12 +394,12 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
 
 
     x = 0
-    directories = [str(data_directory)]
+    directories = [str(os.environ.get('data_directory'))]
     # Loading in the algorithm directory from file
     alg_df = pd.read_csv('../data/device_insights.csv')
     tempalg_df= alg_df
 
-    
+
     while x < len(directories):
         # Finding all files within the data directory
 
@@ -439,7 +439,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                 timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
                 timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
 
-            logger.info('Time Difference: {}'.format(timeFile - timeFileBefore))
+            #logger.info('Time Difference: {}'.format(timeFile - timeFileBefore))
 
             #If it is the first photo in the directory, we can assume it is a new group
             #If it is the first ever photo in the csv, we set the key to 1
@@ -492,6 +492,8 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
     alg_df = tempalg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
     logger.info(alg_df)
     # Saving insights to local DB (just a .csv for now)
+    alg_df.to_csv('../data/device_insights.csv')
+
     alg_df.to_csv('../data/device_insights.csv')
 
     return alg_df

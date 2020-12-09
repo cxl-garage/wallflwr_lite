@@ -1,0 +1,77 @@
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=113 time=19.1 ms
+
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 19.162/19.162/19.162/0.000 ms
+0
+Connecting...
+SQL Connected
+initialize  : INFO     Internet Connection Successful
+initialize  : INFO     Device Name: bumble bee
+initialize  : INFO     Checking git for updates
+initialize  : INFO     In Debug mode, Git is manually controlled!
+Creating gs://insights-6/...
+ServiceException: 409 Bucket insights-6 already exists.
+initialize  : INFO     Checking for new algorithms
+cloud_db    : INFO        device_id  alg_id    status  ... sensitivity resolution action
+0          6    1018  Deployed  ...         0.4        256   None
+
+[1 rows x 9 columns]
+cloud_db    : INFO     Found 0 algorithms ready for download
+cloud_db    : INFO     Saving algorithm information to .txt file locally
+cloud_db    : INFO     File Found
+cloud_db    : INFO     Labels Found
+cloud_db    : INFO     Syncing up the SQL database
+initialize  : INFO     Mounting SD card
+initialize  : ERROR    SD Card Not Found
+cloud_db    : INFO     Uploading Insights to SQL
+cloud_db    : INFO     Successfully added to SQL
+cloud_data  : INFO     Uploading Images
+Copying file://../data/results/1018/Squirrel/68.jpeg [Content-Type=image/jpeg]...
+Copying file://../data/results/1018/Squirrel/50.jpeg [Content-Type=image/jpeg]...
+/ [0/45 files][    0.0 B/273.3 KiB]   0% Done                                   / [0/45 files][    0.0 B/273.3 KiB]   0% Done                                   Copying file://../data/results/1018/Squirrel/53.jpeg [Content-Type=image/jpeg]...
+/ [0/45 files][    0.0 B/273.3 KiB]   0% Done                                   Skipping existing item: gs://insights-6/1018/Squirrel/12.jpeg
+Skipping existing item: gs://insights-6/1018/Squirrel/11.jpeg
+Copying file://../data/results/1018/Squirrel/72.jpeg [Content-Type=image/jpeg]...
+/ [0/45 files][    0.0 B/273.3 KiB]   0% Done                                   -Skipping existing item: gs://insights-6/1018/Squirrel/13.jpeg
+- [1/45 files][ 16.1 KiB/273.3 KiB]   5% Done                                   \\ [2/45 files][ 16.1 KiB/273.3 KiB]   5% Done                                   \ [3/45 files][ 16.1 KiB/273.3 KiB]   5% Done                                   Copying file://../data/results/1018/Squirrel/48.jpeg [Content-Type=image/jpeg]...
+\ [3/45 files][ 22.2 KiB/273.3 KiB]   8% Done                                   |Skipping existing item: gs://insights-6/1018/Squirrel/29.jpeg
+| [4/45 files][ 22.2 KiB/273.3 KiB]   8% Done                                   Skipping existing item: gs://insights-6/1018/Squirrel/5.jpeg
+Skipping existing item: gs://insights-6/1018/Squirrel/24.jpeg
+| [4/45 files][ 27.5 KiB/273.3 KiB]  10% Done                                   /Copying file://../data/results/1018/Squirrel/35.jpeg [Content-Type=image/jpeg]...
+/ [4/45 files][ 27.5 KiB/273.3 KiB]  10% Done                                   Skipping existing item: gs://insights-6/1018/Squirrel/9.jpeg
+Skipping existing item: gs://insights-6/1018/Squirrel/18.jpeg
+/ [5/45 files][ 27.5 KiB/273.3 KiB]  10% Done                                   Skipping existing item: gs://insights-6/1018/Squirrel/19.jpeg
+-Skipping existing item: gs://insights-6/1018/Squirrel/1.jpeg
+Skipping existing item: gs://insights-6/1018/Squirrel/22.jpeg
+- [6/45 files][ 33.0 KiB/273.3 KiB]  12% Done                                   Skipping existing item: gs://insights-6/1018/Squirrel/8.jpeg
+Skipping existing item: gs://insights-6/1018/Squirrel/16.jpeg
+Copying file://../data/results/1018/Squirrel/61.jpeg [Content-Type=image/jpeg]...
+- [6/45 files][ 33.0 KiB/273.3 KiB]  12% Done                                   Copying file://../data/results/1018/Squirrel/40.jpeg [Content-Type=image/jpeg]...
+\\ [6/45 files][ 33.0 KiB/273.3 KiB]  12% Done                                   Copying file://../data/results/1018/Squirrel/38.jpeg [Content-Type=image/jpeg]...
+\ [6/45 files][ 33.0 KiB/273.3 KiB]  12% Done                                   Skipping existing item: gs://insights-6/1018/Squirrel/7.jpeg
+Skipping existing item: gs://insights-6/1018/Squirrel/15.jpeg
+\ [6/45 files][ 40.1 KiB/273.3 KiB]  14% Done                                   |Skipping existing item: gs://insights-6/1018/Squirrel/10.jpeg
+| [7/45 files][ 52.5 KiB/273.3 KiB]  19% Done                                   | [8/45 files][ 52.5 KiB/273.3 KiB]  19% Done                                   Copying file://../data/results/1018/Squirrel/64.jpeg [Content-Type=image/jpeg]...
+| [8/45 files][ 52.5 KiB/273.3 KiB]  19% Done                                   // [9/45 files][ 52.5 KiB/273.3 KiB]  19% Done                                   Copying file://../data/results/1018/Squirrel/42.jpeg [Content-Type=image/jpeg]...
+/ [9/45 files][ 52.5 KiB/273.3 KiB]  19% Done                                   -Copying file://../data/results/1018/Squirrel/67.jpeg [Content-Type=image/jpeg]...
+Skipping existing item: gs://insights-6/1018/Squirrel/4.jpeg
+- [9/45 files][ 52.5 KiB/273.3 KiB]  19% Done                                   Skipping existing item: gs://insights-6/1018/Squirrel/21.jpeg
+- [10/45 files][ 58.5 KiB/273.3 KiB]  21% Done                                  \Copying file://../data/results/1018/Squirrel/43.jpeg [Content-Type=image/jpeg]...
+\ [10/45 files][ 62.9 KiB/273.3 KiB]  23% Done   6.1 KiB/s ETA 00:00:35         Copying file://../data/results/1018/Squirrel/33.jpeg [Content-Type=image/jpeg]...
+\ [10/45 files][ 65.6 KiB/273.3 KiB]  24% Done   7.6 KiB/s ETA 00:00:27         |Copying file://../data/results/1018/Squirrel/63.jpeg [Content-Type=image/jpeg]...
+| [11/45 files][ 65.6 KiB/273.3 KiB]  24% Done   6.8 KiB/s ETA 00:00:30         | [11/45 files][ 65.6 KiB/273.3 KiB]  24% Done   6.8 KiB/s ETA 00:00:30         | [12/45 files][ 65.6 KiB/273.3 KiB]  24% Done   6.5 KiB/s ETA 00:00:32         /Copying file://../data/results/1018/Squirrel/47.jpeg [Content-Type=image/jpeg]...
+/ [12/45 files][ 73.2 KiB/273.3 KiB]  26% Done   8.5 KiB/s ETA 00:00:24         -Copying file://../data/results/1018/Squirrel/37.jpeg [Content-Type=image/jpeg]...
+- [12/45 files][ 73.2 KiB/273.3 KiB]  26% Done   7.0 KiB/s ETA 00:00:29         - [13/45 files][ 78.9 KiB/273.3 KiB]  28% Done   8.0 KiB/s ETA 00:00:24         - [14/45 files][ 86.3 KiB/273.3 KiB]  31% Done   6.8 KiB/s ETA 00:00:27         \Copying file://../data/results/1018/Squirrel/41.jpeg [Content-Type=image/jpeg]...
+\ [15/45 files][ 86.3 KiB/273.3 KiB]  31% Done   7.0 KiB/s ETA 00:00:27         \ [15/45 files][ 86.3 KiB/273.3 KiB]  31% Done   7.0 KiB/s ETA 00:00:27         |Copying file://../data/results/1018/Squirrel/39.jpeg [Content-Type=image/jpeg]...
+| [15/45 files][ 98.4 KiB/273.3 KiB]  35% Done  10.0 KiB/s ETA 00:00:18         | [16/45 files][ 98.4 KiB/273.3 KiB]  35% Done   9.3 KiB/s ETA 00:00:19         // [17/45 files][105.5 KiB/273.3 KiB]  38% Done  10.6 KiB/s ETA 00:00:16         Skipping existing item: gs://insights-6/1018/Squirrel/6.jpeg
+Copying file://../data/results/1018/Squirrel/36.jpeg [Content-Type=image/jpeg]...
+/ [18/45 files][105.5 KiB/273.3 KiB]  38% Done   9.4 KiB/s ETA 00:00:18         / [18/45 files][105.5 KiB/273.3 KiB]  38% Done   8.9 KiB/s ETA 00:00:19         -Copying file://../data/results/1018/Squirrel/71.jpeg [Content-Type=image/jpeg]...
+- [18/45 files][112.5 KiB/273.3 KiB]  41% Done  10.3 KiB/s ETA 00:00:16         Copying file://../data/results/1018/Squirrel/49.jpeg [Content-Type=image/jpeg]...
+- [18/45 files][112.5 KiB/273.3 KiB]  41% Done  10.8 KiB/s ETA 00:00:15         \\ [19/45 files][112.5 KiB/273.3 KiB]  41% Done   9.1 KiB/s ETA 00:00:18         Skipping existing item: gs://insights-6/1018/Squirrel/14.jpeg
+|| [20/45 files][124.5 KiB/273.3 KiB]  45% Done  10.4 KiB/s ETA 00:00:14         Copying file://../data/results/1018/Squirrel/66.jpeg [Content-Type=image/jpeg]...
+| [20/45 files][124.5 KiB/273.3 KiB]  45% Done   8.1 KiB/s ETA 00:00:18         | [21/45 files][129.6 KiB/273.3 KiB]  47% Done   9.1 KiB/s ETA 00:00:16         Skipping existing item: gs://insights-6/1018/Squirrel/20.jpeg
+| [22/45 files][129.6 KiB/273.3 KiB]  47% Done   8.7 KiB/s ETA 00:00:16         /Skipping existing item: gs://insights-6/1018/Squirrel/3.jpeg
+/ [23/45 files][134.4 KiB/273.3 KiB]  49% Done   7.7 KiB/s ETA 00:00:18         rm: cannot remove '../data/results/1018.0/Squirrel/*': No such file or directory
+main        : INFO     Processing complete, device idling (shutdown disabled)
