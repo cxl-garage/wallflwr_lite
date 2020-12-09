@@ -287,7 +287,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
             scores = obj.score
             insight_id = int(k)
             # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-            time_stamp = datetime.datetime.utcfromtimestamp(os.path.getmtime('{}'.format(file_path)))
+            time_stamp = datetime.datetime.fromtimestamp(os.path.getmtime('{}'.format(file_path)))
             logger.info('TIME IS HEREEEE')
             logger.info( time_stamp)
             # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
@@ -331,7 +331,7 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
         # Note: we still save the information about the image being processed, (negative data is still valuable) and thus it is still assigned an insight_id
         insight_id = int(k)
         # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        time_stamp = datetime.datetime.utcfromtimestamp(os.path.getmtime('{}'.format(file_path)))
+        time_stamp = datetime.datetime.fromtimestamp(os.path.getmtime('{}'.format(file_path)))
 
         # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
         meta = {'committed_sql':0,'committed_images':0,
