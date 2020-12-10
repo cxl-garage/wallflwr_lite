@@ -95,7 +95,7 @@ def group_confidence_calculation():
         group = alg_df.loc[alg_df['group_id'] == group_keys[k]]
 
         # Dropping all blanks
-        group = group[int(group['class_id']) != 99]
+        group = group[group['class_id'] != 99]
 
         # Resetting index
         group = group.reset_index(drop=True)
