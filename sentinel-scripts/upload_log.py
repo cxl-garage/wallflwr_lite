@@ -11,7 +11,7 @@ This script is designed to allow interface between the Sentinel Device and Googl
 It does not include SQL database, which we currently host (11-9-2020) on Google Cloud (found on mysql.py)
 """
 
-# import os
+import os
 # import time
 # import numpy as np
 # import sys,select
@@ -27,10 +27,13 @@ import logging
 
 logger = logging.getLogger('upload_log')
 
+
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
+
 logger.info('HELLOOOO')
-print('HELELEOO')
+
 # x = 'insights-{}'.format(os.environ.get('device_id'))
-# logger.info(x)
+logger.info(x)
 
 # def check_bucket_exists():
 #     x = 'insights-{}'.format(os.environ.get('device_id'))
