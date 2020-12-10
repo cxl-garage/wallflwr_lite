@@ -24,7 +24,7 @@ import logging
 from datetime import datetime
 import pathlib
 
-filePath = pathlib.Path(__file__).parent.absolute()
+filePath = pathlib.Path().absolute()
 
 logger = logging.getLogger('upload_log')
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
