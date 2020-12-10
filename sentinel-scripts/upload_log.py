@@ -21,7 +21,7 @@ import os
 # import requests
 # import json
 import logging
-from datetime import datetime
+import datetime
 import pathlib
 
 filePath = pathlib.Path().absolute()
@@ -38,8 +38,7 @@ logger.info(device_id)
 
 
 #Rename
-now = datetime.now()
-dt_string = now.strftime("%D:%m:%Y_%H:%M:%S")
+dt_string = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 logger.info(dt_string)
 os.rename('{}/logs/fullLog.out'.format(filePath),'{}/logs/{}.out'.format( filePath, dt_string))
 
