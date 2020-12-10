@@ -65,3 +65,5 @@ fi
 #Run the script 
 #ENHANCEMENT: If it is connected to the internet, skip the same process found in the main.py 
 python3 main.py 
+
+python3 upload_log.py
