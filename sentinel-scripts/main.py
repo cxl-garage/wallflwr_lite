@@ -74,6 +74,7 @@ while 1:
             k = 2
     if k == 2:
         logger.error('Critical Error!! Unable to install packages')
+        quit()
         k = k + 1
 
 
