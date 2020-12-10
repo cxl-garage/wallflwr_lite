@@ -11,15 +11,15 @@ This script is designed to allow interface between the Sentinel Device and Googl
 It does not include SQL database, which we currently host (11-9-2020) on Google Cloud (found on mysql.py)
 """
 
-import os
-import time
-import numpy as np
-import sys,select
-import datetime as dt
-import csv
-import pandas as pd
-import requests
-import json
+# import os
+# import time
+# import numpy as np
+# import sys,select
+# import datetime as dt
+# import csv
+# import pandas as pd
+# import requests
+# import json
 import logging
 #from google.cloud import storage
 #client = storage.Client()
