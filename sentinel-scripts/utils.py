@@ -77,6 +77,8 @@ def initialize(opt):
         os.makedirs('../data/repo')
 
 
+
+
     # Check if device is connected to internet
     if connect() == True and opt.wilderness != True:
         logger.info('Internet Connection Successful')

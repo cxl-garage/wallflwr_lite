@@ -81,7 +81,7 @@ logger.info(lines[1].rstrip())
 # def upload_log():
 #     # device_id = str(os.environ.get('device_id'))
 #     logger.info('Uploading log')
-#     query = 'gsutil -m cp -r -n "log.out" "gs://insights-2/logs/"'
+#     query = 'gsutil -m cp -r -n "../../logs/bashlogs/log.out" "gs://insights-2/logs/"'
 #     # .format(fileName,device_id)
 #     os.system(query)
 
