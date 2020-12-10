@@ -98,8 +98,9 @@ while 1:
 
 if len(os.listdir(data_directory)) == 0:
     logger.warning('No files to process')
+    data_directory = 'error'
 
-if data_directory != 'error' or len(os.listdir(data_directory)) == 0:
+if data_directory != 'error':
 
     # Reading in information about algorithms that have to run on device
     primary_algs = pd.read_csv('../models/_primary_algs.txt')
