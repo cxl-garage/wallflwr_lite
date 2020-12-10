@@ -63,6 +63,7 @@ while 1:
         break
     except Exception as e:
         logger.error(e)
+        logger.info('Attempting update packages')
         try:
             os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
         except Exception as e:
