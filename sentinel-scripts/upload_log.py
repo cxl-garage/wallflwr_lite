@@ -40,7 +40,7 @@ logger.info(device_id)
 #Rename
 now = datetime.now()
 dt_string = now.strftime("%D/%m/%Y_%H:%M:%S")
-os.rename('{}/logs/fullLog.out','{}/logs/{}.out'.format(filePath, filePath, dt_string))
+os.rename('{}/logs/fullLog.out'.format(filePath,'{}/logs/{}.out'.format( filePath, dt_string))
 
 #Upload
 logger.info('Uploading log')
