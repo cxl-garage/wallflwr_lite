@@ -92,7 +92,7 @@ def group_confidence_calculation():
     while k < len(group_keys):
 
         # Segment the group we are working with
-        group = alg_df.loc[alg_df['group_id'] == group_keys[y]]
+        group = alg_df.loc[alg_df['group_id'] == group_keys[k]]
 
         # Dropping all blanks
         group = group[int(group['class_id']) != 99]
@@ -116,7 +116,7 @@ def group_confidence_calculation():
         ### Scenario 3: Multiple Animal Classes Detected within Group
         else:
             group_confidence = 0
-
+        logger.info('Group {} Confidence: {}'.format(group_keys[k],group_confidence))
         alg_df.loc[alg_df['group_id'] == group_keys[k],'group_confidence'] = group_confidence
         k = k + 1
 
