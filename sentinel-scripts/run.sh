@@ -7,13 +7,10 @@ if [ ! -d /home/pi/wallflwr_lite/sentinel-scripts/logs ]; then
   mkdir -p /home/pi/wallflwr_lite/sentinel-scripts/logs;
 fi
 
-#Current Datetime
-now=$(date +"%m_%d_%Y_%H_%M_%S")
-
 #Logs the whole process
 exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
-exec 1>logs/"log_${now}".out 2>&1
+exec 1>logs/fullLog.out 2>&1
 
 
 #Ping until we have internet (it will try for 30 seconds)

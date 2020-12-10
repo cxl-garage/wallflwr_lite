@@ -27,61 +27,13 @@ import logging
 
 logger = logging.getLogger('upload_log')
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
+
 logger.info('HELLOOOO')
-f = open("../device.name", "r")
+f = open("../device.id", "r")
 lines = f.readlines()
-logger.info(lines[0].rstrip())
-logger.info(lines[1].rstrip())
-# x = 'insights-{}'.format(os.environ.get('device_id'))
-# logger.info(x)
+device_id = lines[0].rstrip()
+logger.info(device_id)
 
-# def check_bucket_exists():
-#     x = 'insights-{}'.format(os.environ.get('device_id'))
-#     #try:
-#     #   bucket = client.get_bucket(x)
-#     #   logging.info('Bucket Exists')
-#     #except:
-#     #   logging.info('Bucket doesnt exist, creating now...')
-#     os.system('gsutil mb gs://{}'.format(x))
-#     #   bucket = client.get_bucket(x)
-#     #   logging.info('Bucket Created and Confirmed')
-
-
-
-# def upload_images():
-#     logger.info('Uploading Images')
-#     insights = pd.read_csv('../data/device_insights.csv')
-
-#     x = insights[insights['committed_images'] == 0]
-#     #print(x)
-#     x = x[x['class'] != 'blank']
-#     x = x.reset_index()
-#     if len(x) == 0:
-#         logger.warning('No images to upload')
-#         return
-#     k = 0
-#     device_id = str(os.environ.get('device_id'))
-#     device_name = str(os.environ.get('device_name')).replace(" ","_")
-
-#     ## Upload all files in results folder
-#     query = 'gsutil -m cp -r -n "../data/results/{}/{}/*" "gs://insights-{}/{}/{}/"'.format(int(x['alg_id'][k]),x['class'][k],device_id,int(x['alg_id'][k]),x['class'][k])
-#     os.system(query)
-
-#     ## Delete all files in the results folder
-#     query = 'rm -r ../data/results/{}/{}/*'.format(x['alg_id'][k],x['class'][k])
-#     os.system(query)
-#     #query = 'gsutil -m cp -r -n "../data/results/{}/{}/original/*" "gs://insights-{}/{}/{}/original/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
-#     #os.system(query)
-#     insights.loc[insights['insight_id'] == x['insight_id'][k],'committed_images'] = 1
-
-#     insights = insights[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
-#     insights.to_csv('../data/device_insights.csv')
-
-
-# def upload_log():
-#     # device_id = str(os.environ.get('device_id'))
-#     logger.info('Uploading log')
-#     query = 'gsutil -m cp -r -n "../../logs/bashlogs/log.out" "gs://insights-2/logs/"'
-#     # .format(fileName,device_id)
-#     os.system(query)
-
+logger.info('Uploading log')
+query = 'gsutil -m cp -r -n "./logs/fullLog.out" "gs://insights-{}/logs/"'.format(device_id)
+os.system(query)
