@@ -62,6 +62,7 @@ while 1:
         import pandas as pd
         break
     except Exception as e:
+        logger.error(e)
         try:
             os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
         except Exception as e:
