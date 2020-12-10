@@ -56,7 +56,7 @@ def main(attempts=1):
 	lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
 	#print(insights)
 	logger.info(len(insights))
-	x =  insights[insights['committed_lora']!=True]
+	x =  insights#[insights['committed_lora']!=True]
 	logger.info(len(x))
 	x = x[x['class'] != 'blank']
 	logger.info(len(x))
