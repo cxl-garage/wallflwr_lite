@@ -93,14 +93,14 @@ while 1:
         logger.error('Critical Error!! Unable to install packages')
     k = k + 1
 
-if data_directory != 'error':
+if len(os.listdir(data_directory)) == 0:
+    logger.warning('No files to process')
+
+if data_directory != 'error' or len(os.listdir(data_directory)) == 0:
 
     # Reading in information about algorithms that have to run on device
     primary_algs = pd.read_csv('../models/_primary_algs.txt')
     secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
-
-    if len(os.listdir(data_directory)) == 0:
-        logger.warning('No files to process')
 
 
     ## Process data until there are no data left in the data directory
