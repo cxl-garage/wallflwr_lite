@@ -41,12 +41,12 @@ def main(attempts=1):
 
 	#devaddr = bytearray(device_info['lora_devaddr'][0],'utf-16')
 	device_info = pd.read_csv('../_device_info.csv')
-	devaddr = b'{}'.format(device_info['lora_devaddr'][0])#bytearray([ 0x26, 0x02, 0x1E, 0x47 ])
+	devaddr = bytearray(device_info['lora_devaddr'][0])#bytearray([ 0x26, 0x02, 0x1E, 0x47 ])
 
 	# TTN Network key
 	#nwkey = bytearray(device_info['lora_nwkey'][0],'utf-16')
-	nwkey = b'{}'.format(device_info['lora_nwkey'][0])#bytearray([ 0x40, 0x3A, 0xCC, 0x3B, 0xB3, 0xE2, 0x60, 0xF6, 0xC4, 0x6A, 0xC8, 0x22, 0x7C, 0xC5, 0xFD, 0xC3 ])
-	app   = b'{}'.format(device_info['lora_appkey'][0])
+	nwkey = bytearray(device_info['lora_nwkey'][0])#bytearray([ 0x40, 0x3A, 0xCC, 0x3B, 0xB3, 0xE2, 0x60, 0xF6, 0xC4, 0x6A, 0xC8, 0x22, 0x7C, 0xC5, 0xFD, 0xC3 ])
+	app   = bytearray(device_info['lora_appkey'][0])
 
 	logger.info('LoRa Info:\n Device Address: {}\nNetwork Key: {}\nApplication Key: {}'.format(devaddr,nwkey,app))
 	# TTN Application key
