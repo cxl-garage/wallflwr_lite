@@ -28,7 +28,7 @@ def encoder(input):
 	input = [input[i:i+2] for i in range(0, len(input), 2)]
 	print(input)
 	#input = ['0x'+x  for x in input]
-	input = [hex(i) for i in input]
+	input = [hex(int(i)) for i in input]
 	print(input)
 	#output = bytearray(input)
 	return output
