@@ -83,7 +83,7 @@ def group_confidence_calculation():
     alg_df = pd.read_csv('../data/device_insights.csv')
 
     # Drop existing calculated confidences
-    alg_df = alg_df.isna()
+    alg_df = alg_df.isna(subset=['group_confidence'])
 
     # Find groups
     group_keys = alg_df.group_id.unique()
