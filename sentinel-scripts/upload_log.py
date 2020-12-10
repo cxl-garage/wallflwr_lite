@@ -22,10 +22,9 @@ import os
 # import json
 import logging
 from datetime import datetime
+import pathlib
 
-#from google.cloud import storage
-#client = storage.Client()
-
+filePath = pathlib.Path(__file__).parent.absolute()
 
 logger = logging.getLogger('upload_log')
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
@@ -41,7 +40,7 @@ logger.info(device_id)
 #Rename
 now = datetime.now()
 dt_string = now.strftime("%D/%m/%Y_%H:%M:%S")
-os.rename('/logs/fullLog.out','{}.out'.format(dt_string))
+os.rename('{}/fullLog.out','{}.out'.format(filePath, dt_string))
 
 #Upload
 logger.info('Uploading log')
