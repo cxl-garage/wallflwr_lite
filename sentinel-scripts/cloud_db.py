@@ -97,7 +97,7 @@ def check_algs():
     engine = sqlalchemy.create_engine(URL, pool_size=5,max_overflow=2,pool_timeout=30,pool_recycle=1800)
     query = "SELECT * FROM deployed_algs WHERE device_id = \'{}\'".format(os.environ.get('device_id'))
     alg_ids = pd.read_sql(query,con=engine)
-    logger.info(alg_ids)
+    #logger.info(alg_ids)
 
     ## Downloading algorithms
     if len(alg_ids) == 0:
