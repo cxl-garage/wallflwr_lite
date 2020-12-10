@@ -38,15 +38,15 @@ def connect(url='http://www.google.com/', timeout=3):
 
     ### Initialize the device (check that local device is ready)
 def initialize(opt):
-    f = open("../device.name", "r")
+    f = open("../device.id", "r")
     lines = f.readlines()
-    os.environ['device_name'] = lines[0].rstrip()
+    os.environ['device_id'] = lines[0].rstrip()
 
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                         datefmt='%m-%d %H:%M',
-                        filename='../../logs/{}_actions.log'.format(os.environ.get("device_name")),
+                        filename='../../logs/{}_actions.log'.format(os.environ.get("device_id")),
                         filemode='w')
     # define a Handler which writes INFO messages or higher to the sys.stderr
     console = logging.StreamHandler()
@@ -80,7 +80,7 @@ def initialize(opt):
     if connect() == True and opt.wilderness != True:
         logger.info('Internet Connection Successful')
 
-        logger.info('Device Name: {}'.format(os.environ.get('device_name')))
+        logger.info('Device ID: {}'.format(os.environ.get('device_id')))
 
         # Pull device info and write it to memory as a CSV
         cloud_db.device_info()
@@ -122,7 +122,7 @@ def initialize(opt):
         logger.warning('Internet Connection not available')
         device_information = pd.read_csv('../_device_info.csv')
         print('Device ID: {}'.format(str(device_information['device_id'][0])))
-        os.environ['device_id'] = str(device_information['device_id'][0])
+        os.environ['device_name'] = str(device_information['device_name'][0])
         os.environ['cycle_time'] = str(device_information['cycle_time'][0])
         os.environ['sudoPW'] = 'endextinction'
         os.environ['shutdown'] = str(device_information['shutdown'][0])
