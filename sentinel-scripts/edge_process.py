@@ -368,7 +368,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
 
     # Defining the path to the model
     model = '../models/{}-{}.tflite'.format(alg['alg_id'][0],quantize_type)
-    logger.info(model)
+    #logger.info(model)
 
     # Defining the resolution of the images to be processed by the model
     cnn_w = int(alg['resolution'][0])
