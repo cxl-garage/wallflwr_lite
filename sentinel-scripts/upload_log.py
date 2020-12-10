@@ -26,14 +26,13 @@ import logging
 
 
 logger = logging.getLogger('upload_log')
-
-
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
-
 logger.info('HELLOOOO')
-
-x = 'insights-{}'.format(os.environ.get('device_id'))
-logger.info(x)
+f = open("../device.name", "r")
+lines = f.readlines()
+logger.info(lines[0].rstrip())
+# x = 'insights-{}'.format(os.environ.get('device_id'))
+# logger.info(x)
 
 # def check_bucket_exists():
 #     x = 'insights-{}'.format(os.environ.get('device_id'))
