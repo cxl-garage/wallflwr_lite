@@ -28,8 +28,8 @@ import logging
 logger = logging.getLogger('upload_log')
 
 logger.info('HELLOOOO')
-x = 'insights-{}'.format(os.environ.get('device_id'))
-logger.info(x)
+# x = 'insights-{}'.format(os.environ.get('device_id'))
+# logger.info(x)
 
 # def check_bucket_exists():
 #     x = 'insights-{}'.format(os.environ.get('device_id'))
