@@ -7,34 +7,8 @@
 This script is the main process that controls the Sentinel Device in the field
 """
 
-import sys
-import os
-import io
-import time
-import utils
-import lora
-#import desmodus_draculae
-import numpy as np
-import csv
-import shutil
-from datetime import datetime
-from time import strftime
 import argparse
-from time import process_time
-import cloud_data
-import cloud_db
-import pandas as pd
 import requests
-import logging
-
-## Setting relative path (necessary for backseat driving)
-try:
-    os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
-except:
-    os.chdir("/home/mendel/wallflwr_lite/sentinel-scripts")
-
-logger = logging.getLogger('main')
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--test', action='store_true', help='Use onboard test data rather than SD card')
 parser.add_argument('--wilderness', action='store_true', help='No internet scenario')
@@ -48,13 +22,78 @@ parser.add_argument('--text', action='store_true', help='Send text notification'
 parser.add_argument('--email', action='store_true', help='Send email notification')
 opt = parser.parse_args()
 
+### Checking if device has internet access
+def connect(url='http://www.google.com/', timeout=3):
+    try:
+        r = requests.head(url, timeout=timeout)
+        return True
+    except requests.ConnectionError as ex:
+        #print(ex)
+        return False
 
-######## BEGINNING OF THE WORK ########
+k = 0
+while 1:
+    try:
+        import logging
+        import os
+        ## Setting relative path (necessary for backseat driving)
+        try:
+            os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
+        except:
+            os.chdir("/home/mendel/wallflwr_lite/sentinel-scripts")
+
+        logger = logging.getLogger('main')
+
+        ######## BEGINNING OF THE WORK ########
+        import utils
+        import sys
+        import io
+        import time
+        import lora
+        #import desmodus_draculae
+        import numpy as np
+        import csv
+        import shutil
+        from datetime import datetime
+        from time import strftime
+        from time import process_time
+        import cloud_data
+        import cloud_db
+        import pandas as pd
+        break
+    except Exception as e:
+        try:
+            os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
+        except Exception as e:
+            os.chdir("/home/mendel/wallflwr_lite/sentinel-scripts")
+        if connect() == True and opt.wilderness != True:
+            os.system('pip3 install -r requirements.txt')
+        else:
+            k = 2
+    if k == 2:
+        logger.error('Critical Error!! Unable to install packages')
+        k = k + 1
+
+
 
 # Initialize the device (check that local device is ready)
 data_directory = utils.initialize(opt)
-import edge_process
-if data_directory != 'noSD':
+
+k = 0
+while 1:
+    try:
+        import edge_process
+        break
+    except Exception as e:
+        if connect() == True and opt.wilderness != True:
+            os.system('pip3 install -r requirements.txt')
+        else:
+            k = 2
+    if k == 2:
+        logger.error('Critical Error!! Unable to install packages')
+    k = k + 1
+
+if data_directory != 'error':
 
     # Reading in information about algorithms that have to run on device
     primary_algs = pd.read_csv('../models/_primary_algs.txt')
@@ -84,14 +123,12 @@ if data_directory != 'noSD':
 
         k = k+1
 
-    # Delete all processed files from SD Card
-    utils.delete_files()
 
 edge_process.group_confidence_calculation()
 
 
 # If internet connection exists, upload data to cloud
-if utils.connect() == True and opt.wilderness != True:
+if connect() == True and opt.wilderness != True:
 
     # Upload metadata to SQL database
     if opt.sql_off == False:
@@ -116,9 +153,11 @@ else:
     # Run LoRa Routine
     lora.main()
 
+# Delete all processed files from SD Card
+utils.delete_files()
+
 ## Shut down Raspberry Pi
 if os.environ.get("cycle_time") == '1':
     utils.shutdown(os.environ.get("cycle_time"))
 else:
     logger.info('Processing complete, device idling (shutdown disabled)')
-

@@ -1,2 +1,2 @@
-,device_id,device_name,location_name,lora_devaddr,lora_nwkey,lora_appkey,lte,satellite,wifi,cycle_time,lat,long,privacy,version,shutdown
-0,3,lemur,"Arlington, VA",,,,,,,30,,,0,,0
+,device_id,device_name,release,location_name,lora_gateway,lora_devaddr,lora_nwkey,lora_appkey,lte,satellite,wifi,cycle_time,lat,long,privacy,version,shutdown,storage
+0,6,bumble bee,debug,"Arlington, VA",,,,,,,,30,,,0,0.3,0,64
