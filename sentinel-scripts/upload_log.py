@@ -25,7 +25,8 @@ import logging
 #client = storage.Client()
 
 
-logger = logging.getLogger('cloud_data')
+logger = logging.getLogger('upload_log')
+
 x = 'insights-{}'.format(os.environ.get('device_id'))
 logger.info(x)
 
