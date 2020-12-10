@@ -9,5 +9,4 @@ pip3 uninstall gitpython
 pip3 uninstall sqlalchemy
 
 
-python3 main.py
-
+python main.py
