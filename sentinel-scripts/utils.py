@@ -142,7 +142,7 @@ def initialize(opt):
         logger.error('Unable to mount EdgeTPU, skipping ahead and will reboot!')
         return 'error'
 
-        
+
     # Loop to run consistently run on RasPi
     if opt.test == False:
         list_of_devices = []
@@ -156,7 +156,7 @@ def initialize(opt):
             m = 0
             while m < len(list_of_devices):
                 mount_command = 'sudo mount {} ../data/camera'.format(list_of_devices[m])
-                logger.info(mount_command)
+                #logger.info(mount_command)
                 os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), mount_command))
                 if os.path.isdir('../data/camera/DCIM') == True:
                     logger.info('SD Card Mounted')
