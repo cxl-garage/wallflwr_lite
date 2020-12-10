@@ -40,6 +40,7 @@ logger.info(device_id)
 #Rename
 now = datetime.now()
 dt_string = now.strftime("%D:%m:%Y_%H:%M:%S")
+logger.info(dt_string)
 os.rename('{}/logs/fullLog.out'.format(filePath),'{}/logs/{}.out'.format( filePath, dt_string))
 
 #Upload
