@@ -21,6 +21,8 @@ import os
 # import requests
 # import json
 import logging
+from datetime import datetime
+
 #from google.cloud import storage
 #client = storage.Client()
 
@@ -34,6 +36,14 @@ lines = f.readlines()
 device_id = lines[0].rstrip()
 logger.info(device_id)
 
+
+
+#Rename
+now = datetime.now()
+dt_string = now.strftime("%D/%m/%Y_%H:%M:%S")
+os.rename('./logs/fullLog.out','{}.out'.format(dt_string))
+
+#Upload
 logger.info('Uploading log')
-query = 'gsutil -m cp -r -n "./logs/fullLog.out" "gs://insights-{}/logs/"'.format(device_id)
+query = 'gsutil -m cp -r -n "./logs/{}.out" "gs://insights-{}/logs/"'.format(dt_string,device_id)
 os.system(query)
