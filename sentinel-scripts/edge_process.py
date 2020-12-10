@@ -93,10 +93,10 @@ def group_confidence_calculation():
 
         # Segment the group we are working with
         group = alg_df.loc[alg_df['group_id'] == group_keys[k]]
-
+        print(group)
         # Dropping all blanks
         group = group[group['class_id'] != 99]
-
+        print(group)
         # Resetting index
         group = group.reset_index(drop=True)
 
