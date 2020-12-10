@@ -106,6 +106,9 @@ def group_confidence_calculation():
             class_id = group['class_id'][k]
             if int(class_id) != 99:
                 break
+            if k == len(group):
+                class_id == group['class_id'][k-1]
+                break
             else:
                 k = k + 1
 
