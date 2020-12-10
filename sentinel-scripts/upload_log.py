@@ -31,6 +31,7 @@ logger.info('HELLOOOO')
 f = open("../device.name", "r")
 lines = f.readlines()
 logger.info(lines[0].rstrip())
+logger.info(lines[1].rstrip())
 # x = 'insights-{}'.format(os.environ.get('device_id'))
 # logger.info(x)
 
