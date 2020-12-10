@@ -81,9 +81,6 @@ def upload_images():
     query = 'gsutil -m cp -r -n "../data/results/{}/{}/*" "gs://insights-{}/{}/{}/"'.format(int(x['alg_id'][k]),x['class'][k],device_id,int(x['alg_id'][k]),x['class'][k])
     os.system(query)
 
-    ## Delete all files in the results folder
-    query = 'rm -r ../data/results/{}/{}/*'.format(x['alg_id'][k],x['class'][k])
-    os.system(query)
     #query = 'gsutil -m cp -r -n "../data/results/{}/{}/original/*" "gs://insights-{}/{}/{}/original/"'.format(int(x['alg_id'][k]),x['class'][k],device_name,int(x['alg_id'][k]),x['class'][k])
     #os.system(query)
     insights.loc[insights['insight_id'] == x['insight_id'][k],'committed_images'] = 1
@@ -92,10 +89,10 @@ def upload_images():
     insights.to_csv('../data/device_insights.csv')
 
 
+
 def upload_log():
     # device_id = str(os.environ.get('device_id'))
     logger.info('Uploading log')
     query = 'gsutil -m cp -r -n "log.out" "gs://insights-2/logs/"'
     # .format(fileName,device_id)
     os.system(query)
-
