@@ -39,13 +39,15 @@ def main(attempts=1):
 	cs  = digitalio.DigitalInOut(board.D27)
 	rst = digitalio.DigitalInOut(board.D22)
 	irq = digitalio.DigitalInOut(board.D23) #16
+	reset = digitalio.DigitalInOut(board.D25)
+
 
 	device_info = pd.read_csv('../_device_info.csv')
 	devaddr = bytearray.fromhex(device_info['lora_devaddr'][0])#bytearray([ 0x26, 0x02, 0x1E, 0x47 ])
 	nwkey = bytearray.fromhex(device_info['lora_nwkey'][0])
 	app   = bytearray.fromhex(device_info['lora_appkey'][0])
 
-	rfm69 = adafruit_rfm69.RFM69(spi, cs, rst, 915.0,baudrate=900000)
+	rfm69 = adafruit_rfm69.RFM69(spi, cs, reset, 915.0,baudrate=900000)
 	rfm69.send('Hello world!')
 
 	ttn_config = TTN(devaddr, nwkey, app, country='US')
