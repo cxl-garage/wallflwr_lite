@@ -1,4 +1,4 @@
-##### Tyto AI: Conservation X Labs   #####
+a##### Tyto AI: Conservation X Labs   #####
 ## Author: Sam Kelly
 
 # This code is currently proprietary, further licensing will be decided in the near future
@@ -17,6 +17,7 @@ import shutil
 import sys
 import time
 from adafruit_tinylora.adafruit_tinylora import TTN, TinyLoRa
+import adafruit_rfm69
 import pandas as pd
 import math
 import numpy as np
