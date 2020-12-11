@@ -45,9 +45,10 @@ def main(attempts=1):
 	nwkey = bytearray.fromhex(device_info['lora_nwkey'][0])
 	app   = bytearray.fromhex(device_info['lora_appkey'][0])
 
+	rfm69 = adafruit_rfm69.RFM69(spi, cs, reset, 915.0)
+	rfm69.send('Hello world!')
 
 	ttn_config = TTN(devaddr, nwkey, app, country='US')
-
 	lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
 	print(insights)
 	logger.info(len(insights))
