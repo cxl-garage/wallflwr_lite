@@ -144,6 +144,10 @@ class TinyLoRa:
            If no packet is received, the returned packet will be None
         """
 
+        # Set transmit power to 13 dBm, a safe value any module supports.
+        self.tx_power = 13
+
+
         self._irq = irq
         self._irq.switch_to_input()
         self._cs = cs
