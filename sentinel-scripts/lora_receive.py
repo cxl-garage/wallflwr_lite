@@ -1,4 +1,4 @@
-from lora_utils import TTN, TinyLoRa,receive
+from lora_utils import TTN, TinyLoRa
 
 
-receive()
+TinyLoRa.receive()
