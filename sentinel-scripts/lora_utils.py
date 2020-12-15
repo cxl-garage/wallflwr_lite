@@ -496,10 +496,15 @@ class TinyLoRa:
            The payload then begins at packet[4].
            If with_ack is True, send an ACK after receipt (Reliable Datagram mode)
         """
+        print(1)
+
         timed_out = False
         if timeout is None:
             timeout = self.receive_timeout
+
+        print(2)
         if timeout is not None:
+            print(3)
             # Wait for the payload_ready signal.  This is not ideal and will
             # surely miss or overflow the FIFO when packets aren't read fast
             # enough, however it's the best that can be done from Python without
@@ -508,10 +513,13 @@ class TinyLoRa:
             self.listen()
             start = time.monotonic()
             timed_out = False
+            print(3)
             while not timed_out and not self.payload_ready():
+                print(4)
                 if (time.monotonic() - start) >= timeout:
                     timed_out = True
         # Payload ready is set, a packet is in the FIFO.
+        print(5)
         packet = None
         # save last RSSI reading
         self.last_rssi = self.rssi
