@@ -502,7 +502,7 @@ class TinyLoRa:
         if timeout is None:
             timeout = self.receive_timeout
 
-        print(2)
+        print(timeout)
         if timeout is not None:
             print(3)
             # Wait for the payload_ready signal.  This is not ideal and will
@@ -514,6 +514,8 @@ class TinyLoRa:
             start = time.monotonic()
             timed_out = False
             print(3)
+            print(timeout)
+            print(self.payload_ready())
             while not timed_out and not self.payload_ready():
                 print(4)
                 if (time.monotonic() - start) >= timeout:
@@ -590,6 +592,7 @@ class TinyLoRa:
         op_mode = self._read_u8(_REG_OP_MODE)
         return (op_mode >> 2) & 0b111
 
+    ## From RFM69
     @operation_mode.setter
     def operation_mode(self, val):
         assert 0 <= val <= 4
@@ -601,6 +604,17 @@ class TinyLoRa:
         # Wait for mode to change by polling interrupt bit.
         while not self.mode_ready:
             pass
+
+    ## From RFM69
+    def packet_sent(self):
+        """Transmit status"""
+        return (self._read_u8(_REG_IRQ_FLAGS2) & 0x8) >> 3
+
+    ## From RFM69
+    def payload_ready(self):
+        """Receive status"""
+        return (self._read_u8(_REG_IRQ_FLAGS2) & 0x4) >> 2
+
 
     def set_datarate(self, datarate):
         """Sets the RFM Datarate
