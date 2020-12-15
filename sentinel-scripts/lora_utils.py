@@ -73,6 +73,14 @@ _REG_DIO_MAPPING_1 = const(0x40)
 _FSTEP = 32000000.0 / 524288
 
 
+# User facing constants:
+SLEEP_MODE = 0b000
+STANDBY_MODE = 0b001
+FS_MODE = 0b010
+TX_MODE = 0b011
+RX_MODE = 0b100
+
+
 class TTN:
     """TTN Class
     """
@@ -478,6 +486,29 @@ class TinyLoRa:
             # Enter idle mode to stop receiving other packets.
             self.idle()
         return packet
+
+    ## From RFM69
+    @property
+    def operation_mode(self):
+        """The operation mode value.  Unless you're manually controlling the chip you shouldn't
+           change the operation_mode with this property as other side-effects are required for
+           changing logical modes--use :py:func:`idle`, :py:func:`sleep`, :py:func:`transmit`,
+           :py:func:`listen` instead to signal intent for explicit logical modes.
+        """
+        op_mode = self._read_u8(_REG_OP_MODE)
+        return (op_mode >> 2) & 0b111
+
+    @operation_mode.setter
+    def operation_mode(self, val):
+        assert 0 <= val <= 4
+        # Set the mode bits inside the operation mode register.
+        op_mode = self._read_u8(_REG_OP_MODE)
+        op_mode &= 0b11100011
+        op_mode |= val << 2
+        self._write_u8(_REG_OP_MODE, op_mode)
+        # Wait for mode to change by polling interrupt bit.
+        while not self.mode_ready:
+            pass
 
     def set_datarate(self, datarate):
         """Sets the RFM Datarate
