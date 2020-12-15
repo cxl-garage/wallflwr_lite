@@ -1,55 +1,3 @@
-# The MIT License (MIT)
-#
-# Copyright (c) 2017 Tony DiCola for Adafruit Industries
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-"""
-`adafruit_rfm69`
-====================================================
-CircuitPython RFM69 packet radio module. This supports basic RadioHead-compatible sending and
-receiving of packets with RFM69 series radios (433/915Mhz).
-.. warning:: This is NOT for LoRa radios!
-.. note:: This is a 'best effort' at receiving data using pure Python code--there is not interrupt
-    support so you might lose packets if they're sent too quickly for the board to process them.
-    You will have the most luck using this in simple low bandwidth scenarios like sending and
-    receiving a 60 byte packet at a time--don't try to receive many kilobytes of data at a time!
-* Author(s): Tony DiCola, Jerry Needell
-Implementation Notes
---------------------
-**Hardware:**
-* Adafruit `RFM69HCW Transceiver Radio Breakout - 868 or 915 MHz - RadioFruit
-  <https://www.adafruit.com/product/3070>`_ (Product ID: 3070)
-* Adafruit `RFM69HCW Transceiver Radio Breakout - 433 MHz - RadioFruit
-  <https://www.adafruit.com/product/3071>`_ (Product ID: 3071)
-* Adafruit `Feather M0 RFM69HCW Packet Radio - 868 or 915 MHz - RadioFruit
-  <https://www.adafruit.com/product/3176>`_ (Product ID: 3176)
-* Adafruit `Feather M0 RFM69HCW Packet Radio - 433 MHz - RadioFruit
-  <https://www.adafruit.com/product/3177>`_ (Product ID: 3177)
-* Adafruit `Radio FeatherWing - RFM69HCW 900MHz - RadioFruit
-  <https://www.adafruit.com/product/3229>`_ (Product ID: 3229)
-* Adafruit `Radio FeatherWing - RFM69HCW 433MHz - RadioFruit
-  <https://www.adafruit.com/product/3230>`_ (Product ID: 3230)
-**Software and Dependencies:**
-* Adafruit CircuitPython firmware for the ESP8622 and M0-based boards:
-  https://github.com/adafruit/circuitpython/releases
-* Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
-"""
 import time
 import random
 
@@ -238,19 +186,7 @@ class RFM69:
     dio_0_mapping = _RegisterBits(_REG_DIO_MAPPING1, offset=6, bits=2)
 
     # pylint: disable=too-many-statements
-    def __init__(
-        self,
-        spi,
-        cs,
-        reset,
-        frequency,
-        *,
-        sync_word=b"\x2D\xD4",
-        preamble_length=4,
-        encryption_key=None,
-        high_power=True,
-        baudrate=2000000
-    ):
+    def __init__(self,spi,cs,reset,frequency,*,sync_word=b"\x2D\xD4",preamble_length=4,encryption_key=None,high_power=True,baudrate=2000000):
         self._tx_power = 13
         self.high_power = high_power
         # Device support SPI mode 0 (polarity & phase = 0) up to a max of 10mhz.
@@ -261,8 +197,7 @@ class RFM69:
         self.reset()  # Reset the chip.
         # Check the version of the chip.
         version = self._read_u8(_REG_VERSION)
-        print(version)
-        if version != 18:# 0x24:
+        if version != 0x24:
             raise RuntimeError(
                 "Failed to find RFM69 with expected version, check wiring!"
             )
@@ -690,16 +625,7 @@ class RFM69:
         """Receive status"""
         return (self._read_u8(_REG_IRQ_FLAGS2) & 0x4) >> 2
 
-    def send(
-        self,
-        data,
-        *,
-        keep_listening=False,
-        destination=None,
-        node=None,
-        identifier=None,
-        flags=None
-    ):
+    def send(self,data,*,keep_listening=False,destination=None,node=None,identifier=None,flags=None):
         """Send a string of data using the transmitter.
            You can only send 60 bytes at a time
            (limited by chip's FIFO size and appended headers).
@@ -797,9 +723,7 @@ class RFM69:
         return got_ack
 
     # pylint: disable=too-many-branches
-    def receive(
-        self, *, keep_listening=True, with_ack=False, timeout=None, with_header=False
-    ):
+    def receive(self, *, keep_listening=True, with_ack=False, timeout=None, with_header=False):
         """Wait to receive a packet from the receiver. If a packet is found the payload bytes
            are returned, otherwise None is returned (which indicates the timeout elapsed with no
            reception).

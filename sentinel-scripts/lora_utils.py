@@ -113,11 +113,8 @@ class TTN:
         """
         return self.net_key
 
-
-# pylint: disable=too-many-instance-attributes
 class TinyLoRa:
-    """TinyLoRa Interface
-    """
+    """TinyLoRa Interface"""
 
     # SPI Write Buffer
     _BUFFER = bytearray(2)
@@ -133,6 +130,12 @@ class TinyLoRa:
         :param TTN ttn_config: TTN Configuration.
         :param int channel: Frequency Channel.
         """
+        
+        # The number of ACK retries before reporting a failure.
+        self.ack_retries = 5
+        # initialize sequence number counter for reliabe datagram mode
+        self.sequence_number = 0
+
         self._irq = irq
         self._irq.switch_to_input()
         self._cs = cs
@@ -227,6 +230,21 @@ class TinyLoRa:
         self._bw = None
         self._modemcfg = None
 
+
+    ## From RFM69
+    def listen(self):
+        """Listen for packets to be received by the chip.  Use :py:func:`receive` to listen, wait
+           and retrieve packets as they're available.
+        """
+        # Like RadioHead library, turn off high power boost if enabled.
+        if self._tx_power >= 18:
+            self._write_u8(_REG_TEST_PA1, _TEST_PA1_NORMAL)
+            self._write_u8(_REG_TEST_PA2, _TEST_PA2_NORMAL)
+        # Enable payload ready interrupt for D0 line.
+        self.dio_0_mapping = 0b01
+        # Enter RX mode (will clear FIFO!).
+        self.operation_mode = RX_MODE
+
     def send_data(self, data, data_length, frame_counter, timeout=2):
         """Function to assemble and send data
            :param data: data to send
@@ -318,6 +336,136 @@ class TinyLoRa:
         self._write_u8(_REG_OPERATING_MODE, _MODE_SLEEP)
         if timed_out:
             raise RuntimeError("Timeout during packet send")
+
+    ## From RFM69
+
+    def send_with_ack(self, data):
+        """Reliable Datagram mode:
+           Send a packet with data and wait for an ACK response.
+           The packet header is automatically generated.
+           If enabled, the packet transmission will be retried on failure
+        """
+        if self.ack_retries:
+            retries_remaining = self.ack_retries
+        else:
+            retries_remaining = 1
+        got_ack = False
+        self.sequence_number = (self.sequence_number + 1) & 0xFF
+        while not got_ack and retries_remaining:
+            self.identifier = self.sequence_number
+            self.send(data, keep_listening=True)
+            # Don't look for ACK from Broadcast message
+            if self.destination == _RH_BROADCAST_ADDRESS:
+                got_ack = True
+            else:
+                # wait for a packet from our destination
+                ack_packet = self.receive(timeout=self.ack_wait, with_header=True)
+                if ack_packet is not None:
+                    if ack_packet[3] & _RH_FLAGS_ACK:
+                        # check the ID
+                        if ack_packet[2] == self.identifier:
+                            got_ack = True
+                            break
+            # pause before next retry -- random delay
+            if not got_ack:
+                # delay by random amount before next try
+                time.sleep(self.ack_wait + self.ack_wait * random.random())
+            retries_remaining = retries_remaining - 1
+            # set retry flag in packet header
+            self.flags |= _RH_FLAGS_RETRY
+        self.flags = 0  # clear flags
+        return got_ack
+
+    ## From RFM69
+    def receive(self, *, keep_listening=True, with_ack=False, timeout=None, with_header=False):
+        """Wait to receive a packet from the receiver. If a packet is found the payload bytes
+           are returned, otherwise None is returned (which indicates the timeout elapsed with no
+           reception).
+           If keep_listening is True (the default) the chip will immediately enter listening mode
+           after reception of a packet, otherwise it will fall back to idle mode and ignore any
+           future reception.
+           All packets must have a 4 byte header for compatibilty with the
+           RadioHead library.
+           The header consists of 4 bytes (To,From,ID,Flags). The default setting will  strip
+           the header before returning the packet to the caller.
+           If with_header is True then the 4 byte header will be returned with the packet.
+           The payload then begins at packet[4].
+           If with_ack is True, send an ACK after receipt (Reliable Datagram mode)
+        """
+        timed_out = False
+        if timeout is None:
+            timeout = self.receive_timeout
+        if timeout is not None:
+            # Wait for the payload_ready signal.  This is not ideal and will
+            # surely miss or overflow the FIFO when packets aren't read fast
+            # enough, however it's the best that can be done from Python without
+            # interrupt supports.
+            # Make sure we are listening for packets.
+            self.listen()
+            start = time.monotonic()
+            timed_out = False
+            while not timed_out and not self.payload_ready():
+                if (time.monotonic() - start) >= timeout:
+                    timed_out = True
+        # Payload ready is set, a packet is in the FIFO.
+        packet = None
+        # save last RSSI reading
+        self.last_rssi = self.rssi
+        # Enter idle mode to stop receiving other packets.
+        self.idle()
+        if not timed_out:
+            # Read the length of the FIFO.
+            fifo_length = self._read_u8(_REG_FIFO)
+            # Handle if the received packet is too small to include the 4 byte
+            # RadioHead header and at least one byte of data --reject this packet and ignore it.
+            if fifo_length > 0:  # read and clear the FIFO if anything in it
+                packet = bytearray(fifo_length)
+                self._read_into(_REG_FIFO, packet, fifo_length)
+
+            if fifo_length < 5:
+                packet = None
+            else:
+                if (
+                    self.node != _RH_BROADCAST_ADDRESS
+                    and packet[0] != _RH_BROADCAST_ADDRESS
+                    and packet[0] != self.node
+                ):
+                    packet = None
+                # send ACK unless this was an ACK or a broadcast
+                elif (
+                    with_ack
+                    and ((packet[3] & _RH_FLAGS_ACK) == 0)
+                    and (packet[0] != _RH_BROADCAST_ADDRESS)
+                ):
+                    # delay before sending Ack to give receiver a chance to get ready
+                    if self.ack_delay is not None:
+                        time.sleep(self.ack_delay)
+                    # send ACK packet to sender (data is b'!')
+                    self.send(
+                        b"!",
+                        destination=packet[1],
+                        node=packet[0],
+                        identifier=packet[2],
+                        flags=(packet[3] | _RH_FLAGS_ACK),
+                    )
+                    # reject Retries if we have seen this idetifier from this source before
+                    if (self.seen_ids[packet[1]] == packet[2]) and (
+                        packet[3] & _RH_FLAGS_RETRY
+                    ):
+                        packet = None
+                    else:  # save the packet identifier for this source
+                        self.seen_ids[packet[1]] = packet[2]
+                if (
+                    not with_header and packet is not None
+                ):  # skip the header if not wanted
+                    packet = packet[4:]
+        # Listen again if necessary and return the result packet.
+        if keep_listening:
+            self.listen()
+        else:
+            # Enter idle mode to stop receiving other packets.
+            self.idle()
+        return packet
 
     def set_datarate(self, datarate):
         """Sets the RFM Datarate
