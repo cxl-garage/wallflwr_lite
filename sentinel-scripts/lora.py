@@ -26,7 +26,7 @@ import logging
 logger = logging.getLogger('lora')
 
 
-def main(attempts=1):
+def main(attempts=1,test):
 	try:
 		insights = pd.read_csv('../data/device_insights.csv')
 	except Exception as e:
@@ -50,10 +50,13 @@ def main(attempts=1):
 	ttn_config = TTN(devaddr, nwkey, app, country='US')
 	lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
 	print(insights)
-	logger.info(len(insights))
-	x =  insights[insights['committed_lora']!=True]
-	x = x.drop_duplicates(subset=['group_id'], keep='first')
-	x = x.reset_index()
+	#logger.info(len(insights))
+	if test == False:
+		x =  insights[insights['committed_lora']!=True]
+		x = x.drop_duplicates(subset=['group_id'], keep='first')
+		x = x.reset_index()
+	else:
+		x = insights
 	logger.info(x)
 	k = 0
 	if len(x) == 0:

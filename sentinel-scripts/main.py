@@ -10,7 +10,7 @@ This script is the main process that controls the Sentinel Device in the field
 import argparse
 import requests
 parser = argparse.ArgumentParser()
-parser.add_argument('--test', action='store_true', help='Use onboard test data rather than SD card')
+parser.add_argument('--test', action='store_true', help='Lora Test')
 parser.add_argument('--wilderness', action='store_true', help='No internet scenario')
 parser.add_argument('--lora_off', action='store_true', help='Disable LoRa')
 parser.add_argument('--gcs_off', action='store_true', help='Disable Upload of Pictures')
@@ -155,7 +155,7 @@ if connect() == True and opt.wilderness != True:
 else:
     logger.warning('Unable to connect, running LoRa')
     # Run LoRa Routine
-    lora.main(attempts=1)
+    lora.main(attempts=1,opt.test)
 
 # Delete all processed files from SD Card
 utils.delete_files()
