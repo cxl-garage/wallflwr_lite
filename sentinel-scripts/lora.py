@@ -16,8 +16,8 @@ import os
 import shutil
 import sys
 import time
-from lora_utils import TTN, TinyLoRa
-#import adafruit_rfm69
+#from lora_utils import TTN, TinyLoRa
+import adafruit_rfm69
 import pandas as pd
 import math
 import numpy as np
@@ -46,9 +46,10 @@ def main(test, attempts=1):
 	devaddr = bytearray.fromhex(device_info['lora_devaddr'][0])#bytearray([ 0x26, 0x02, 0x1E, 0x47 ])
 	nwkey = bytearray.fromhex(device_info['lora_nwkey'][0])
 	app   = bytearray.fromhex(device_info['lora_appkey'][0])
-
-	ttn_config = TTN(devaddr, nwkey, app, country='US')
-	lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
+	rfm69 = adafruit_rfm69.RFM69(spi, cs, rst, 915.0,baudrate=2000000)
+	rfm69.send('Hello world!')
+	#ttn_config = TTN(devaddr, nwkey, app, country='US')
+	#lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
 	print(insights)
 	#logger.info(len(insights))
 	logger.info('Test Mode: {}'.format(test))
@@ -58,7 +59,7 @@ def main(test, attempts=1):
 		x = x.reset_index()
 	else:
 		x = insights
-	logger.info(x)
+	#logger.info(x)
 	k = 0
 	if len(x) == 0:
 		logger.info('Nothing to send over LoRa')
