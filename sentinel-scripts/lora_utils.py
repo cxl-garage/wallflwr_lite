@@ -69,6 +69,7 @@ _REG_RSSI_CONFIG = const(0x0E)
 _REG_RSSI_COLLISION = const(0x0F)
 _REG_DIO_MAPPING_1 = const(0x40)
 
+
 # Freq synth step
 _FSTEP = 32000000.0 / 524288
 
@@ -214,8 +215,8 @@ class TinyLoRa:
         self.frame_counter = 0
         # Set up RFM9x for LoRa Mode
         for pair in (
-            (_REG_OPERATING_MODE, _MODE_SLEEP),
-            (_REG_OPERATING_MODE, _MODE_LORA),
+            (_REG_OP_MODE, _MODE_SLEEP),
+            (_REG_OP_MODE, _MODE_LORA),
             (_REG_PA_CONFIG, 0xFF),
             (_REG_PREAMBLE_DETECT, 0x25),
             (_REG_PREAMBLE_MSB, 0x00),
@@ -345,7 +346,7 @@ class TinyLoRa:
         for k in range(packet_length):
             self._write_u8(0x00, lora_packet[k])
         # switch RFM to TX operating mode
-        self._write_u8(_REG_OPERATING_MODE, _MODE_TX)
+        self._write_u8(_REG_OP_MODE, _MODE_TX)
         # wait for TxDone IRQ, poll for timeout.
         start = time.monotonic()
         timed_out = False
@@ -353,7 +354,7 @@ class TinyLoRa:
             if (time.monotonic() - start) >= timeout:
                 timed_out = True
         # switch RFM to sleep operating mode
-        self._write_u8(_REG_OPERATING_MODE, _MODE_SLEEP)
+        self._write_u8(_REG_OP_MODE, _MODE_SLEEP)
         if timed_out:
             raise RuntimeError("Timeout during packet send")
 
