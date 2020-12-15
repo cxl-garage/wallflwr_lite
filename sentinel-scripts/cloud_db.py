@@ -293,14 +293,16 @@ def insight_check():
     URL = 'mysql+pymysql://{}:{}@{}/{}'.format(db_user,db_pass,db_ip,db_name)
     engine = sqlalchemy.create_engine(URL, pool_size=5,max_overflow=2,pool_timeout=30,pool_recycle=1800,)
     local_insights = pd.read_csv('../data/device_insights.csv')
+    local_insights.set_index('insight_id')
     print(local_insights)
     query = "SELECT * FROM insights WHERE device_id = \'{}\'".format(os.environ.get('device_id'))
     cloud_insights = pd.read_sql(query,con=engine)
     cloud_insights['committed_sql'] = 1
     cloud_insights['committed_images'] = 0
     cloud_insights['committed_lora'] = 1
+    cloud_insights.set_index('insight_id')
     print(cloud_insights)
-    insights = local_insights.join(cloud_insights.set_index('insight_id'),on='insight_id')
+    insights = pd.concat([local_insights,cloud_insights])
     print(insights)
     insights = insights[['insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
     insights.to_csv('../data/device_insights.csv')
