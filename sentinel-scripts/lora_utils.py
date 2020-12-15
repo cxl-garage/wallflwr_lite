@@ -136,6 +136,14 @@ class TinyLoRa:
         # initialize sequence number counter for reliabe datagram mode
         self.sequence_number = 0
 
+        # initialize timeouts and delays delays
+        self.ack_wait = 0.5
+        """The delay time before attempting a retry after not receiving an ACK"""
+        self.receive_timeout = 0.5
+        """The amount of time to poll for a received packet.
+           If no packet is received, the returned packet will be None
+        """
+
         self._irq = irq
         self._irq.switch_to_input()
         self._cs = cs

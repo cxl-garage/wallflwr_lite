@@ -14,9 +14,10 @@ reset = digitalio.DigitalInOut(board.D25)
 
 
 device_info = pd.read_csv('../_device_info.csv')
-devaddr = bytearray.fromhex(device_info['lora_devaddr'][0])#bytearray([ 0x26, 0x02, 0x1E, 0x47 ])
+devaddr = bytearray.fromhex(device_info['lora_devaddr'][0])
 nwkey = bytearray.fromhex(device_info['lora_nwkey'][0])
 app   = bytearray.fromhex(device_info['lora_appkey'][0])
 ttn_config = TTN(devaddr, nwkey, app, country='US')
+
 lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
 lora.receive()
