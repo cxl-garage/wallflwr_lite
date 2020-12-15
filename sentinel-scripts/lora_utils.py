@@ -341,13 +341,19 @@ class TinyLoRa:
            and retrieve packets as they're available.
         """
         # Like RadioHead library, turn off high power boost if enabled.
+        print('listen1')
         if self._tx_power >= 18:
+            print('listen2')
             self._write_u8(_REG_TEST_PA1, _TEST_PA1_NORMAL)
             self._write_u8(_REG_TEST_PA2, _TEST_PA2_NORMAL)
+            print('listen3')
+        print('listen4')
         # Enable payload ready interrupt for D0 line.
         self.dio_0_mapping = 0b01
+        print('listen5')
         # Enter RX mode (will clear FIFO!).
         self.operation_mode = RX_MODE
+        print('listen6')
 
     def send_data(self, data, data_length, frame_counter, timeout=2):
         """Function to assemble and send data
@@ -513,11 +519,10 @@ class TinyLoRa:
             self.listen()
             start = time.monotonic()
             timed_out = False
-            print(3)
-            print(timeout)
+            print(4)
             print(self.payload_ready())
             while not timed_out and not self.payload_ready():
-                print(4)
+                print(5)
                 if (time.monotonic() - start) >= timeout:
                     timed_out = True
         # Payload ready is set, a packet is in the FIFO.
