@@ -155,7 +155,7 @@ if connect() == True and opt.wilderness != True:
 else:
     logger.warning('Unable to connect, running LoRa')
     # Run LoRa Routine
-    lora.main(attempts=1,opt.test)
+    lora.main(opt.test,attempts=1)
 
 # Delete all processed files from SD Card
 utils.delete_files()

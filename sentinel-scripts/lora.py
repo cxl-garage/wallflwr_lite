@@ -26,7 +26,7 @@ import logging
 logger = logging.getLogger('lora')
 
 
-def main(attempts=1,test=False):
+def main(test, attempts=1):
 	try:
 		insights = pd.read_csv('../data/device_insights.csv')
 	except Exception as e:
