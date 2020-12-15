@@ -86,6 +86,10 @@ def initialize(opt):
         # Pull device info and write it to memory as a CSV
         cloud_db.device_info()
 
+        # Check local db is consistent with cloud
+        cloud_db.insight_check()
+
+
         # Pull latest master branch from git
         logger.info('Checking git for updates')
         repo = Repo('../')
