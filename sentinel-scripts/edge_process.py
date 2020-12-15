@@ -81,10 +81,8 @@ def get_output_tensor(interpreter, index):
 def group_confidence_calculation():
     # Load csv
     insights = pd.read_csv('../data/device_insights.csv')
-    print(alg_df)
     # Drop existing calculated confidences
     alg_df = insights.loc[~insights.index.isin(insights.dropna(subset=['group_confidence']).index)]
-
     # Find groups
     group_keys = alg_df.group_id.unique()
 
