@@ -82,6 +82,9 @@ TX_MODE = 0b011
 RX_MODE = 0b100
 
 
+
+
+
 class TTN:
     """TTN Class
     """
@@ -127,6 +130,75 @@ class TinyLoRa:
 
     # SPI Write Buffer
     _BUFFER = bytearray(2)
+
+    class _RegisterBits:
+        # Class to simplify access to the many configuration bits avaialable
+        # on the chip's registers.  This is a subclass here instead of using
+        # a higher level module to increase the efficiency of memory usage
+        # (all of the instances of this bit class will share the same buffer
+        # used by the parent RFM69 class instance vs. each having their own
+        # buffer and taking too much memory).
+
+        # Quirk of pylint that it requires public methods for a class.  This
+        # is a decorator class in Python and by design it has no public methods.
+        # Instead it uses dunder accessors like get and set below.  For some
+        # reason pylint can't figure this out so disable the check.
+        # pylint: disable=too-few-public-methods
+
+        # Again pylint fails to see the true intent of this code and warns
+        # against private access by calling the write and read functions below.
+        # This is by design as this is an internally used class.  Disable the
+        # check from pylint.
+        # pylint: disable=protected-access
+
+        def __init__(self, address, *, offset=0, bits=1):
+            assert 0 <= offset <= 7
+            assert 1 <= bits <= 8
+            assert (offset + bits) <= 8
+            self._address = address
+            self._mask = 0
+            for _ in range(bits):
+                self._mask <<= 1
+                self._mask |= 1
+            self._mask <<= offset
+            self._offset = offset
+
+        def __get__(self, obj, objtype):
+            reg_value = obj._read_u8(self._address)
+            return (reg_value & self._mask) >> self._offset
+
+        def __set__(self, obj, val):
+            reg_value = obj._read_u8(self._address)
+            reg_value &= ~self._mask
+            reg_value |= (val & 0xFF) << self._offset
+            obj._write_u8(self._address, reg_value)
+
+    # Control bits from the registers of the chip:
+    data_mode = _RegisterBits(_REG_DATA_MOD, offset=5, bits=2)
+    modulation_type = _RegisterBits(_REG_DATA_MOD, offset=3, bits=2)
+    modulation_shaping = _RegisterBits(_REG_DATA_MOD, offset=0, bits=2)
+    temp_start = _RegisterBits(_REG_TEMP1, offset=3)
+    temp_running = _RegisterBits(_REG_TEMP1, offset=2)
+    sync_on = _RegisterBits(_REG_SYNC_CONFIG, offset=7)
+    sync_size = _RegisterBits(_REG_SYNC_CONFIG, offset=3, bits=3)
+    aes_on = _RegisterBits(_REG_PACKET_CONFIG2, offset=0)
+    pa_0_on = _RegisterBits(_REG_PA_LEVEL, offset=7)
+    pa_1_on = _RegisterBits(_REG_PA_LEVEL, offset=6)
+    pa_2_on = _RegisterBits(_REG_PA_LEVEL, offset=5)
+    output_power = _RegisterBits(_REG_PA_LEVEL, offset=0, bits=5)
+    rx_bw_dcc_freq = _RegisterBits(_REG_RX_BW, offset=5, bits=3)
+    rx_bw_mantissa = _RegisterBits(_REG_RX_BW, offset=3, bits=2)
+    rx_bw_exponent = _RegisterBits(_REG_RX_BW, offset=0, bits=3)
+    afc_bw_dcc_freq = _RegisterBits(_REG_AFC_BW, offset=5, bits=3)
+    afc_bw_mantissa = _RegisterBits(_REG_AFC_BW, offset=3, bits=2)
+    afc_bw_exponent = _RegisterBits(_REG_AFC_BW, offset=0, bits=3)
+    packet_format = _RegisterBits(_REG_PACKET_CONFIG1, offset=7, bits=1)
+    dc_free = _RegisterBits(_REG_PACKET_CONFIG1, offset=5, bits=2)
+    crc_on = _RegisterBits(_REG_PACKET_CONFIG1, offset=4, bits=1)
+    crc_auto_clear_off = _RegisterBits(_REG_PACKET_CONFIG1, offset=3, bits=1)
+    address_filter = _RegisterBits(_REG_PACKET_CONFIG1, offset=1, bits=2)
+    mode_ready = _RegisterBits(_REG_IRQ_FLAGS1, offset=7)
+    dio_0_mapping = _RegisterBits(_REG_DIO_MAPPING1, offset=6, bits=2)
 
     # pylint: disable=too-many-arguments
     def __init__(self, spi, cs, irq, rst, ttn_config, channel=None):
