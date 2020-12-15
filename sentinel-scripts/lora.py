@@ -51,6 +51,7 @@ def main(test, attempts=1):
 	lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
 	print(insights)
 	#logger.info(len(insights))
+	logger.info('Test Mode: {}'.format(test))
 	if test == False:
 		x =  insights[insights['committed_lora']!=True]
 		x = x.drop_duplicates(subset=['group_id'], keep='first')
