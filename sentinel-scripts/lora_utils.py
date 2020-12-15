@@ -497,7 +497,7 @@ class TinyLoRa:
            If with_ack is True, send an ACK after receipt (Reliable Datagram mode)
         """
         print(1)
-
+        print(timeout)
         timed_out = False
         if timeout is None:
             timeout = self.receive_timeout
