@@ -293,5 +293,7 @@ def insight_check():
     cloud_insights['committed_images'] = 0
     cloud_insights['committed_lora'] = 1
     print(cloud_insights)
+    insights = local_insights.merge(cloud_insights,on='insight_id')
     insights = insights[['insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
+    print(insights)
     insights.to_csv('../data/device_insights.csv')
