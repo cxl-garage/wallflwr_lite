@@ -146,7 +146,7 @@ class TinyLoRa:
 
         # Set transmit power to 13 dBm, a safe value any module supports.
         self.tx_power = 13
-
+        self._tx_power = 13
 
         self._irq = irq
         self._irq.switch_to_input()
