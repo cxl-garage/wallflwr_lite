@@ -303,8 +303,8 @@ def insight_check():
     cloud_insights.set_index('insight_id')
     print(cloud_insights)
     insights = pd.concat([local_insights,cloud_insights])
-    insights.drop_duplicates(subset=['insight_id'], keep='first')
-    insights.sort_values(by=['insight_id'])
+    insights = insights.drop_duplicates(subset=['insight_id'], keep='first')
+    insights = insights.sort_values(by=['insight_id'])
     insights = insights[['committed_sql','committed_lora','committed_images','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
     print(insights)
     os.sys.exit()
