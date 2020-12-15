@@ -130,7 +130,7 @@ class TinyLoRa:
         :param TTN ttn_config: TTN Configuration.
         :param int channel: Frequency Channel.
         """
-        
+
         # The number of ACK retries before reporting a failure.
         self.ack_retries = 5
         # initialize sequence number counter for reliabe datagram mode
@@ -377,7 +377,7 @@ class TinyLoRa:
         return got_ack
 
     ## From RFM69
-    def receive(self, *, keep_listening=True, with_ack=False, timeout=None, with_header=False):
+    def receive(self, keep_listening=True, with_ack=False, timeout=None, with_header=False):
         """Wait to receive a packet from the receiver. If a packet is found the payload bytes
            are returned, otherwise None is returned (which indicates the timeout elapsed with no
            reception).
