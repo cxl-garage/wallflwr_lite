@@ -261,7 +261,7 @@ class RFM69:
         self.reset()  # Reset the chip.
         # Check the version of the chip.
         version = self._read_u8(_REG_VERSION)
-        if version != 0x24:
+        if version != 18:# 0x24:
             raise RuntimeError(
                 "Failed to find RFM69 with expected version, check wiring!"
             )
