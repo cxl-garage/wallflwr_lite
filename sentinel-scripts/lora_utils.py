@@ -594,6 +594,7 @@ class TinyLoRa:
            changing logical modes--use :py:func:`idle`, :py:func:`sleep`, :py:func:`transmit`,
            :py:func:`listen` instead to signal intent for explicit logical modes.
         """
+        print('operation1')
         op_mode = self._read_u8(_REG_OP_MODE)
         return (op_mode >> 2) & 0b111
 
@@ -666,7 +667,9 @@ class TinyLoRa:
         """Read a single byte from the provided address and return it.
         :param bytearray address: Register Address.
         """
+        print('readu8_1')
         self._read_into(address, self._BUFFER, length=1)
+        print('readu8_2')
         return self._BUFFER[0]
 
     def _write_u8(self, address, val):
