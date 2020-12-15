@@ -63,7 +63,7 @@ def main(test, attempts=1):
 	if len(x) == 0:
 		logger.info('Nothing to send over LoRa')
 	while k < len(x):
-		if x['group_confidence'][k] != 0:
+		if x.loc[k,'group_confidence'] != 0:
 			try:
 				alg_id_1 = int(math.floor(x['alg_id'][k]/256))
 				alg_id_2 = int(x['alg_id'][k])%256
