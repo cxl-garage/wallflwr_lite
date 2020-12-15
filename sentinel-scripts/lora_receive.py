@@ -1,5 +1,7 @@
 from lora_utils import TTN, TinyLoRa
-
+import busio
+import digitalio
+import board
 
 # Set Pin Outs
 i2c = busio.I2C(board.SCL, board.SDA)
