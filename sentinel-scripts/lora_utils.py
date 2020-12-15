@@ -68,6 +68,7 @@ _REG_IMAGE_CAL = const(0x3B)
 _REG_RSSI_CONFIG = const(0x0E)
 _REG_RSSI_COLLISION = const(0x0F)
 _REG_DIO_MAPPING_1 = const(0x40)
+_REG_DATA_MOD = const(0x02)
 
 
 # Freq synth step
