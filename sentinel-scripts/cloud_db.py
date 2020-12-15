@@ -303,6 +303,6 @@ def insight_check():
     cloud_insights.set_index('insight_id')
     print(cloud_insights)
     insights = pd.concat([local_insights,cloud_insights])
-    print(insights)
     insights = insights[['insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
+    print(insights)
     insights.to_csv('../data/device_insights.csv')
