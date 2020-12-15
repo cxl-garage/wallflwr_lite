@@ -2,6 +2,7 @@ from lora_utils import TTN, TinyLoRa
 import busio
 import digitalio
 import board
+import pandas as pd
 
 # Set Pin Outs
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -11,6 +12,8 @@ rst = digitalio.DigitalInOut(board.D22)
 irq = digitalio.DigitalInOut(board.D23) #16
 reset = digitalio.DigitalInOut(board.D25)
 
+
+device_info = pd.read_csv('../_device_info.csv')
 devaddr = bytearray.fromhex(device_info['lora_devaddr'][0])#bytearray([ 0x26, 0x02, 0x1E, 0x47 ])
 nwkey = bytearray.fromhex(device_info['lora_nwkey'][0])
 app   = bytearray.fromhex(device_info['lora_appkey'][0])
