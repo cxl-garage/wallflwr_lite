@@ -285,6 +285,13 @@ def device_info():
 
 ### Download cloud insights (to check we are consistent)
 def insight_check():
+    db_user = os.environ.get("DB_USER")
+    db_pass = os.environ.get("DB_PASS")
+    db_name = os.environ.get("DB_NAME")
+    db_ip   = os.environ.get("DB_PRIP")
+    cloud_sql_connection_name = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
+    URL = 'mysql+pymysql://{}:{}@{}/{}'.format(db_user,db_pass,db_ip,db_name)
+    engine = sqlalchemy.create_engine(URL, pool_size=5,max_overflow=2,pool_timeout=30,pool_recycle=1800,)
     local_insights = pd.read_csv('../data/device_insights.csv')
     print(local_insights)
     query = "SELECT * FROM insights WHERE device_id = \'{}\'".format(os.environ.get('device_id'))
