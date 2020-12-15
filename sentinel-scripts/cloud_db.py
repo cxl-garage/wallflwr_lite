@@ -307,4 +307,5 @@ def insight_check():
     insights.sort_values(by=['insight_id'])
     insights = insights[['committed_sql','committed_lora','committed_images','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
     print(insights)
+    os.sys.exit()
     insights.to_csv('../data/device_insights.csv')
