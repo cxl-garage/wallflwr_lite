@@ -654,8 +654,11 @@ class TinyLoRa:
         :param bytearray buf: Data Buffer for bytes.
         :param int length: Buffer length.
         """
+        print('read_into')
+        print(length)
         if length is None:
             length = len(buf)
+        print('read_into2')
         with self._device as device:
             # Strip out top bit to set 0 value (read).
             self._BUFFER[0] = address & 0x7F
@@ -668,6 +671,7 @@ class TinyLoRa:
         :param bytearray address: Register Address.
         """
         print('readu8_1')
+        print(address)
         self._read_into(address, self._BUFFER, length=1)
         print('readu8_2')
         return self._BUFFER[0]
