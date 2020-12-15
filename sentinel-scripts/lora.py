@@ -16,8 +16,8 @@ import os
 import shutil
 import sys
 import time
-from adafruit_tinylora.adafruit_tinylora import TTN, TinyLoRa
-import adafruit_rfm69
+from lora_utils import TTN, TinyLoRa
+#import adafruit_rfm69
 import pandas as pd
 import math
 import numpy as np
