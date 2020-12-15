@@ -72,7 +72,14 @@ _REG_DATA_MOD = const(0x02)
 
 
 _REG_TEMP1 = const(0x4E)
-
+_REG_SYNC_CONFIG = const(0x2E)
+_REG_PACKET_CONFIG2 = const(0x3D)
+_REG_PA_LEVEL = const(0x11)
+_REG_RX_BW = const(0x19)
+_REG_AFC_BW = const(0x1A)
+_REG_PACKET_CONFIG1 = const(0x37)
+_REG_IRQ_FLAGS1 = const(0x27)
+_REG_DIO_MAPPING1 = const(0x25)
 
 # Freq synth step
 _FSTEP = 32000000.0 / 524288
