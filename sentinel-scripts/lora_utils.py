@@ -71,6 +71,9 @@ _REG_DIO_MAPPING_1 = const(0x40)
 _REG_DATA_MOD = const(0x02)
 
 
+_REG_TEMP1 = const(0x4E)
+
+
 # Freq synth step
 _FSTEP = 32000000.0 / 524288
 
