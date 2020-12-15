@@ -80,10 +80,10 @@ def get_output_tensor(interpreter, index):
 
 def group_confidence_calculation():
     # Load csv
-    alg_df = pd.read_csv('../data/device_insights.csv')
-
+    insights = pd.read_csv('../data/device_insights.csv')
+    print(alg_df)
     # Drop existing calculated confidences
-    alg_df = alg_df.loc[~alg_df.index.isin(alg_df.dropna(subset=['group_confidence']).index)]
+    alg_df = insights.loc[~insights.index.isin(insights.dropna(subset=['group_confidence']).index)]
 
     # Find groups
     group_keys = alg_df.group_id.unique()
@@ -117,14 +117,16 @@ def group_confidence_calculation():
         else:
             group_confidence = 0
         logger.info('Group {} Confidence: {}'.format(group_keys[k],group_confidence))
-        alg_df.loc[alg_df['group_id'] == group_keys[k],'group_confidence'] = group_confidence
+        insights.loc[insights['group_id'] == group_keys[k],'group_confidence'] = group_confidence
         k = k + 1
 
+
+
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
-    alg_df = alg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
+    insights = insights[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
 
     # Saving insights to local DB (just a .csv for now)
-    alg_df.to_csv('../data/device_insights.csv')
+    insights.to_csv('../data/device_insights.csv')
 
 ### Function to Save Cropped Images
 def bb_crop(data_directory, file, aoi, result, classes, results_directory, insight_id,class_names):
