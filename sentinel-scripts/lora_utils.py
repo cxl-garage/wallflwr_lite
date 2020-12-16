@@ -546,6 +546,7 @@ class TinyLoRa:
     ## From RFM69
     @operation_mode.setter
     def operation_mode(self, val):
+        print('Changing Operation Mode: {}'.format(_REG_OP_MODE))
         assert 0 <= val <= 4
         # Set the mode bits inside the operation mode register.
         op_mode = self._read_u8(_REG_OP_MODE)
