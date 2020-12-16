@@ -472,10 +472,11 @@ class TinyLoRa:
             self.listen()
             start = time.monotonic()
             timed_out = False
+            print('Listening...')
             while not timed_out and not self.payload_ready():
                 if (time.monotonic() - start) >= timeout:
                     timed_out = True
-                print('Listening...')
+                    print('Timed Out')
         # Payload ready is set, a packet is in the FIFO.
         packet = None
         # save last RSSI reading
