@@ -580,8 +580,15 @@ class TinyLoRa:
         #os.sys.exit()
         #self._write_u8(_REG_OP_MODE, op_mode)
         self._write_u8(_REG_OP_MODE, _MODE_SLEEP)
+        #if new_op_mode == op_mode:
+        #    pass
+        #else:
+        #    print('Error Setting new mode')
+        # Wait for mode to change by polling interrupt bit.
         while not self.mode_ready:
             pass
+        new_op_mode = self._read_u8(_REG_OP_MODE)
+        print('New Operation Mode: {}'.format(new_op_mode))
 
     ## From RFM69
     def packet_sent(self):
