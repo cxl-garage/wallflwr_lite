@@ -76,7 +76,7 @@ def main(test, attempts=1):
 				m = 0
 				while m < attempts:
 					#print('Sending packet...')
-					lora.send_data(data, len(data), lora.frame_counter)
+					lora.send_data(data, lora.frame_counter)
 					logger.info(data)
 					#lora.frame_counter += 1
 					#time.sleep(5)

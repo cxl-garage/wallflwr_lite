@@ -52,6 +52,9 @@ _REG_RSSI_VALUE = const(0x24)
 # Freq synth step
 _FSTEP = 32000000.0 / 524288
 
+## Default address is 255
+#_RH_BROADCAST_ADDRESS = const(0xFF)
+
 # User facing constants:
 SLEEP_MODE = 0b000
 STANDBY_MODE = 0b001
@@ -187,6 +190,7 @@ class TinyLoRa:
         :param TTN ttn_config: TTN Configuration.
         :param int channel: Frequency Channel.
         """
+        #self.destination = _RH_BROADCAST_ADDRESS
 
         # The number of ACK retries before reporting a failure.
         self.ack_retries = 5
@@ -313,14 +317,19 @@ class TinyLoRa:
         self.operation_mode = RX_MODE
         print('Set to RX')
 
-    def send_data(self, data, data_length, frame_counter, timeout=2):
+    def send_data(self, data, frame_counter, timeout=2,keep_listening=False):
         """Function to assemble and send data
            :param data: data to send
            :param data_length: length of data to send
            :param frame_counter: frame counter variable, declared in code.py.
            :param timeout: TxDone wait time, default is 2.
         """
-        # data packet
+
+        ## Set operation mode to LoRa
+        self._write_u8(_REG_OP_MODE, _MODE_LORA)
+
+        ## Encoding the data
+        data_length = len(data)
         enc_data = bytearray(data_length)
         lora_pkt = bytearray(64)
         # copy bytearray into bytearray for encryption
@@ -357,9 +366,9 @@ class TinyLoRa:
         lora_pkt[lora_pkt_len : lora_pkt_len + 4] = mic[0:4]
         # recalculate packet length (add MIC length)
         lora_pkt_len += 4
-        self.send_packet(lora_pkt, lora_pkt_len, timeout)
+        self.send_packet(lora_pkt, lora_pkt_len, timeout,keep_listening=False)
 
-    def send_packet(self, lora_packet, packet_length, timeout):
+    def send_packet(self, lora_packet, packet_length, timeout,keep_listening=False):
         """Sends a LoRa packet using the RFM Module
           :param bytearray lora_packet: assembled LoRa packet from send_data
           :param int packet_length: length of LoRa packet to send
@@ -400,6 +409,13 @@ class TinyLoRa:
         while not timed_out and not self._irq.value:
             if (time.monotonic() - start) >= timeout:
                 timed_out = True
+
+        # Listen again if requested.
+        if keep_listening:
+            self.listen()
+        else:  # Enter idle mode to stop receiving other packets.
+            self.idle()
+
         # switch RFM to sleep operating mode
         self._write_u8(_REG_OP_MODE, _MODE_SLEEP)
         if timed_out:
@@ -420,11 +436,12 @@ class TinyLoRa:
         self.sequence_number = (self.sequence_number + 1) & 0xFF
         while not got_ack and retries_remaining:
             self.identifier = self.sequence_number
-            self.send(data, keep_listening=True)
+            self.send_data(data, keep_listening=True)
             # Don't look for ACK from Broadcast message
-            if self.destination == _RH_BROADCAST_ADDRESS:
-                got_ack = True
-            else:
+            #if self.destination == _RH_BROADCAST_ADDRESS:
+            #    got_ack = True
+            #else:
+            if True:
                 # wait for a packet from our destination
                 ack_packet = self.receive(timeout=self.ack_wait, with_header=True)
                 if ack_packet is not None:
@@ -672,19 +689,6 @@ class TinyLoRa:
     def sleep(self):
         """Enter sleep mode."""
         self.operation_mode = SLEEP_MODE
-
-    def listen(self):
-        """Listen for packets to be received by the chip.  Use :py:func:`receive` to listen, wait
-           and retrieve packets as they're available.
-        """
-        # Like RadioHead library, turn off high power boost if enabled.
-        if self._tx_power >= 18:
-            self._write_u8(_REG_TEST_PA1, _TEST_PA1_NORMAL)
-            self._write_u8(_REG_TEST_PA2, _TEST_PA2_NORMAL)
-        # Enable payload ready interrupt for D0 line.
-        self.dio_0_mapping = 0b01
-        # Enter RX mode (will clear FIFO!).
-        self.operation_mode = RX_MODE
 
     def transmit(self):
         """Transmit a packet which is queued in the FIFO.  This is a low level function for
