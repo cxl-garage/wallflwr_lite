@@ -247,7 +247,7 @@ class TinyLoRa:
         self._rst = rst
         self._rst.switch_to_output()
         # Set up SPI Device on Mode 0
-        self._device = adafruit_bus_device.spidev.SPIDevice(spi, cs, baudrate=baudrate, polarity=0, phase=0)#spi_device.SPIDevice(spi, self._cs, baudrate=4000000, polarity=0, phase=0)
+        self._device = adafruit_bus_device.spi_device.SPIDevice(spi, cs, baudrate=baudrate, polarity=0, phase=0)#spi_device.SPIDevice(spi, self._cs, baudrate=4000000, polarity=0, phase=0)
         self._rst.value = False
         time.sleep(0.0001)  # 100 us
         self._rst.value = True
