@@ -212,7 +212,7 @@ class TinyLoRa:
     dio_0_mapping = _RegisterBits(_REG_DIO_MAPPING1, offset=6, bits=2)
 
     # pylint: disable=too-many-arguments
-    def __init__(self, spi, cs, irq, rst, ttn_config, channel=None):
+    def __init__(self, spi, cs, irq, rst, ttn_config, channel=None,baudrate=2000000):
         """Interface for a HopeRF RFM95/6/7/8(w) radio module. Sets module up for sending to
         The Things Network.
         :param ~busio.SPI spi: The SPI bus the device is on
@@ -247,9 +247,7 @@ class TinyLoRa:
         self._rst = rst
         self._rst.switch_to_output()
         # Set up SPI Device on Mode 0
-        self._device = adafruit_bus_device.spi_device.SPIDevice(
-            spi, self._cs, baudrate=4000000, polarity=0, phase=0
-        )
+        self._device = adafruit_bus_device.spidev.SPIDevice(spi, cs, baudrate=baudrate, polarity=0, phase=0)#spi_device.SPIDevice(spi, self._cs, baudrate=4000000, polarity=0, phase=0)
         self._rst.value = False
         time.sleep(0.0001)  # 100 us
         self._rst.value = True
