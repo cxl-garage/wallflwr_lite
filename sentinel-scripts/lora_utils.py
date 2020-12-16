@@ -134,10 +134,12 @@ class TinyLoRa:
             self._offset = offset
 
         def __get__(self, obj, objtype):
+            print('In __get__')
             reg_value = obj._read_u8(self._address)
             return (reg_value & self._mask) >> self._offset
 
         def __set__(self, obj, val):
+            print('In __set__')
             reg_value = obj._read_u8(self._address)
             reg_value &= ~self._mask
             reg_value |= (val & 0xFF) << self._offset
@@ -556,6 +558,7 @@ class TinyLoRa:
         print(op_mode)
         #os.sys.exit()
         self._write_u8(_REG_OP_MODE, op_mode)
+
         # Wait for mode to change by polling interrupt bit.
         while not self.mode_ready:
             pass
@@ -604,7 +607,7 @@ class TinyLoRa:
         """
         if length is None:
             length = len(buf)
-        print('Buffer Length: {}'.format(length))
+        print('In _read_into')
         with self._device as device:
             # Strip out top bit to set 0 value (read).
             self._BUFFER[0] = address & 0x7F
@@ -624,10 +627,9 @@ class TinyLoRa:
         :param bytearray address: Register Address.
         :param val: Data to write.
         """
-        print('Writing U8')
+        print('In _write_u8')
         with self._device as device:
             self._BUFFER[0] = address | 0x80  # MSB 1 to Write
             self._BUFFER[1] = val
             # pylint: disable=no-member
             device.write(self._BUFFER, end=2)
-            print('Written to U8')
