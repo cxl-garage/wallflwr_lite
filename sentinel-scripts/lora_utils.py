@@ -647,6 +647,7 @@ class TinyLoRa:
             print(1)
             # Strip out top bit to set 0 value (read).
             self._BUFFER[0] = address & 0x7F
+            print(self._BUFFER)
             # pylint: disable=no-member
             device.write(self._BUFFER, end=1)
             device.readinto(buf, end=length)
