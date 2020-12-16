@@ -539,7 +539,7 @@ class TinyLoRa:
            changing logical modes--use :py:func:`idle`, :py:func:`sleep`, :py:func:`transmit`,
            :py:func:`listen` instead to signal intent for explicit logical modes.
         """
-        print('Changing Operation Mode: {}'.format(_REG_OP_MODE))
+        #print('Changing Operation Mode: {}'.format(_REG_OP_MODE))
         op_mode = self._read_u8(_REG_OP_MODE)
         return (op_mode >> 2) & 0b111
 
