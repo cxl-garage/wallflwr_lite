@@ -502,13 +502,10 @@ class TinyLoRa:
            The payload then begins at packet[4].
            If with_ack is True, send an ACK after receipt (Reliable Datagram mode)
         """
-        print('receive1')
-        print(timeout)
         timed_out = False
         if timeout is None:
             timeout = self.receive_timeout
 
-        print(timeout)
         if timeout is not None:
             print(3)
             # Wait for the payload_ready signal.  This is not ideal and will
@@ -519,14 +516,12 @@ class TinyLoRa:
             self.listen()
             start = time.monotonic()
             timed_out = False
-            print(4)
+
             print(self.payload_ready())
             while not timed_out and not self.payload_ready():
-                print(5)
                 if (time.monotonic() - start) >= timeout:
                     timed_out = True
         # Payload ready is set, a packet is in the FIFO.
-        print(5)
         packet = None
         # save last RSSI reading
         self.last_rssi = self.rssi
@@ -653,12 +648,10 @@ class TinyLoRa:
         :param bytearray buf: Data Buffer for bytes.
         :param int length: Buffer length.
         """
-        print('read_into')
-        print(length)
         if length is None:
             length = len(buf)
-        print('read_into2')
         with self._device as device:
+            print(1)
             # Strip out top bit to set 0 value (read).
             self._BUFFER[0] = address & 0x7F
             # pylint: disable=no-member
@@ -669,10 +662,7 @@ class TinyLoRa:
         """Read a single byte from the provided address and return it.
         :param bytearray address: Register Address.
         """
-        print('readu8_1')
-        print(address)
         self._read_into(address, self._BUFFER, length=1)
-        print('readu8_2')
         return self._BUFFER[0]
 
     def _write_u8(self, address, val):
