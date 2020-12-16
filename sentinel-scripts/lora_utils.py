@@ -554,7 +554,7 @@ class TinyLoRa:
         op_mode &= 0b11100011
         op_mode |= val << 2
         print(op_mode)
-        os.sys.exit()
+        #os.sys.exit()
         self._write_u8(_REG_OP_MODE, op_mode)
         # Wait for mode to change by polling interrupt bit.
         while not self.mode_ready:
