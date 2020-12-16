@@ -471,11 +471,10 @@ class TinyLoRa:
             self.listen()
             start = time.monotonic()
             timed_out = False
-            print(1)
             while not timed_out and not self.payload_ready():
                 if (time.monotonic() - start) >= timeout:
                     timed_out = True
-                print(2)
+                print('Listening...')
         # Payload ready is set, a packet is in the FIFO.
         packet = None
         # save last RSSI reading
@@ -483,6 +482,7 @@ class TinyLoRa:
         # Enter idle mode to stop receiving other packets.
         self.idle()
         if not timed_out:
+            print('Something Received!')
             # Read the length of the FIFO.
             fifo_length = self._read_u8(_REG_FIFO)
             # Handle if the received packet is too small to include the 4 byte
@@ -577,6 +577,7 @@ class TinyLoRa:
     ## From RFM69
     def payload_ready(self):
         """Receive status"""
+        print('Payload Status" {}'.format((self._read_u8(_REG_IRQ_FLAGS2) & 0x4) >> 2))
         return (self._read_u8(_REG_IRQ_FLAGS2) & 0x4) >> 2
 
     @property
