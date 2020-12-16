@@ -579,6 +579,15 @@ class TinyLoRa:
         """Receive status"""
         return (self._read_u8(_REG_IRQ_FLAGS2) & 0x4) >> 2
 
+    @property
+    def rssi(self):
+        """The received strength indicator (in dBm).
+           May be inaccuate if not read immediatey. last_rssi contains the value read immediately
+           receipt of the last packet.
+        """
+        # Read RSSI register and convert to value using formula in datasheet.
+        return -self._read_u8(_REG_RSSI_VALUE) / 2.0
+
     def set_datarate(self, datarate):
         """Sets the RFM Datarate
         :param datarate: Bandwidth and Frequency Plan
