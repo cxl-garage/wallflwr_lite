@@ -254,6 +254,7 @@ class TinyLoRa:
         time.sleep(0.005)  # 5 ms
         # Verify the version of the RFM module
         self._version = self._read_u8(_REG_VERSION)
+        print(self._version)
         if self._version != 18:
             raise TypeError("Can not detect LoRa Module. Please check wiring!")
         # Set Frequency registers
