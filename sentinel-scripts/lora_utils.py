@@ -140,7 +140,7 @@ class TinyLoRa:
             return (reg_value & self._mask) >> self._offset
 
         def __set__(self, obj, val):
-            print('In __set__')
+            print('In __set__, setting {} to val {}'.format(obj,val))
             reg_value = obj._read_u8(self._address)
             reg_value &= ~self._mask
             reg_value |= (val & 0xFF) << self._offset
