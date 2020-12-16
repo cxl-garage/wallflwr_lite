@@ -405,7 +405,10 @@ class RFM69:
         # Set the mode bits inside the operation mode register.
         op_mode = self._read_u8(_REG_OP_MODE)
         op_mode &= 0b11100011
+        print(op_mode)
         op_mode |= val << 2
+        print(op_mode)
+        print(op_mode)
         self._write_u8(_REG_OP_MODE, op_mode)
         # Wait for mode to change by polling interrupt bit.
         while not self.mode_ready:
