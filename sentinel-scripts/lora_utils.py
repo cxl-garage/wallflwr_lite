@@ -47,6 +47,7 @@ _REG_IRQ_FLAGS1 = const(0x27)
 _REG_DIO_MAPPING1 = const(0x25)
 _REG_IRQ_FLAGS1 = const(0x27)
 _REG_IRQ_FLAGS2 = const(0x28)
+_REG_RSSI_VALUE = const(0x24)
 
 # Freq synth step
 _FSTEP = 32000000.0 / 524288
@@ -577,7 +578,7 @@ class TinyLoRa:
     ## From RFM69
     def payload_ready(self):
         """Receive status"""
-        print('Payload Status" {}'.format((self._read_u8(_REG_IRQ_FLAGS2) & 0x4) >> 2))
+        #print('Payload Status: {}'.format((self._read_u8(_REG_IRQ_FLAGS2) & 0x4) >> 2))
         return (self._read_u8(_REG_IRQ_FLAGS2) & 0x4) >> 2
 
     @property
@@ -587,6 +588,7 @@ class TinyLoRa:
            receipt of the last packet.
         """
         # Read RSSI register and convert to value using formula in datasheet.
+        print('Current RSSI Value: {}'.format(-self._read_u8(_REG_RSSI_VALUE) / 2.0))
         return -self._read_u8(_REG_RSSI_VALUE) / 2.0
 
     def set_datarate(self, datarate):
