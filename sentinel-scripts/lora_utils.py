@@ -134,8 +134,9 @@ class TinyLoRa:
             self._offset = offset
 
         def __get__(self, obj, objtype):
-            print('In __get__')
+            print('In __get__, reading {}'format(self._address))
             reg_value = obj._read_u8(self._address)
+            print('__get__ returning {}'.format((reg_value & self._mask) >> self._offset))
             return (reg_value & self._mask) >> self._offset
 
         def __set__(self, obj, val):
