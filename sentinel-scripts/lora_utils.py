@@ -134,9 +134,8 @@ class TinyLoRa:
             self._offset = offset
 
         def __get__(self, obj, objtype):
-            print('In __get__, reading {}'.format(self._address))
             reg_value = obj._read_u8(self._address)
-            print('__get__ returning {}'.format((reg_value & self._mask) >> self._offset))
+            print('__get__, reading {}, returning {}'.format(self._address,(reg_value & self._mask) >> self._offset))
             return (reg_value & self._mask) >> self._offset
 
         def __set__(self, obj, val):
@@ -628,7 +627,7 @@ class TinyLoRa:
         :param bytearray address: Register Address.
         :param val: Data to write.
         """
-        print('In _write_u8')
+        print('Writing: Address {}, Value {}'.format(address, val))
         with self._device as device:
             self._BUFFER[0] = address | 0x80  # MSB 1 to Write
             self._BUFFER[1] = val
