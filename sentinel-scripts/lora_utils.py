@@ -134,7 +134,7 @@ class TinyLoRa:
             self._offset = offset
 
         def __get__(self, obj, objtype):
-            print('In __get__, reading {}'format(self._address))
+            print('In __get__, reading {}'.format(self._address))
             reg_value = obj._read_u8(self._address)
             print('__get__ returning {}'.format((reg_value & self._mask) >> self._offset))
             return (reg_value & self._mask) >> self._offset
@@ -608,7 +608,7 @@ class TinyLoRa:
         """
         if length is None:
             length = len(buf)
-        print('In _read_into')
+        #print('In _read_into')
         with self._device as device:
             # Strip out top bit to set 0 value (read).
             self._BUFFER[0] = address & 0x7F
