@@ -3,6 +3,7 @@ from random import randint
 from micropython import const
 import adafruit_bus_device.spi_device
 from adafruit_tinylora.adafruit_tinylora_encryption import AES
+import os
 
 # RFM Module Settings
 _MODE_SLEEP = const(0x00)
@@ -541,24 +542,24 @@ class TinyLoRa:
            changing logical modes--use :py:func:`idle`, :py:func:`sleep`, :py:func:`transmit`,
            :py:func:`listen` instead to signal intent for explicit logical modes.
         """
-        #print('Changing Operation Mode: {}'.format(_REG_OP_MODE))
         op_mode = self._read_u8(_REG_OP_MODE)
         return (op_mode >> 2) & 0b111
 
     ## From RFM69
     @operation_mode.setter
     def operation_mode(self, val):
-        print('Changing Operation Mode: {}'.format(_REG_OP_MODE))
         assert 0 <= val <= 4
         # Set the mode bits inside the operation mode register.
         op_mode = self._read_u8(_REG_OP_MODE)
-        print(op_mode)
+        print('Current Operation Mode: {}'.format(op_mode))
         op_mode &= 0b11100011
         op_mode |= val << 2
-        print(op_mode)
+        print('Changing Operation Mode to: {}'.format(op_mode))
         #os.sys.exit()
         self._write_u8(_REG_OP_MODE, op_mode)
-
+        op_mode = self._read_u8(_REG_OP_MODE)
+        print('New Operation Mode: {}'.format(op_mode))
+        os.system.exit()
         # Wait for mode to change by polling interrupt bit.
         while not self.mode_ready:
             pass
