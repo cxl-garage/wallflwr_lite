@@ -566,8 +566,8 @@ class TinyLoRa:
         #else:
         #    print('Error Setting new mode')
         # Wait for mode to change by polling interrupt bit.
-        while not self.mode_ready:
-            pass
+        #while not self.mode_ready:
+        #    pass
 
     ## From RFM69
     def packet_sent(self):
