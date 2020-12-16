@@ -602,7 +602,6 @@ class TinyLoRa:
         :param bytearray buf: Data Buffer for bytes.
         :param int length: Buffer length.
         """
-        print('Reading into Device ({})'.format(self._device))
         if length is None:
             length = len(buf)
         print('Buffer Length: {}'.format(length))
@@ -610,16 +609,13 @@ class TinyLoRa:
             # Strip out top bit to set 0 value (read).
             self._BUFFER[0] = address & 0x7F
             # pylint: disable=no-member
-            print('Writing...')
             device.write(self._BUFFER, end=1)
-            print('Reading in...')
             device.readinto(buf, end=length)
 
     def _read_u8(self, address):
         """Read a single byte from the provided address and return it.
         :param bytearray address: Register Address.
         """
-        print('In Read_U8: {} {}'.format(address,self._BUFFER))
         self._read_into(address, self._BUFFER, length=1)
         return self._BUFFER[0]
 
@@ -628,8 +624,10 @@ class TinyLoRa:
         :param bytearray address: Register Address.
         :param val: Data to write.
         """
+        print('Writing U8')
         with self._device as device:
             self._BUFFER[0] = address | 0x80  # MSB 1 to Write
             self._BUFFER[1] = val
             # pylint: disable=no-member
             device.write(self._BUFFER, end=2)
+            print('Written to U8')
