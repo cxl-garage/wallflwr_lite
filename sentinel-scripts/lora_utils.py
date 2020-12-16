@@ -575,11 +575,11 @@ class TinyLoRa:
         print('Current Operation Mode: {}'.format(op_mode))
         op_mode &= 0b11100011
         op_mode |= val << 2
-        print('Changing Operation Mode to: {}'.format(op_mode))
+        #print('Changing Operation Mode to: {}'.format(op_mode))
         #os.sys.exit()
         self._write_u8(_REG_OP_MODE, op_mode)
         new_op_mode = self._read_u8(_REG_OP_MODE)
-        print('New Operation Mode: {}'.format(op_mode))
+        print('New Operation Mode: {}'.format(new_op_mode))
         #if new_op_mode == op_mode:
         #    pass
         #else:
