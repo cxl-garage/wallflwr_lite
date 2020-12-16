@@ -11,6 +11,7 @@ _MODE_LORA = const(0x80)
 _MODE_STDBY = const(0x01)
 _MODE_TX = const(0x83)
 _TRANSMIT_DIRECTION_UP = const(0x00)
+
 # RFM Registers
 _REG_PA_CONFIG = const(0x09)
 _REG_PREAMBLE_MSB = const(0x20)
@@ -142,14 +143,14 @@ class TinyLoRa:
 
         def __get__(self, obj, objtype):
             reg_value = obj._read_u8(self._address)
-            print('__get__, reading {}, returning {}'.format(self._address,(reg_value & self._mask) >> self._offset))
+            #print('__get__, reading {}, returning {}'.format(self._address,(reg_value & self._mask) >> self._offset))
             return (reg_value & self._mask) >> self._offset
 
         def __set__(self, obj, val):
             reg_value = obj._read_u8(self._address)
             reg_value &= ~self._mask
             reg_value |= (val & 0xFF) << self._offset
-            print('In __set__, setting {} to val {}'.format(self._address, reg_value))
+            #print('In __set__, setting {} to val {}'.format(self._address, reg_value))
             obj._write_u8(self._address, reg_value)
 
     # Control bits from the registers of the chip:
@@ -577,7 +578,8 @@ class TinyLoRa:
         op_mode |= val << 2
         #print('Changing Operation Mode to: {}'.format(op_mode))
         #os.sys.exit()
-        self._write_u8(_REG_OP_MODE, op_mode)
+        #self._write_u8(_REG_OP_MODE, op_mode)
+        self._write_u8(_REG_OP_MODE, _MODE_STDBY)
         new_op_mode = self._read_u8(_REG_OP_MODE)
         print('New Operation Mode: {}'.format(new_op_mode))
         #if new_op_mode == op_mode:
