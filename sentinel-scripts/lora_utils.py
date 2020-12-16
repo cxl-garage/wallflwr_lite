@@ -45,6 +45,8 @@ _REG_AFC_BW = const(0x1A)
 _REG_PACKET_CONFIG1 = const(0x37)
 _REG_IRQ_FLAGS1 = const(0x27)
 _REG_DIO_MAPPING1 = const(0x25)
+_REG_IRQ_FLAGS1 = const(0x27)
+_REG_IRQ_FLAGS2 = const(0x28)
 
 # Freq synth step
 _FSTEP = 32000000.0 / 524288
@@ -559,13 +561,13 @@ class TinyLoRa:
         self._write_u8(_REG_OP_MODE, op_mode)
         new_op_mode = self._read_u8(_REG_OP_MODE)
         print('New Operation Mode: {}'.format(op_mode))
-        if new_op_mode == op_mode:
-            pass
-        else:
-            print('Error Setting new mode')
-        # Wait for mode to change by polling interrupt bit.
-        #while not self.mode_ready:
+        #if new_op_mode == op_mode:
         #    pass
+        #else:
+        #    print('Error Setting new mode')
+        # Wait for mode to change by polling interrupt bit.
+        while not self.mode_ready:
+            pass
 
     ## From RFM69
     def packet_sent(self):
