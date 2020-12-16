@@ -652,3 +652,50 @@ class TinyLoRa:
             self._BUFFER[1] = val
             # pylint: disable=no-member
             device.write(self._BUFFER, end=2)
+
+    def reset(self):
+        """Perform a reset of the chip."""
+        # See section 7.2.2 of the datasheet for reset description.
+        self._reset.value = True
+        time.sleep(0.0001)  # 100 us
+        self._reset.value = False
+        time.sleep(0.005)  # 5 ms
+
+    def idle(self):
+        """Enter idle standby mode (switching off high power amplifiers if necessary)."""
+        # Like RadioHead library, turn off high power boost if enabled.
+        if self._tx_power >= 18:
+            self._write_u8(_REG_TEST_PA1, _TEST_PA1_NORMAL)
+            self._write_u8(_REG_TEST_PA2, _TEST_PA2_NORMAL)
+        self.operation_mode = STANDBY_MODE
+
+    def sleep(self):
+        """Enter sleep mode."""
+        self.operation_mode = SLEEP_MODE
+
+    def listen(self):
+        """Listen for packets to be received by the chip.  Use :py:func:`receive` to listen, wait
+           and retrieve packets as they're available.
+        """
+        # Like RadioHead library, turn off high power boost if enabled.
+        if self._tx_power >= 18:
+            self._write_u8(_REG_TEST_PA1, _TEST_PA1_NORMAL)
+            self._write_u8(_REG_TEST_PA2, _TEST_PA2_NORMAL)
+        # Enable payload ready interrupt for D0 line.
+        self.dio_0_mapping = 0b01
+        # Enter RX mode (will clear FIFO!).
+        self.operation_mode = RX_MODE
+
+    def transmit(self):
+        """Transmit a packet which is queued in the FIFO.  This is a low level function for
+           entering transmit mode and more.  For generating and transmitting a packet of data use
+           :py:func:`send` instead.
+        """
+        # Like RadioHead library, turn on high power boost if enabled.
+        if self._tx_power >= 18:
+            self._write_u8(_REG_TEST_PA1, _TEST_PA1_BOOST)
+            self._write_u8(_REG_TEST_PA2, _TEST_PA2_BOOST)
+        # Enable packet sent interrupt for D0 line.
+        self.dio_0_mapping = 0b00
+        # Enter TX mode (will clear FIFO!).
+        self.operation_mode = TX_MODE
