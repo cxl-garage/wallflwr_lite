@@ -502,7 +502,7 @@ class TinyLoRa:
            The payload then begins at packet[4].
            If with_ack is True, send an ACK after receipt (Reliable Datagram mode)
         """
-        print(1)
+        print('receive1')
         print(timeout)
         timed_out = False
         if timeout is None:
@@ -620,7 +620,6 @@ class TinyLoRa:
     def payload_ready(self):
         """Receive status"""
         return (self._read_u8(_REG_IRQ_FLAGS2) & 0x4) >> 2
-
 
     def set_datarate(self, datarate):
         """Sets the RFM Datarate
