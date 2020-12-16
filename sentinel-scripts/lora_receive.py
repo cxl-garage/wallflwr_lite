@@ -20,5 +20,5 @@ app   = bytearray.fromhex(device_info['lora_appkey'][0])
 ttn_config = TTN(devaddr, nwkey, app, country='US')
 
 lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
-while 1:
-    lora.receive(timeout = 2)
+
+lora.receive(keep_listening = False,timeout = 2)

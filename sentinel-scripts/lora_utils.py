@@ -1,44 +1,8 @@
-# Copyright 2015, 2016 Ideetron B.V.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-#
-# You should have received a copy of the GNU Lesser General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-# Modified by Brent Rubell for Adafruit Industries.
-"""
-`Adafruit_TinyLoRa`
-====================================================
-CircuitPython LoRaWAN implementation for use with
-The Things Network.
-* Author(s): adafruit
-Implementation Notes
---------------------
-**Hardware:**
-* `Adafruit RFM95W LoRa Radio Transceiver Breakout <https://www.adafruit.com/product/3072>`_
-**Software and Dependencies:**
-* Adafruit CircuitPython firmware for the supported boards:
-  https://github.com/adafruit/circuitpython/releases
-* Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
-"""
-
 import time
 from random import randint
 from micropython import const
 import adafruit_bus_device.spi_device
 from adafruit_tinylora.adafruit_tinylora_encryption import AES
-
-__version__ = "0.0.0-auto.0"
-__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_TinyLoRa.git"
 
 # RFM Module Settings
 _MODE_SLEEP = const(0x00)
@@ -84,17 +48,12 @@ _REG_DIO_MAPPING1 = const(0x25)
 # Freq synth step
 _FSTEP = 32000000.0 / 524288
 
-
 # User facing constants:
 SLEEP_MODE = 0b000
 STANDBY_MODE = 0b001
 FS_MODE = 0b010
 TX_MODE = 0b011
 RX_MODE = 0b100
-
-
-
-
 
 class TTN:
     """TTN Class
@@ -254,7 +213,6 @@ class TinyLoRa:
         time.sleep(0.005)  # 5 ms
         # Verify the version of the RFM module
         self._version = self._read_u8(_REG_VERSION)
-        print(self._version)
         if self._version != 18:
             raise TypeError("Can not detect LoRa Module. Please check wiring!")
         # Set Frequency registers
@@ -332,7 +290,6 @@ class TinyLoRa:
         self._sf = None
         self._bw = None
         self._modemcfg = None
-
 
     ## From RFM69
     def listen(self):
@@ -441,7 +398,6 @@ class TinyLoRa:
             raise RuntimeError("Timeout during packet send")
 
     ## From RFM69
-
     def send_with_ack(self, data):
         """Reliable Datagram mode:
            Send a packet with data and wait for an ACK response.
@@ -509,7 +465,6 @@ class TinyLoRa:
             start = time.monotonic()
             timed_out = False
 
-            print('payload ready? {}'.format(self.payload_ready()))
             while not timed_out and not self.payload_ready():
                 if (time.monotonic() - start) >= timeout:
                     timed_out = True
@@ -581,7 +536,6 @@ class TinyLoRa:
            changing logical modes--use :py:func:`idle`, :py:func:`sleep`, :py:func:`transmit`,
            :py:func:`listen` instead to signal intent for explicit logical modes.
         """
-        print('operation1')
         op_mode = self._read_u8(_REG_OP_MODE)
         return (op_mode >> 2) & 0b111
 
@@ -643,10 +597,8 @@ class TinyLoRa:
         if length is None:
             length = len(buf)
         with self._device as device:
-            print(1)
             # Strip out top bit to set 0 value (read).
             self._BUFFER[0] = address & 0x7F
-            print(self._BUFFER)
             # pylint: disable=no-member
             device.write(self._BUFFER, end=1)
             device.readinto(buf, end=length)
