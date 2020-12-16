@@ -296,6 +296,7 @@ class TinyLoRa:
         """Listen for packets to be received by the chip.  Use :py:func:`receive` to listen, wait
            and retrieve packets as they're available.
         """
+        print('In Listen Mode')
         # Like RadioHead library, turn off high power boost if enabled.
         if self._tx_power >= 18:
             self._write_u8(_REG_TEST_PA1, _TEST_PA1_NORMAL)
@@ -304,6 +305,7 @@ class TinyLoRa:
         self.dio_0_mapping = 0b01
         # Enter RX mode (will clear FIFO!).
         self.operation_mode = RX_MODE
+        print('Set to RX')
 
     def send_data(self, data, data_length, frame_counter, timeout=2):
         """Function to assemble and send data
@@ -464,10 +466,11 @@ class TinyLoRa:
             self.listen()
             start = time.monotonic()
             timed_out = False
-
+            print(1)
             while not timed_out and not self.payload_ready():
                 if (time.monotonic() - start) >= timeout:
                     timed_out = True
+                print(2)
         # Payload ready is set, a packet is in the FIFO.
         packet = None
         # save last RSSI reading
