@@ -669,7 +669,7 @@ class TinyLoRa:
         :param bytearray address: Register Address.
         :param val: Data to write.
         """
-        print('Writing: Address {}, Value {}'.format(address, val))
+        print('Writing: Address {}, Value {}'.format(hex(address), hex(val)))
         with self._device as device:
             self._BUFFER[0] = address | 0x80  # MSB 1 to Write
             self._BUFFER[1] = val
