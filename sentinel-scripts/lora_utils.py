@@ -12,6 +12,14 @@ _MODE_STDBY = const(0x01)
 _MODE_TX = const(0x83)
 _TRANSMIT_DIRECTION_UP = const(0x00)
 
+
+# User facing constants:
+SLEEP_MODE = 0b000
+STANDBY_MODE = 0b001
+FS_MODE = 0b010
+TX_MODE = 0b011
+RX_MODE = 0b100
+
 # RFM Registers
 _REG_PA_CONFIG = const(0x09)
 _REG_PREAMBLE_MSB = const(0x20)
@@ -49,6 +57,7 @@ _REG_DIO_MAPPING1 = const(0x25)
 _REG_IRQ_FLAGS1 = const(0x27)
 _REG_IRQ_FLAGS2 = const(0x28)
 _REG_RSSI_VALUE = const(0x24)
+_REG_FIFO = const(0x00)
 
 # Freq synth step
 _FSTEP = 32000000.0 / 524288
@@ -56,12 +65,6 @@ _FSTEP = 32000000.0 / 524288
 ## Default address is 255
 #_RH_BROADCAST_ADDRESS = const(0xFF)
 
-# User facing constants:
-SLEEP_MODE = 0b000
-STANDBY_MODE = 0b001
-FS_MODE = 0b010
-TX_MODE = 0b011
-RX_MODE = 0b100
 
 class TTN:
     """TTN Class
@@ -307,7 +310,7 @@ class TinyLoRa:
         """Listen for packets to be received by the chip.  Use :py:func:`receive` to listen, wait
            and retrieve packets as they're available.
         """
-        print('In Listen Mode')
+        #print('In Listen Mode')
         # Like RadioHead library, turn off high power boost if enabled.
         if self._tx_power >= 18:
             self._write_u8(_REG_TEST_PA1, _TEST_PA1_NORMAL)
@@ -316,7 +319,7 @@ class TinyLoRa:
         self.dio_0_mapping = 0b01
         # Enter RX mode (will clear FIFO!).
         self.operation_mode = RX_MODE
-        print('Set to RX')
+        #print('Set to RX')
 
     def send_data(self, data, frame_counter, timeout=2,keep_listening=False):
         """Function to assemble and send data
@@ -573,7 +576,7 @@ class TinyLoRa:
         assert 0 <= val <= 4
         # Set the mode bits inside the operation mode register.
         op_mode = self._read_u8(_REG_OP_MODE)
-        print('Current Operation Mode: {}'.format(op_mode))
+        print('Current Operation Mode: {}'.format(bin(op_mode))
         op_mode &= 0b11100011
         op_mode |= val << 2
         #print('Changing Operation Mode to: {}'.format(op_mode))
