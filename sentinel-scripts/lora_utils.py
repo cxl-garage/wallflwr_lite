@@ -581,14 +581,15 @@ class TinyLoRa:
         print('Current Operation Mode: {}'.format(hex(op_mode)))
         op_mode &= 0b11100011
         op_mode |= val << 2
+
         print('Changing Operation Mode to: {}'.format(hex(op_mode)))
-        #os.sys.exit()
+        print(op_mode, bin(op_mode), hex(op_mode))
         self._write_u8_2(_REG_OP_MODE, op_mode)
+        new_op_mode = self._read_u8(_REG_OP_MODE)
+        print('New Operation Mode: {}'.format(new_op_mode))
         # Wait for mode to change by polling interrupt bit.
         while not self.mode_ready:
             pass
-        new_op_mode = self._read_u8(_REG_OP_MODE)
-        print('New Operation Mode: {}'.format(new_op_mode))
 
     ## From RFM69
     def packet_sent(self):
@@ -679,6 +680,7 @@ class TinyLoRa:
     def _write_u8_2(self, address, val):
         # Write a byte register to the chip.  Specify the 7-bit address and the
         # 8-bit value to write to that address.
+        print('Writing: Address {}, Value {}'.format(hex(address), hex(val)))
         with self._device as device:
             self._BUFFER[0] = (address | 0x80) & 0xFF  # Set top bit to 1 to
             # indicate a write.
