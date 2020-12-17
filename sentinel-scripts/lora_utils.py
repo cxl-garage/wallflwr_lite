@@ -58,6 +58,8 @@ _REG_IRQ_FLAGS1 = const(0x27)
 _REG_IRQ_FLAGS2 = const(0x28)
 _REG_RSSI_VALUE = const(0x24)
 _REG_FIFO = const(0x00)
+_REG_DIO_MAPPING1 = const(0x25)
+
 
 # Freq synth step
 _FSTEP = 32000000.0 / 524288
@@ -576,7 +578,7 @@ class TinyLoRa:
         assert 0 <= val <= 4
         # Set the mode bits inside the operation mode register.
         op_mode = self._read_u8(_REG_OP_MODE)
-        print('Current Operation Mode: {}'.format(bin(op_mode)))
+        print('Current Operation Mode: {}'.format((op_mode)))
         op_mode &= 0b11100011
         op_mode |= val << 2
         #print('Changing Operation Mode to: {}'.format(op_mode))
