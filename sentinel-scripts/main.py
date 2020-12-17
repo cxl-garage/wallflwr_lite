@@ -62,6 +62,8 @@ while 1:
         import pandas as pd
         break
     except Exception as e:
+        logger.error(e)
+        logger.info('Attempting update packages')
         try:
             os.chdir("/home/pi/wallflwr_lite/sentinel-scripts")
         except Exception as e:
@@ -72,6 +74,7 @@ while 1:
             k = 2
     if k == 2:
         logger.error('Critical Error!! Unable to install packages')
+        quit()
         k = k + 1
 
 
@@ -93,14 +96,15 @@ while 1:
         logger.error('Critical Error!! Unable to install packages')
     k = k + 1
 
+if len(os.listdir(data_directory)) == 0:
+    logger.warning('No files to process')
+    data_directory = 'error'
+
 if data_directory != 'error':
 
     # Reading in information about algorithms that have to run on device
     primary_algs = pd.read_csv('../models/_primary_algs.txt')
     secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
-
-    if len(os.listdir(data_directory)) == 0:
-        logger.warning('No files to process')
 
 
     ## Process data until there are no data left in the data directory
@@ -151,7 +155,7 @@ if connect() == True and opt.wilderness != True:
 else:
     logger.warning('Unable to connect, running LoRa')
     # Run LoRa Routine
-    lora.main()
+    lora.main(attempts=1)
 
 # Delete all processed files from SD Card
 utils.delete_files()
