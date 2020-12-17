@@ -681,7 +681,9 @@ class TinyLoRa:
             self._BUFFER[0] = (address | 0x80) & 0xFF  # Set top bit to 1 to
             # indicate a write.
             self._BUFFER[1] = val & 0xFF
+            print(bin(address))
             print(bin(self._BUFFER[0]))
+            print(bin(val))
             print(bin(self._BUFFER[1]))
             device.write(self._BUFFER, end=2)
 
