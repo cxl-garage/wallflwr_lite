@@ -100,6 +100,7 @@ def group_confidence_calculation():
         # Resetting index
         group = group.reset_index(drop=True)
 
+
         ### Scenario 1: No recorded classes
         if len(group) == 0:
             group_confidence = 0
@@ -273,8 +274,10 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
             scores = obj.score
             insight_id = int(k)
             # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-            # time_stamp = datetime.datetime.fromtimestamp(os.path.getmtime('{}'.format(file_path))).strftime('%Y-%m-%dT%H:%M:%S')
-            time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
+            time_stamp = datetime.datetime.fromtimestamp(os.path.getmtime('{}'.format(file_path)))
+            logger.info('TIME IS HEREEEE')
+            logger.info( time_stamp)
+            # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
 
             logger.info('File: {}, Class: {}, Confidence: {}'.format(file,class_names[0][classes],scores))
             #logger.info('Confidence: {}'.format(scores))
@@ -315,8 +318,9 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
         # Note: we still save the information about the image being processed, (negative data is still valuable) and thus it is still assigned an insight_id
         insight_id = int(k)
         # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        # time_stamp = datetime.datetime.fromtimestamp(os.path.getmtime('{}'.format(file_path))).strftime('%Y-%m-%dT%H:%M:%S')
-        time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
+        time_stamp = datetime.datetime.fromtimestamp(os.path.getmtime('{}'.format(file_path)))
+
+        # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
         meta = {'committed_sql':0,'committed_images':0,
         'committed_lora': 0,'insight_id':insight_id,'alg_id':alg['alg_id'][0],
         'time_stamp': time_stamp,'class_id':99,'class':'blank',
