@@ -576,7 +576,7 @@ class TinyLoRa:
         assert 0 <= val <= 4
         # Set the mode bits inside the operation mode register.
         op_mode = self._read_u8(_REG_OP_MODE)
-        print('Current Operation Mode: {}'.format(bin(op_mode))
+        print('Current Operation Mode: {}'.format(bin(op_mode)))
         op_mode &= 0b11100011
         op_mode |= val << 2
         #print('Changing Operation Mode to: {}'.format(op_mode))
