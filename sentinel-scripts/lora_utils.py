@@ -670,10 +670,10 @@ class TinyLoRa:
             self._BUFFER[0] = address | 0x80  # MSB 1 to Write
             self._BUFFER[1] = val
             # pylint: disable=no-member
-            print('{} ()'.format(bin(address),hex(address)))
-            print('{} ()'.format(bin(self._BUFFER[0]),hex(self._BUFFER[0])))
-            print('{} ()'.format(bin(val),hex(val)))
-            print('{} ()'.format(bin(self._BUFFER[1]),hex(self._BUFFER[1])))
+            print('{} ({})'.format(bin(address),hex(address)))
+            print('{} ({})'.format(bin(self._BUFFER[0]),hex(self._BUFFER[0])))
+            print('{} ({})'.format(bin(val),hex(val)))
+            print('{} ({})'.format(bin(self._BUFFER[1]),hex(self._BUFFER[1])))
             device.write(self._BUFFER, end=2)
 
     def _write_u8_2(self, address, val):
@@ -683,10 +683,10 @@ class TinyLoRa:
             self._BUFFER[0] = (address | 0x80) & 0xFF  # Set top bit to 1 to
             # indicate a write.
             self._BUFFER[1] = val & 0xFF
-            print('{} ()'.format(bin(address),hex(address)))
-            print('{} ()'.format(bin(self._BUFFER[0]),hex(self._BUFFER[0])))
-            print('{} ()'.format(bin(val),hex(val)))
-            print('{} ()'.format(bin(self._BUFFER[1]),hex(self._BUFFER[1])))
+            print('{} ({})'.format(bin(address),hex(address)))
+            print('{} ({})'.format(bin(self._BUFFER[0]),hex(self._BUFFER[0])))
+            print('{} ({})'.format(bin(val),hex(val)))
+            print('{} ({})'.format(bin(self._BUFFER[1]),hex(self._BUFFER[1])))
             device.write(self._BUFFER, end=2)
 
     def reset(self):
