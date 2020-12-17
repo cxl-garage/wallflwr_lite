@@ -10,6 +10,7 @@ _MODE_SLEEP = const(0x00)
 _MODE_LORA = const(0x80)
 _MODE_STDBY = const(0x01)
 _MODE_TX = const(0x83)
+_MODE_RX = const(0x90)
 _TRANSMIT_DIRECTION_UP = const(0x00)
 
 
@@ -582,7 +583,7 @@ class TinyLoRa:
         #print('Changing Operation Mode to: {}'.format(op_mode))
         #os.sys.exit()
         #self._write_u8(_REG_OP_MODE, op_mode)
-        self._write_u8(_REG_OP_MODE, _MODE_SLEEP)
+        self._write_u8(_REG_OP_MODE, _MODE_RX)
         #if new_op_mode == op_mode:
         #    pass
         #else:
