@@ -586,7 +586,7 @@ class TinyLoRa:
         print(op_mode, bin(op_mode), hex(op_mode))
         self._write_u8_2(_REG_OP_MODE, op_mode)
         new_op_mode = self._read_u8(_REG_OP_MODE)
-        print('New Operation Mode: {}'.format(new_op_mode))
+        print('New Operation Mode: {}'.format(hex(new_op_mode)))
         # Wait for mode to change by polling interrupt bit.
         while not self.mode_ready:
             pass
