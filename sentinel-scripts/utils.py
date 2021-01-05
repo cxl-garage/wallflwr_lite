@@ -1,5 +1,5 @@
 ##### Tyto AI: Conservation X Labs   #####
-## Author: Sam Kelly
+# Author: Sam Kelly
 
 # This code is currently proprietary, further licensing will be decided in the near future.
 
@@ -26,18 +26,20 @@ import requests
 import logging
 from git import Repo
 
-### Checking if device has internet access
+# Checking if device has internet access
+
+
 def connect(url='http://www.google.com/', timeout=3):
     try:
         r = requests.head(url, timeout=timeout)
         return True
     except requests.ConnectionError as ex:
-        #print(ex)
+        # print(ex)
         return False
 
+    # Initialize the device (check that local device is ready)
 
 
-    ### Initialize the device (check that local device is ready)
 def initialize(opt):
     f = open("../device.id", "r")
     lines = f.readlines()
@@ -47,7 +49,8 @@ def initialize(opt):
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                         datefmt='%m-%d %H:%M',
-                        filename='../../logs/{}_actions.log'.format(os.environ.get("device_id")),
+                        filename='../../logs/{}_actions.log'.format(
+                            os.environ.get("device_id")),
                         filemode='w')
     # define a Handler which writes INFO messages or higher to the sys.stderr
     console = logging.StreamHandler()
@@ -60,14 +63,13 @@ def initialize(opt):
     logging.getLogger('').addHandler(console)
     logger = logging.getLogger('initialize')
 
-
-
     # Check local database exists
     if not os.path.exists('../data'):
         os.makedirs('../data')
     if not os.path.exists('../data/device_insights.csv'):
         logger.info('Device Insights Table Initializing!')
-        x = pd.DataFrame(columns=['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence'])
+        x = pd.DataFrame(columns=['committed_sql', 'committed_images', 'committed_lora', 'insight_id', 'alg_id', 'time_stamp', 'class_id',
+                                  'class', 'confidence', 'image_id', 'x_min', 'y_min', 'x_max', 'y_max', 'device_id', 'group_id', 'group_confidence'])
         x.to_csv('../data/device_insights.csv')
     if not os.path.exists('../models'):
         os.makedirs('../models')
@@ -75,9 +77,6 @@ def initialize(opt):
         os.makedirs('../data/camera')
     if not os.path.exists('../data/repo'):
         os.makedirs('../data/repo')
-
-
-
 
     # Check if device is connected to internet
     if connect() == True and opt.wilderness != True:
@@ -103,8 +102,10 @@ def initialize(opt):
                     checkout_commit = tag.commit.hexsha
                     if checkout_commit != repo.head.object.hexsha:
                         repo.git.checkout(checkout_commit)
-                        logger.info('Checked out {} version (SHA: {})'.format(checkout_tag,checkout_commit))
-                        os.system('echo {} | sudo reboot'.format(os.environ.get('sudoPW')))
+                        logger.info('Checked out {} version (SHA: {})'.format(
+                            checkout_tag, checkout_commit))
+                        os.system('echo {} | sudo reboot'.format(
+                            os.environ.get('sudoPW')))
                     else:
                         logger.info('Already up-to-date')
                     break
@@ -113,13 +114,10 @@ def initialize(opt):
                     commit_to_checkout = repo.head.object.hexsha
                 k = k + 1
 
-
         cloud_data.check_bucket_exists()
         if opt.update_off == False:
             logger.info('Checking for new algorithms')
             cloud_db.check_algs()
-
-
 
     else:
         logger.warning('Internet Connection not available')
@@ -131,7 +129,6 @@ def initialize(opt):
         os.environ['shutdown'] = str(device_information['shutdown'][0])
         os.environ['version'] = str(device_information['version'][0])
 
-
     if os.environ.get('version').startswith('0'):
         import edgetpu
         from edgetpu.detection.engine import DetectionEngine
@@ -141,9 +138,9 @@ def initialize(opt):
         from pycoral.utils.dataset import read_label_file
         from pycoral.utils.edgetpu import make_interpreter
     else:
-        logger.error('Unable to mount EdgeTPU, skipping ahead and will reboot!')
+        logger.error(
+            'Unable to mount EdgeTPU, skipping ahead and will reboot!')
         return 'error'
-
 
     # Loop to run consistently run on RasPi
     if opt.test == False:
@@ -157,9 +154,11 @@ def initialize(opt):
         while 1:
             m = 0
             while m < len(list_of_devices):
-                mount_command = 'sudo mount {} ../data/camera'.format(list_of_devices[m])
-                #logger.info(mount_command)
-                os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), mount_command))
+                mount_command = 'sudo mount {} ../data/camera'.format(
+                    list_of_devices[m])
+                # logger.info(mount_command)
+                os.system(
+                    'echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), mount_command))
                 if os.path.isdir('../data/camera/DCIM') == True:
                     logger.info('SD Card Mounted')
                     break
@@ -173,19 +172,17 @@ def initialize(opt):
                 time.sleep(1)
             k = k + 1
             time.sleep(1)
-        data_directory = '../data/camera/DCIM/{}'.format(os.listdir('../data/camera/DCIM/')[0])
+        data_directory = '../data/camera/DCIM/{}'.format(
+            os.listdir('../data/camera/DCIM/')[0])
     else:
         data_directory = '../data/test'
         logger.warning('Running in test mode')
     os.environ['data_directory'] = data_directory
 
-
-
     return data_directory
 
 
-
-### Deletes files from SD Card
+# Deletes files from SD Card
 def delete_files():
     logger = logging.getLogger('deleter')
     # Load local insights "database" (currently just a csv) as a pandas dataframe
@@ -195,20 +192,22 @@ def delete_files():
     k = 0
     while k < len(insights):
         try:
-            delete_command = 'sudo rm -f {}/{}'.format(os.environ.get('data_directory'),insights['image_id'][k])
-            os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), delete_command))
+            delete_command = 'sudo rm -f {}/{}'.format(
+                os.environ.get('data_directory'), insights['image_id'][k])
+            os.system(
+                'echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), delete_command))
         except Exception as e:
             logger.warning('Issue deleting file')
         k = k+1
 
-    ## Delete all files in the results folder
+    # Delete all files in the results folder
     query = 'rm -r ../data/results/*'
     os.system(query)
 
     logger.info('Files Deleted')
 
 
-### Function to make the RPi shut itself down
+# Function to make the RPi shut itself down
 def shutdown(cycle_time):
     logger = logging.getLogger('shutter')
     if os.environ.get('version').startswith('0'):
@@ -217,7 +216,8 @@ def shutdown(cycle_time):
         from digitalio import DigitalInOut, Direction, Pull
 
         # Pull the M0 Pin Low to keep the Pi on...
-        shutdown_pin  = DigitalInOut(board.D14)
+        shutdown_pin = DigitalInOut(board.D14)
+        shutdown_pin.direction = Direction.OUTPUT
         # Pull the M0 Pin low to communicate sleep length...
         shutdown_pin.value = False
         logger.info('Send command to M0 to shut down')
@@ -244,8 +244,9 @@ def shutdown(cycle_time):
                 logger.info('M0 Timneout')
                 # Shut down the logger
                 logger.info('Shutting Down')
-                ## Shutting Down the Pi (M0 is supposed to wait 10 seconds to shutdown
-                os.system('echo {}|sudo -S sudo shutdown'.format(os.environ.get('sudoPW')))
+                # Shutting Down the Pi (M0 is supposed to wait 10 seconds to shutdown
+                os.system(
+                    'echo {}|sudo -S sudo shutdown'.format(os.environ.get('sudoPW')))
             else:
                 time.sleep(1)
             k = k + 1
