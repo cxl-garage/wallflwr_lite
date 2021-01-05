@@ -7,6 +7,7 @@ from sqlalchemy import update
 import os
 import logging
 import datetime
+import pathlib
 import os
 import pandas as pd
 import sqlalchemy
@@ -19,6 +20,7 @@ from os import path
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Float
+
 Base = declarative_base()
 
 filePath = pathlib.Path().absolute()
