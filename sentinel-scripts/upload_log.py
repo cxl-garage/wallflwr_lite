@@ -55,3 +55,7 @@ def upload():
         os.remove('{}/logs/{}.out'.format(filePath, dt_string))
     else:
         print("File not exist")
+
+
+if __name__ == "__main__":
+    upload()
