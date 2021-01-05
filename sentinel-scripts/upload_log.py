@@ -21,6 +21,16 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Float
 
+os.environ['DB_USER'] = 'sentinel_devices'
+os.environ['CLOUD_SQL_CONNECTION_NAME'] = 'sentinel-project-278421:us-east4:algorithm-library'
+os.environ['FRAMEWORK'] = 'CXL_YoloV3_TF2_v1.0'
+# os.environ['DB_PRIP']   = '35.245.49.25'
+os.environ['DB_PRIP'] = '127.0.0.1:1234'
+os.environ['DB_NAME'] = 'algorithm_library'
+os.environ['DB_PASS'] = 'endextinction'
+os.environ['USERNAME'] = 'Conservation X Labs'
+
+
 Base = declarative_base()
 
 filePath = pathlib.Path().absolute()
