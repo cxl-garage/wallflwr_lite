@@ -4,6 +4,11 @@
 
 #The below four lines are there to log the outputs of this script
 #Follow this: https://serverfault.com/questions/103501/how-can-i-fully-log-all-bash-scripts-actions
+
+cd /
+cd /home/pi/wallflwr_lite/sentinel-scripts
+rm log.out
+cd /
 exec 3>&1 4>&2
 trap 'exec 2>&4 1>&3' 0 1 2 3
 exec 1>log.out 2>&1
