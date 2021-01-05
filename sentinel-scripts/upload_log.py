@@ -7,7 +7,6 @@ from sqlalchemy import update
 import os
 import logging
 import datetime
-import pathlib
 import os
 import pandas as pd
 import sqlalchemy
