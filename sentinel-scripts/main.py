@@ -168,3 +168,9 @@ else:
 
 # Delete all processed files from SD Card
 utils.delete_files()
+
+# Shut down Raspberry Pi
+if os.environ.get("shutdown") == '1':
+    utils.shutdown(os.environ.get("cycle_time"))
+else:
+    logger.info('Processing complete, device idling (shutdown disabled)')
