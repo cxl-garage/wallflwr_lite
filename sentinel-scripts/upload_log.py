@@ -22,34 +22,36 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Float
 
 
-Base = declarative_base()
+def upload():
 
-filePath = pathlib.Path().absolute()
-logger = logging.getLogger('upload_log')
-logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
+    Base = declarative_base()
 
-file = pathlib.Path('{}/logs/fullLog.out'.format(filePath))
-if file.exists():
-    print("File exist")
-    # Get Device ID
-    f = open("../device.id", "r")
-    lines = f.readlines()
-    device_id = lines[0].rstrip()
-    logger.info(device_id)
+    filePath = pathlib.Path().absolute()
+    logger = logging.getLogger('upload_log')
+    logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
-    # Rename
-    dt_string = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-    logger.info(dt_string)
-    os.rename('{}/logs/fullLog.out'.format(filePath),
-              '{}/logs/{}.out'.format(filePath, dt_string))
+    file = pathlib.Path('{}/logs/fullLog.out'.format(filePath))
+    if file.exists():
+        print("File exist")
+        # Get Device ID
+        f = open("../device.id", "r")
+        lines = f.readlines()
+        device_id = lines[0].rstrip()
+        logger.info(device_id)
 
-    # Upload
-    logger.info('Uploading log')
-    query = 'gsutil -m cp -r -n "./logs/{}.out" "gs://insights-{}/logs/"'.format(
-        dt_string, device_id)
-    os.system(query)
+        # Rename
+        dt_string = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+        logger.info(dt_string)
+        os.rename('{}/logs/fullLog.out'.format(filePath),
+                  '{}/logs/{}.out'.format(filePath, dt_string))
 
-    # Remove log
-    os.remove('{}/logs/{}.out'.format(filePath, dt_string))
-else:
-    print("File not exist")
+        # Upload
+        logger.info('Uploading log')
+        query = 'gsutil -m cp -r -n "./logs/{}.out" "gs://insights-{}/logs/"'.format(
+            dt_string, device_id)
+        os.system(query)
+
+        # Remove log
+        os.remove('{}/logs/{}.out'.format(filePath, dt_string))
+    else:
+        print("File not exist")

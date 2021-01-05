@@ -57,6 +57,7 @@ while 1:
         logger = logging.getLogger('main')
 
         ######## BEGINNING OF THE WORK ########
+        import upload_log
         import utils
         import sys
         import io
@@ -168,6 +169,8 @@ else:
 
 # Delete all processed files from SD Card
 utils.delete_files()
+
+upload_log.upload()
 
 # Shut down Raspberry Pi
 if os.environ.get("shutdown") == '1':
