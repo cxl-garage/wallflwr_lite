@@ -58,8 +58,12 @@ def upload():
 
     device_information = pd.read_csv('../_device_info.csv')
 
-    print(device_information['cycle_time'])
-    print(device_information['shutdown'])
+    cycle_time = device_information['cycle_time'][0]
+    shutdown = device_information['shutdown'][0]
+
+    # Shut down Raspberry Pi
+    if shutdown != '0':
+        utils.shutdown(cycle_time)
 
 
 if __name__ == "__main__":

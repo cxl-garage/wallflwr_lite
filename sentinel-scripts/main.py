@@ -174,9 +174,3 @@ utils.delete_files()
 # If the script error-ed out, we wouldnt get to this point
 # So, you will notice we call this same functoin in run.sh as that will always run if main.py fails
 upload_log.upload()
-
-# Shut down Raspberry Pi
-if os.environ.get("shutdown") == '1':
-    utils.shutdown(os.environ.get("cycle_time"))
-else:
-    logger.info('Processing complete, device idling (shutdown disabled)')

@@ -208,7 +208,7 @@ def delete_files():
 
 
 # Function to make the RPi shut itself down
-def shutdown(cycle_time):
+def shutdown(cycle_time=5):
     logger = logging.getLogger('shutter')
     import digitalio
     import board
