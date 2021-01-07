@@ -210,43 +210,42 @@ def delete_files():
 # Function to make the RPi shut itself down
 def shutdown(cycle_time):
     logger = logging.getLogger('shutter')
-    if os.environ.get('version').startswith('0'):
-        import digitalio
-        import board
-        from digitalio import DigitalInOut, Direction, Pull
+    import digitalio
+    import board
+    from digitalio import DigitalInOut, Direction, Pull
 
-        # Pull the M0 Pin Low to keep the Pi on...
-        shutdown_pin = DigitalInOut(board.D14)
-        shutdown_pin.direction = Direction.OUTPUT
-        # Pull the M0 Pin low to communicate sleep length...
-        shutdown_pin.value = False
-        logger.info('Send command to M0 to shut down')
-        time.sleep(int(cycle_time)/100)
-        shutdown_pin.value = True
+    # Pull the M0 Pin Low to keep the Pi on...
+    shutdown_pin = DigitalInOut(board.D14)
+    shutdown_pin.direction = Direction.OUTPUT
+    # Pull the M0 Pin low to communicate sleep length...
+    shutdown_pin.value = False
+    logger.info('Send command to M0 to shut down')
+    time.sleep(int(cycle_time)/100)
+    shutdown_pin.value = True
 
-        # Pull the M0 Pin low to begin shutdown sequence...
-        time.sleep(0.2)
-        shutdown_pin.value = False
+    # Pull the M0 Pin low to begin shutdown sequence...
+    time.sleep(0.2)
+    shutdown_pin.value = False
 
-        # Switching pin to check for confirmation from M0 shutdown
-        shutdown_pin.switch_to_input(pull=digitalio.Pull.DOWN)
+    # Switching pin to check for confirmation from M0 shutdown
+    shutdown_pin.switch_to_input(pull=digitalio.Pull.DOWN)
 
-        # Loop to check for confirmation from M0.
-        k = 0
-        while 1:
-            # Scenario 1: M0 Confirmation when pin goes high, stopping shutdown
-            if shutdown_pin.value == True:
-                logger.warning('M0 Intervention with Shutdown')
-                time.sleep(3)
-                break
-            # Scenario 2: Timeout
-            elif k == 5:
-                logger.info('M0 Timneout')
-                # Shut down the logger
-                logger.info('Shutting Down')
-                # Shutting Down the Pi (M0 is supposed to wait 10 seconds to shutdown
-                os.system(
-                    'echo {}|sudo -S sudo shutdown'.format(os.environ.get('sudoPW')))
-            else:
-                time.sleep(1)
-            k = k + 1
+    # Loop to check for confirmation from M0.
+    k = 0
+    while 1:
+        # Scenario 1: M0 Confirmation when pin goes high, stopping shutdown
+        if shutdown_pin.value == True:
+            logger.warning('M0 Intervention with Shutdown')
+            time.sleep(3)
+            break
+        # Scenario 2: Timeout
+        elif k == 5:
+            logger.info('M0 Timneout')
+            # Shut down the logger
+            logger.info('Shutting Down')
+            # Shutting Down the Pi (M0 is supposed to wait 10 seconds to shutdown
+            os.system(
+                'echo {}|sudo -S sudo shutdown'.format('endextinction'))
+        else:
+            time.sleep(1)
+        k = k + 1
