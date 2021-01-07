@@ -57,7 +57,9 @@ def upload():
     #     print("File not exist")
 
     device_information = pd.read_csv('../_device_info.csv')
-    print(device_information)
+
+    print(device_information['cycle_time'])
+    print(device_information['shutdown'])
 
 
 if __name__ == "__main__":
