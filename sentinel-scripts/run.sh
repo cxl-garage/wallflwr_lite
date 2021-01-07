@@ -32,7 +32,7 @@ then
     #This while loop checks until the connection is made with the cloud SQL
     COUNTER2=0
     while [  $COUNTER2 -lt 10 ]; do
-        if [ $COUNTER2 -eq 15 ]
+        if [ $COUNTER2 -eq 25 ]
         then
             echo SQL Timed Out
             break 
