@@ -57,7 +57,6 @@ while 1:
         logger = logging.getLogger('main')
 
         ######## BEGINNING OF THE WORK ########
-        import upload_log
         import utils
         import sys
         import io
@@ -169,8 +168,3 @@ else:
 
 # Delete all processed files from SD Card
 utils.delete_files()
-
-# Here is where we upload the logs IF THE SCRIPT RAN SUCCESFULLY
-# If the script error-ed out, we wouldnt get to this point
-# So, you will notice we call this same functoin in run.sh as that will always run if main.py fails
-upload_log.upload()
