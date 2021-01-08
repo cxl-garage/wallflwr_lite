@@ -31,14 +31,14 @@ then
 
     #This while loop checks until the connection is made with the cloud SQL
     COUNTER2=0
-    while [  $COUNTER2 -lt 10 ]; do
+    while [  $COUNTER2 -lt 25 ]; do
         if [ $COUNTER2 -eq 25 ]
         then
             echo SQL Timed Out
             break 
         else
             let COUNTER2=COUNTER2+1 
-            sleep 2
+            sleep 1
             echo Connecting...
             
             # #This is just in case run.sh runs again with the proxy already running

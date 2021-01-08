@@ -61,9 +61,9 @@ def upload():
     cycle_time = device_information['cycle_time'][0]
     shutdown = device_information['shutdown'][0]
 
-    # Shut down Raspberry Pi
-    if shutdown != '0':
-        utils.shutdown(cycle_time)
+    # # Shut down Raspberry Pi
+    # if shutdown != '0':
+    #     utils.shutdown(cycle_time)
 
 
 if __name__ == "__main__":
