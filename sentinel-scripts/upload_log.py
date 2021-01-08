@@ -24,12 +24,17 @@ from sqlalchemy import Column, Integer, String, Float
 
 def upload():
 
+    device_information = pd.read_csv('../_device_info.csv')
+
+    cycle_time = device_information['cycle_time'][0]
+    shutdown = device_information['shutdown'][0]
+
     Base = declarative_base()
 
     filePath = pathlib.Path().absolute()
     logger = logging.getLogger('upload_log')
     logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
-
+    logging.info(shutdown)
     file = pathlib.Path('{}/logs/fullLog.out'.format(filePath))
     if file.exists():
         print("File exist")
@@ -49,17 +54,21 @@ def upload():
         logger.info('Uploading log')
         query = 'gsutil -m cp -r -n "./logs/{}.out" "gs://insights-{}/logs/"'.format(
             dt_string, device_id)
-        os.system(query)
+        result = os.system(query)
 
+        if 0 == result:
+            logging.info("upload complete")
+        else:
+            logging.info("result code: %d" % result)
+
+
+i
         # Remove log
         os.remove('{}/logs/{}.out'.format(filePath, dt_string))
     else:
         print("File not exist")
 
-    device_information = pd.read_csv('../_device_info.csv')
 
-    cycle_time = device_information['cycle_time'][0]
-    shutdown = device_information['shutdown'][0]
 
     # # Shut down Raspberry Pi
     # if shutdown != '0':
