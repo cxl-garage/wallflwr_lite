@@ -60,15 +60,10 @@ def upload():
             logging.info("upload complete")
         else:
             logging.info("result code: %d" % result)
-
-
-i
         # Remove log
         os.remove('{}/logs/{}.out'.format(filePath, dt_string))
     else:
         print("File not exist")
-
-
 
     # # Shut down Raspberry Pi
     # if shutdown != '0':
