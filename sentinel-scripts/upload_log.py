@@ -55,7 +55,6 @@ def upload():
         query = 'gsutil -m cp -r -n "./logs/{}.out" "gs://insights-{}/logs/"'.format(
             dt_string, device_id)
         result = os.system(query)
-
         if 0 == result:
             logging.info("upload complete")
         else:
@@ -67,7 +66,7 @@ def upload():
 
     # # Shut down Raspberry Pi
     # if shutdown != '0':
-    #     utils.shutdown(cycle_time)
+    utils.shutdown(cycle_time)
 
 
 if __name__ == "__main__":
