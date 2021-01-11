@@ -88,31 +88,31 @@ def initialize(opt):
         cloud_db.device_info()
 
         # Pull latest master branch from git
-        logger.info('Checking git for updates')
-        repo = Repo('../')
-        assert not repo.bare
-        repo.remotes.origin.pull()
-        if os.environ.get('release') == 'debug':
-            logger.info('In Debug mode, Git is manually controlled!')
-        else:
-            k = 1
-            for tag in repo.tags:
-                if str(tag) == str(os.environ.get('release')):
-                    checkout_tag = tag
-                    checkout_commit = tag.commit.hexsha
-                    if checkout_commit != repo.head.object.hexsha:
-                        repo.git.checkout(checkout_commit)
-                        logger.info('Checked out {} version (SHA: {})'.format(
-                            checkout_tag, checkout_commit))
-                        os.system('echo {} | sudo reboot'.format(
-                            os.environ.get('sudoPW')))
-                    else:
-                        logger.info('Already up-to-date')
-                    break
-                if k == len(repo.tags):
-                    logger.error('Version not known')
-                    commit_to_checkout = repo.head.object.hexsha
-                k = k + 1
+        # logger.info('Checking git for updates')
+        # repo = Repo('../')
+        # assert not repo.bare
+        # repo.remotes.origin.pull()
+        # if os.environ.get('release') == 'debug':
+        #     logger.info('In Debug mode, Git is manually controlled!')
+        # else:
+        #     k = 1
+        #     for tag in repo.tags:
+        #         if str(tag) == str(os.environ.get('release')):
+        #             checkout_tag = tag
+        #             checkout_commit = tag.commit.hexsha
+        #             if checkout_commit != repo.head.object.hexsha:
+        #                 repo.git.checkout(checkout_commit)
+        #                 logger.info('Checked out {} version (SHA: {})'.format(
+        #                     checkout_tag, checkout_commit))
+        #                 os.system('echo {} | sudo reboot'.format(
+        #                     os.environ.get('sudoPW')))
+        #             else:
+        #                 logger.info('Already up-to-date')
+        #             break
+        #         if k == len(repo.tags):
+        #             logger.error('Version not known')
+        #             commit_to_checkout = repo.head.object.hexsha
+        #         k = k + 1
 
         cloud_data.check_bucket_exists()
         if opt.update_off == False:
