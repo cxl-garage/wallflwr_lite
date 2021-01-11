@@ -67,8 +67,7 @@ def upload():
     # # Shut down Raspberry Pi
     # if shutdown != '0':
 
-
-utils.shutdown(cycle_time)
+    utils.shutdown(cycle_time)
 
 
 if __name__ == "__main__":
