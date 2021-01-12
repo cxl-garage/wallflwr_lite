@@ -65,7 +65,7 @@ def upload():
         print("File not exist")
 
     # Shut down Raspberry Pi
-    if shutdown != '0':
+    if shutdown == 1:
         utils.shutdown(cycle_time)
 
 
