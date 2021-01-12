@@ -220,32 +220,35 @@ def shutdown(cycle_time=5):
     # Pull the M0 Pin low to communicate sleep length...
     shutdown_pin.value = False
     logger.info('Send command to M0 to shut down')
-    time.sleep(int(cycle_time)/100)
-    shutdown_pin.value = True
+    logger.info('Shutting Down')
+    # Shutting Down the Pi (M0 is supposed to wait 10 seconds to shutdown
+    os.system('echo {}|sudo -S sudo shutdown'.format('endextinction'))
+    # time.sleep(int(cycle_time)/100)
+    # shutdown_pin.value = True
 
-    # Pull the M0 Pin low to begin shutdown sequence...
-    time.sleep(0.2)
-    shutdown_pin.value = False
+    # # Pull the M0 Pin low to begin shutdown sequence...
+    # time.sleep(0.2)
+    # shutdown_pin.value = False
 
-    # Switching pin to check for confirmation from M0 shutdown
-    shutdown_pin.switch_to_input(pull=digitalio.Pull.DOWN)
+    # # Switching pin to check for confirmation from M0 shutdown
+    # shutdown_pin.switch_to_input(pull=digitalio.Pull.DOWN)
 
-    # Loop to check for confirmation from M0.
-    k = 0
-    while 1:
-        # Scenario 1: M0 Confirmation when pin goes high, stopping shutdown
-        if shutdown_pin.value == True:
-            logger.warning('M0 Intervention with Shutdown')
-            time.sleep(3)
-            break
-        # Scenario 2: Timeout
-        elif k == 5:
-            logger.info('M0 Timneout')
-            # Shut down the logger
-            logger.info('Shutting Down')
-            # Shutting Down the Pi (M0 is supposed to wait 10 seconds to shutdown
-            os.system(
-                'echo {}|sudo -S sudo shutdown'.format('endextinction'))
-        else:
-            time.sleep(1)
-        k = k + 1
+    # # Loop to check for confirmation from M0.
+    # k = 0
+    # while 1:
+    #     # Scenario 1: M0 Confirmation when pin goes high, stopping shutdown
+    #     if shutdown_pin.value == True:
+    #         logger.warning('M0 Intervention with Shutdown')
+    #         time.sleep(3)
+    #         break
+    #     # Scenario 2: Timeout
+    #     elif k == 5:
+    #         logger.info('M0 Timneout')
+    #         # Shut down the logger
+    #         logger.info('Shutting Down')
+    #         # Shutting Down the Pi (M0 is supposed to wait 10 seconds to shutdown
+    #         os.system(
+    #             'echo {}|sudo -S sudo shutdown'.format('endextinction'))
+    #     else:
+    #         time.sleep(1)
+    #     k = k + 1
