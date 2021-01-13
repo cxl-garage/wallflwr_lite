@@ -67,7 +67,7 @@ def upload():
         # Iterate through them and upload them
         for x in file_list:
             logger.info('Uploading log')
-            query = 'gsutil -m cp -r -n "./logs/{}.out" "gs://insights-{}/logs/"'.format(
+            query = 'gsutil -m cp -r -n "./logs/{}" "gs://insights-{}/logs/"'.format(
                 x, device_id)
             result = os.system(query)
             if 0 == result:
@@ -75,7 +75,7 @@ def upload():
             else:
                 logging.info("result code: %d" % result)
             # Remove log
-            os.remove('{}/logs/{}.out'.format(filePath, x))
+            os.remove('{}/logs/{}'.format(filePath, x))
 
     # Shut down Raspberry Pi
     if shutdown == 1 or opt.preventShutdown != False:
