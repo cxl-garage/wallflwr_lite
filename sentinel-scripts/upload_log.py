@@ -45,14 +45,13 @@ def upload():
     file = pathlib.Path('{}/logs/fullLog.out'.format(filePath))
     # Check to see if the log exists as a error failsafe
 
+    # Get Device ID
+    f = open("../device.id", "r")
+    lines = f.readlines()
+    device_id = lines[0].rstrip()
+
     if file.exists():
         print("File exist")
-        # Get Device ID
-        f = open("../device.id", "r")
-        lines = f.readlines()
-        device_id = lines[0].rstrip()
-        logger.info(device_id)
-
         # Rename the log to current time
         dt_string = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
         logger.info(dt_string)
