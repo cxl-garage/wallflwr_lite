@@ -42,45 +42,42 @@ def upload():
     logger = logging.getLogger('upload_log')
     logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
     logging.info(shutdown)
-
-    # Check to see if the log exists as a error failsafe
     file = pathlib.Path('{}/logs/fullLog.out'.format(filePath))
-    file_list = os.listdir('{}/logs'.format(filePath))
-    for x in file_list:
-        print(x)
-    print(file_list)
-    # if file.exists():
-    #     print("File exist")
-    #     # Get Device ID
-    #     f = open("../device.id", "r")
-    #     lines = f.readlines()
-    #     device_id = lines[0].rstrip()
-    #     logger.info(device_id)
+    # Check to see if the log exists as a error failsafe
 
-    #     # Rename the log to current time
-    #     dt_string = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-    #     logger.info(dt_string)
-    #     os.rename('{}/logs/fullLog.out'.format(filePath),
-    #               '{}/logs/{}.out'.format(filePath, dt_string))
+    if file.exists():
+        print("File exist")
+        # Get Device ID
+        f = open("../device.id", "r")
+        lines = f.readlines()
+        device_id = lines[0].rstrip()
+        logger.info(device_id)
 
-    #     # Upload log if internet is connected
+        # Rename the log to current time
+        dt_string = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+        logger.info(dt_string)
+        os.rename('{}/logs/fullLog.out'.format(filePath),
+                  '{}/logs/{}.out'.format(filePath, dt_string))
 
-    #     # Get list of all files in log folder
-    #     # Iterate through them and upload them
+        # Upload log if internet is connected
+        if opt.wilderness != True:
+            # Get list of all files in log folder
+            file_list = os.listdir('{}/logs'.format(filePath))
+            # Iterate through them and upload them
+            for x in file_list:
+                logger.info('Uploading log')
+                query = 'gsutil -m cp -r -n "./logs/{}.out" "gs://insights-{}/logs/"'.format(
+                    x, device_id)
+                result = os.system(query)
+                if 0 == result:
+                    logging.info("upload complete")
+                else:
+                    logging.info("result code: %d" % result)
+                # Remove log
+                os.remove('{}/logs/{}.out'.format(filePath, x))
 
-    #     # if opt.wilderness != True:
-    #     #     logger.info('Uploading log')
-    #     #     query = 'gsutil -m cp -r -n "./logs/{}.out" "gs://insights-{}/logs/"'.format(
-    #     #         dt_string, device_id)
-    #     #     result = os.system(query)
-    #     #     if 0 == result:
-    #     #         logging.info("upload complete")
-    #     #     else:
-    #     #         logging.info("result code: %d" % result)
-    #     #     # Remove log
-    #     #     os.remove('{}/logs/{}.out'.format(filePath, dt_string))
-    # else:
-    #     print("File not exist")
+    else:
+        print("File not exist")
 
     # Shut down Raspberry Pi
     if shutdown == 1 or opt.preventShutdown != False:
