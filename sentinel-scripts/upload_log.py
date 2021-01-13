@@ -58,26 +58,25 @@ def upload():
         logger.info(dt_string)
         os.rename('{}/logs/fullLog.out'.format(filePath),
                   '{}/logs/{}.out'.format(filePath, dt_string))
-
-        # Upload log if internet is connected
-        if opt.wilderness != True:
-            # Get list of all files in log folder
-            file_list = os.listdir('{}/logs'.format(filePath))
-            # Iterate through them and upload them
-            for x in file_list:
-                logger.info('Uploading log')
-                query = 'gsutil -m cp -r -n "./logs/{}.out" "gs://insights-{}/logs/"'.format(
-                    x, device_id)
-                result = os.system(query)
-                if 0 == result:
-                    logging.info("upload complete")
-                else:
-                    logging.info("result code: %d" % result)
-                # Remove log
-                os.remove('{}/logs/{}.out'.format(filePath, x))
-
     else:
         print("File not exist")
+
+        # Upload log if internet is connected
+    if opt.wilderness != True:
+        # Get list of all files in log folder
+        file_list = os.listdir('{}/logs'.format(filePath))
+        # Iterate through them and upload them
+        for x in file_list:
+            logger.info('Uploading log')
+            query = 'gsutil -m cp -r -n "./logs/{}.out" "gs://insights-{}/logs/"'.format(
+                x, device_id)
+            result = os.system(query)
+            if 0 == result:
+                logging.info("upload complete")
+            else:
+                logging.info("result code: %d" % result)
+            # Remove log
+            os.remove('{}/logs/{}.out'.format(filePath, x))
 
     # Shut down Raspberry Pi
     if shutdown == 1 or opt.preventShutdown != False:
