@@ -46,6 +46,8 @@ def upload():
     # Check to see if the log exists as a error failsafe
     file = pathlib.Path('{}/logs/fullLog.out'.format(filePath))
     file_list = os.listdir('{}/logs'.format(filePath))
+    for x in file_list:
+        print(x)
     print(file_list)
     # if file.exists():
     #     print("File exist")
