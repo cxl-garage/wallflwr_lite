@@ -32,20 +32,20 @@ then
     #This while loop checks until the connection is made with the cloud SQL
     COUNTER2=0
     while [  $COUNTER2 -lt 60 ]; do
-        if [ $COUNTER2 -eq 60 ]
+        if [ $COUNTER2 -eq 59 ]
         then
             echo SQL Timed Out
             break 
         else
             let COUNTER2=COUNTER2+1 
-            sleep 1
+            sleep 2
             echo Connecting...
             
             # #This is just in case run.sh runs again with the proxy already running
             if grep -m1 'listen tcp 127.0.0.1:1234: bind: address already in use' < ./log.out;
             then
                 echo SQL Already Connected
-                let COUNTER2=99
+                let COUNTER2=999
                 break
             fi
 
@@ -53,7 +53,7 @@ then
             if grep -m1 'Ready for new connections' < ./log.out;
             then
                 echo SQL Connected
-                let COUNTER2=99
+                let COUNTER2=999
                 break
             fi
 
