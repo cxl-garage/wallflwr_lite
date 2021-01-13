@@ -44,6 +44,7 @@ then
         if [ $COUNTER2 -eq 59 ]
         then
             echo SQL Timed Out
+            let COUNTER2=999
             break 
         else
             let COUNTER2=COUNTER2+1 
