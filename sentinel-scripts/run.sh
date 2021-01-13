@@ -73,7 +73,7 @@ then
     #Run main.py
     python3 main.py 
     #Uploading and shutting down
-    python3 upload_log.py
+    python3 upload_log.py --preventShutdown
 else 
     python3 main.py --wilderness
     python3 upload_log.py --wilderness
