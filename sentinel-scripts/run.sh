@@ -13,18 +13,27 @@ trap 'exec 2>&4 1>&3' 0 1 2 3
 exec 1>logs/fullLog.out 2>&1
 
 
-#Ping until we have internet (it will try for 30 seconds)
+#Ping until we have internet (it will try for 30 seconds, INTERNET variable will determine if we are connected
 COUNTER=0
+INTERNET=0
 while [  $COUNTER -lt 3 ]; do
-    ping -c 1 8.8.8.8 && break
-    sleep 10
-    let COUNTER=COUNTER+1 
+    if ping -c 1 8.8.8.8
+    then
+        echo Internet Connected
+        let INTERNET=1 
+        let COUNTER=99 
+        break
+    else
+        sleep 10
+        let COUNTER=COUNTER+1 
+    fi
 done
-echo $COUNTER
+
+
 
 #If the device is connected to the internet, try to connect to the proxy
 #You may ask why this is so logic heavy, it is becuase I hate bash and had to do this convoluted way for it to work
-if [ $COUNTER -lt 3 ]
+if [ $INTERNET=1 ]
 then
     #This will start the cloud proxy ONLY if there is internet
     bash cloud_proxy.sh
@@ -60,11 +69,16 @@ then
         fi
         
     done
+    #Run main.py
+    python3 main.py 
+    #Uploading and shutting down
+    python3 upload_log.py
+else 
+    python3 main.py --wilderness
+    python3 upload_log.py --wilderness
+
 fi
 
-#Run the script 
-#ENHANCEMENT: If it is connected to the internet, skip the same process found in the main.py 
-python3 main.py 
 
-#Uploading and shutting down
-python3 upload_log.py
+
+
