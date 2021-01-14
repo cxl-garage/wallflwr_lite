@@ -25,6 +25,7 @@ import pandas as pd
 import requests
 import logging
 from git import Repo
+import glob
 
 # Checking if device has internet access
 
@@ -75,8 +76,8 @@ def initialize(opt):
         os.makedirs('../models')
     if not os.path.exists('../data/camera'):
         os.makedirs('../data/camera')
-    if not os.path.exists('../data/repo'):
-        os.makedirs('../data/repo')
+    if not os.path.exists('../data/results'):
+        os.makedirs('../data/results')
 
     # Check if device is connected to internet
     if connect() == True and opt.wilderness != True:
@@ -87,32 +88,35 @@ def initialize(opt):
         # Pull device info and write it to memory as a CSV
         cloud_db.device_info()
 
+        # Check local db is consistent with cloud
+        cloud_db.insight_check()
+
         # Pull latest master branch from git
-        # logger.info('Checking git for updates')
-        # repo = Repo('../')
-        # assert not repo.bare
-        # repo.remotes.origin.pull()
-        # if os.environ.get('release') == 'debug':
-        #     logger.info('In Debug mode, Git is manually controlled!')
-        # else:
-        #     k = 1
-        #     for tag in repo.tags:
-        #         if str(tag) == str(os.environ.get('release')):
-        #             checkout_tag = tag
-        #             checkout_commit = tag.commit.hexsha
-        #             if checkout_commit != repo.head.object.hexsha:
-        #                 repo.git.checkout(checkout_commit)
-        #                 logger.info('Checked out {} version (SHA: {})'.format(
-        #                     checkout_tag, checkout_commit))
-        #                 os.system('echo {} | sudo reboot'.format(
-        #                     os.environ.get('sudoPW')))
-        #             else:
-        #                 logger.info('Already up-to-date')
-        #             break
-        #         if k == len(repo.tags):
-        #             logger.error('Version not known')
-        #             commit_to_checkout = repo.head.object.hexsha
-        #         k = k + 1
+        logger.info('Checking git for updates')
+        repo = Repo('../')
+        assert not repo.bare
+        repo.remotes.origin.pull()
+        if os.environ.get('release') == 'debug' and opt.git != True:
+            logger.info('In Debug mode, Git is manually controlled!')
+        else:
+            k = 1
+            for tag in repo.tags:
+                if str(tag) == str(os.environ.get('release')):
+                    checkout_tag = tag
+                    checkout_commit = tag.commit.hexsha
+                    if checkout_commit != repo.head.object.hexsha:
+                        repo.git.checkout(checkout_commit)
+                        logger.info('Checked out {} version (SHA: {})'.format(
+                            checkout_tag, checkout_commit))
+                        os.system('echo {} | sudo reboot'.format(
+                            os.environ.get('sudoPW')))
+                    else:
+                        logger.info('Already up-to-date')
+                    break
+                if k == len(repo.tags):
+                    logger.error('Version not known')
+                    commit_to_checkout = repo.head.object.hexsha
+                k = k + 1
 
         cloud_data.check_bucket_exists()
         if opt.update_off == False:
@@ -122,7 +126,7 @@ def initialize(opt):
     else:
         logger.warning('Internet Connection not available')
         device_information = pd.read_csv('../_device_info.csv')
-        print('Device ID: {}'.format(str(device_information['device_id'][0])))
+        #print('Device ID: {}'.format(str(device_information['device_id'][0])))
         os.environ['device_name'] = str(device_information['device_name'][0])
         os.environ['cycle_time'] = str(device_information['cycle_time'][0])
         os.environ['sudoPW'] = 'endextinction'
@@ -154,14 +158,15 @@ def initialize(opt):
         while 1:
             m = 0
             while m < len(list_of_devices):
-                mount_command = 'sudo mount {} ../data/camera'.format(
-                    list_of_devices[m])
+                mount_command = 'sudo mount {} ../data/camera'.format(list_of_devices[m])
                 # logger.info(mount_command)
-                os.system(
-                    'echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), mount_command))
+                os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), mount_command))
                 if os.path.isdir('../data/camera/DCIM') == True:
                     logger.info('SD Card Mounted')
                     break
+                else:
+                    unmount_command = 'sudo umount ../data/camera'
+                    os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), unmount_command))
                 m = m + 1
             if k == 3:
                 logger.error('SD Card Not Found')
@@ -172,13 +177,13 @@ def initialize(opt):
                 time.sleep(1)
             k = k + 1
             time.sleep(1)
-        data_directory = '../data/camera/DCIM/{}'.format(
-            os.listdir('../data/camera/DCIM/')[0])
+
+        data_directory = '../data/camera/DCIM/'
     else:
         data_directory = '../data/test'
         logger.warning('Running in test mode')
     os.environ['data_directory'] = data_directory
-
+    logger.info('Data Directories: {}'.format(data_directory))
     return data_directory
 
 
@@ -192,10 +197,15 @@ def delete_files():
     k = 0
     while k < len(insights):
         try:
-            delete_command = 'sudo rm -f {}/{}'.format(
-                os.environ.get('data_directory'), insights['image_id'][k])
-            os.system(
-                'echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), delete_command))
+            #logger.info('Searching for file: {}'.format(insights['image_id'][k]))
+            file = glob.glob("{}/**/{}".format(os.environ.get('data_directory'), insights['image_id'][k]), recursive = True)
+            if len(file) != 0:
+                logger.info('Deleting File: {}'.format(insights['image_id'][k]))
+                delete_command = 'sudo rm -f {}'.format(file[0])
+                os.system(
+                    'echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), delete_command))
+            #else:
+                #logger.info('File not found')
         except Exception as e:
             logger.warning('Issue deleting file')
         k = k+1
@@ -214,7 +224,10 @@ def shutdown(cycle_time=5):
     import board
     from digitalio import DigitalInOut, Direction, Pull
 
-    # Pull the M0 Pin Low to keep the Pi on...
+    ### STEP 1
+
+
+    ## STEP 2: Defining sleep time
     shutdown_pin = DigitalInOut(board.D14)
     shutdown_pin.direction = Direction.OUTPUT
     # Pull the M0 Pin low to communicate sleep length...

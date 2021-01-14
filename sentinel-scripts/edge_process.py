@@ -80,10 +80,10 @@ def get_output_tensor(interpreter, index):
 
 def group_confidence_calculation():
     # Load csv
-    alg_df = pd.read_csv('../data/device_insights.csv')
+    insights = pd.read_csv('../data/device_insights.csv')
 
     # Drop existing calculated confidences
-    alg_df = alg_df.loc[~alg_df.index.isin(alg_df.dropna(subset=['group_confidence']).index)]
+    alg_df = insights.loc[~insights.index.isin(insights.dropna(subset=['group_confidence']).index)]
 
     # Find groups
     group_keys = alg_df.group_id.unique()
@@ -93,10 +93,8 @@ def group_confidence_calculation():
 
         # Segment the group we are working with
         group = alg_df.loc[alg_df['group_id'] == group_keys[k]]
-        print(group)
         # Dropping all blanks
         group = group[group['class_id'] != 99]
-        print(group)
         # Resetting index
         group = group.reset_index(drop=True)
 
@@ -118,14 +116,14 @@ def group_confidence_calculation():
         else:
             group_confidence = 0
         logger.info('Group {} Confidence: {}'.format(group_keys[k],group_confidence))
-        alg_df.loc[alg_df['group_id'] == group_keys[k],'group_confidence'] = group_confidence
+        insights.loc[insights['group_id'] == group_keys[k],'group_confidence'] = group_confidence
         k = k + 1
 
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
-    alg_df = alg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
+    insights = insights[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
 
     # Saving insights to local DB (just a .csv for now)
-    alg_df.to_csv('../data/device_insights.csv')
+    insights.to_csv('../data/device_insights.csv')
 
 ### Function to Save Cropped Images
 def bb_crop(data_directory, file, aoi, result, classes, results_directory, insight_id,class_names):
@@ -275,11 +273,9 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
             insight_id = int(k)
             # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
             time_stamp = datetime.datetime.fromtimestamp(os.path.getmtime('{}'.format(file_path)))
-            logger.info('TIME IS HEREEEE')
-            logger.info( time_stamp)
             # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
 
-            logger.info('File: {}, Class: {}, Confidence: {}'.format(file,class_names[0][classes],scores))
+            logger.info('File: {}, Time: {}, Class: {}, Confidence: {}'.format(file,time_stamp,class_names[0][classes],scores))
             #logger.info('Confidence: {}'.format(scores))
 
             ## Processing outputs into the correct format for pandas DF
@@ -383,20 +379,20 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         k = k + 1
 
 
-    x = 0
-    directories = [str(os.environ.get('data_directory'))]
+    directories = os.listdir(data_directory)
+    directories = [data_directory + x for x in directories]  #[str(os.environ.get('data_directory'))]
     # Loading in the algorithm directory from file
     alg_df = pd.read_csv('../data/device_insights.csv')
     tempalg_df= alg_df
 
-
+    logger.info('Directories: {}'.format(directories))
+    x = 0
     while x < len(directories):
         # Finding all files within the data directory
-
+        list_of_files = []
         original_directory_list = os.listdir(directories[x])
-
         logger.info('Checking Directory: {}'.format(directories[x]))
-        logger.info('Directory length: {}'.format(len(original_directory_list)))
+        logger.info('Directory Length: {}'.format(len(original_directory_list)))
         #Renaming the photos
         i = 0
         while i < len(original_directory_list):
@@ -436,9 +432,12 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             if k == 0:
                 try:
                     group_key = alg_df['group_id'].iloc[-1]+1
-                    logger.info(group_key)
+                    logger.info('Group ID: {}'.format(group_key))
                 except Exception as e:
                     group_key = 1
+            elif alg_df['group_id'].iloc[-1] == np.nan:
+                group_keys = alg_df.group_id.unique()
+                group_key = group_keys[-1] + 1
             #If the gap between photos after the first is smaller than 30 seconds, it is the same group
             elif (timeFile - timeFileBefore) < 30:
                 group_key = alg_df['group_id'].iloc[-1]
@@ -448,7 +447,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
 
             # Checking that the file hasn't already been processed by this algorithm
             if ((alg_df['alg_id'] == alg['alg_id'][0]) & (alg_df['image_id'] == file)).any():
-                logger.info('File already processed')
+                logger.info('{} already processed'.format(file))
                 k = k + 1
                 continue
             else:
@@ -466,7 +465,7 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                         # Appending the unique group key to the metadata
                         meta_df['group_id'] = group_key
                         # Appending to existing results from the while loop
-                        alg_df = alg_df.append(meta_df,ignore_index=True)
+                        alg_df = alg_df.append(meta_df,ignore_index=True,sort=True)
                         tempalg_df=alg_df
                     else:
                         logger.error('Type of algorithm not yet supported')

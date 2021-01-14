@@ -1,4 +1,4 @@
-device.name
+device.id
 models/
 data/
 sentinel-scripts/__pycache__

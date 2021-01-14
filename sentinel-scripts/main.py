@@ -8,7 +8,6 @@ This script is the main process that controls the Sentinel Device in the field
 """
 
 import argparse
-import requests
 parser = argparse.ArgumentParser()
 parser.add_argument('--test', action='store_true',
                     help='Use onboard test data rather than SD card')
@@ -29,12 +28,15 @@ parser.add_argument('--text', action='store_true',
                     help='Send text notification')
 parser.add_argument('--email', action='store_true',
                     help='Send email notification')
+parser.add_argument('--git', action='store_true',
+                    help='Pull git update')
 opt = parser.parse_args()
 
 # Checking if device has internet access
 
 
 def connect(url='http://www.google.com/', timeout=3):
+    import requests
     try:
         r = requests.head(url, timeout=timeout)
         return True
@@ -63,6 +65,7 @@ while 1:
         import time
         import lora
         #import desmodus_draculae
+        import requests
         import numpy as np
         import csv
         import shutil
@@ -81,7 +84,7 @@ while 1:
         except Exception as e:
             os.chdir("/home/mendel/wallflwr_lite/sentinel-scripts")
         if connect() == True and opt.wilderness != True:
-            os.system('pip3 install -r requirements.txt')
+            os.system('pip3 install -r ../requirements.txt')
         else:
             k = 2
     if k == 2:
@@ -107,12 +110,16 @@ while 1:
         logger.error('Critical Error!! Unable to install packages')
     k = k + 1
 
+list_of_files = []
+for path, subdirs, files in os.walk(data_directory):
+    for name in files:
+        list_of_files.append(os.path.join(path, name))
+
 if len(os.listdir(data_directory)) == 0:
     logger.warning('No files to process')
     data_directory = 'error'
 
 if data_directory != 'error':
-
     # Reading in information about algorithms that have to run on device
     primary_algs = pd.read_csv('../models/_primary_algs.txt')
     secondary_algs = pd.read_csv('../models/_secondary_algs.txt')
@@ -122,6 +129,7 @@ if data_directory != 'error':
 
     # Running loop of all algorithms that have to run on device
     k = 0
+    logger.info('{} algoroithms found'.format(len(primary_algs)))
     while k < len(primary_algs):
         primary_alg = primary_algs.iloc[[k]]
         logger.info('Model {} Starting'.format(primary_alg['alg_id'][0]))
@@ -136,7 +144,6 @@ if data_directory != 'error':
         # print('Insert outcome from secondary model:')# secondary_class, secondary_confidence)
 
         k = k+1
-
 
 edge_process.group_confidence_calculation()
 

@@ -244,6 +244,32 @@ def check_algs():
 #     os.environ['version'] = str(device_information['version'][0])
 
 
+### Download cloud insights (to check we are consistent)
+def insight_check():
+    logger.info('Checking consistency between cloud and device')
+    db_user = os.environ.get("DB_USER")
+    db_pass = os.environ.get("DB_PASS")
+    db_name = os.environ.get("DB_NAME")
+    db_ip   = os.environ.get("DB_PRIP")
+    cloud_sql_connection_name = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
+    URL = 'mysql+pymysql://{}:{}@{}/{}'.format(db_user,db_pass,db_ip,db_name)
+    engine = sqlalchemy.create_engine(URL, pool_size=5,max_overflow=2,pool_timeout=30,pool_recycle=1800,)
+    local_insights = pd.read_csv('../data/device_insights.csv')
+    local_insights.set_index('insight_id')
+    query = "SELECT * FROM insights WHERE device_id = \'{}\'".format(os.environ.get('device_id'))
+    cloud_insights = pd.read_sql(query,con=engine)
+    cloud_insights['committed_sql'] = 1
+    cloud_insights['committed_images'] = 0
+    cloud_insights['committed_lora'] = 1
+    cloud_insights.set_index('insight_id')
+    #print(cloud_insights)
+    insights = pd.concat([local_insights,cloud_insights])
+    insights = insights.drop_duplicates(subset=['insight_id'], keep='first')
+    insights = insights.sort_values(by=['insight_id'])
+    insights = insights[['committed_sql','committed_lora','committed_images','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id','group_confidence']]
+    print(insights)
+    insights.to_csv('../data/device_insights.csv')
+
 ### Upload insights captured on device to SQL DB
 def upload_insights():
     logger.info('Uploading Insights to SQL')
@@ -275,6 +301,7 @@ def upload_insights():
 
         # Changing the local db to reflect that these insights are now on the cloud
         insights.loc[:,'committed_sql'] = 1
+        insights.loc[:,'committed_lora'] = 1
         insights.to_csv('../data/device_insights.csv')
         logger.info('Successfully added to SQL')
     except Exception as e:

@@ -48,17 +48,17 @@ def main(attempts=1):
 	ttn_config = TTN(devaddr, nwkey, app, country='US')
 
 	lora = TinyLoRa(spi, cs, irq, rst, ttn_config)
-	print(insights)
-	logger.info(len(insights))
+#print(insights)
+	#logger.info(len(insights))
 	x =  insights[insights['committed_lora']!=True]
 	x = x.drop_duplicates(subset=['group_id'], keep='first')
 	x = x.reset_index()
-	logger.info(x)
+	#logger.info(x)
 	k = 0
 	if len(x) == 0:
 		logger.info('Nothing to send over LoRa')
 	while k < len(x):
-		if x['group_confidence'] != 0:
+		if x['group_confidence'][k] != 0:
 			try:
 				alg_id_1 = int(math.floor(x['alg_id'][k]/256))
 				alg_id_2 = int(x['alg_id'][k])%256
@@ -71,14 +71,14 @@ def main(attempts=1):
 				while m < attempts:
 					#print('Sending packet...')
 					lora.send_data(data, len(data), lora.frame_counter)
-					logger.info(data)
+					#logger.info(data)
 					#lora.frame_counter += 1
 					#time.sleep(5)
 					m = m + 1
 				time.sleep(0.5)
 				insights.loc[insights['group_id'] == x['group_id'][k],'committed_lora'] = True
 				insights.to_csv('../data/device_insights.csv')
-				logger.info('LoRa Packet Sent!')
+				logger.info('LoRa Packet Sent! (Algorithm: {}, Class ID: {}, Group Confidence {}, Insight ID: {})'.format(data[0]*256+data[1],data[2],data[3],data[4]*256+data[5]))
 			except Exception as e:
 				logger.error('Issue sending insight {}'.format(x['insight_id'][k]))
 		k = k + 1
