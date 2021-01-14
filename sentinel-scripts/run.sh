@@ -35,6 +35,7 @@ done
 #You may ask why this is so logic heavy, it is becuase I hate bash and had to do this convoluted way for it to work
 if [ $INTERNET=1 ]
 then
+    sudo timedatectl set-ntp true
     #This will start the cloud proxy ONLY if there is internet
     bash cloud_proxy.sh
 
