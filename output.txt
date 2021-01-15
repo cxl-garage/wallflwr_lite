@@ -1,0 +1,710 @@
+Collecting pandas
+  Using cached https://files.pythonhosted.org/packages/75/bc/abf2e8cc6a9d918008774b958613cfdbd3a8c135cffb0757f78fabd8268f/pandas-1.2.0.tar.gz
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'error'
+  Complete output from command /usr/bin/python3 -m pip install --ignore-installed --no-user --prefix /tmp/pip-build-env-1p9vdm64 --no-warn-script-location --no-binary :none: --only-binary :none: -i https://pypi.org/simple -- setuptools wheel Cython>=0.29.21,<3 "numpy==1.16.5; python_version=='3.7' and platform_system!='AIX'" "numpy==1.17.3; python_version=='3.8' and platform_system!='AIX'" "numpy==1.16.5; python_version=='3.7' and platform_system=='AIX'" "numpy==1.17.3; python_version=='3.8' and platform_system=='AIX'" "numpy; python_version>='3.9'":
+  Ignoring numpy: markers 'python_version == "3.8" and platform_system != "AIX"' don't match your environment
+  Ignoring numpy: markers 'python_version == "3.7" and platform_system == "AIX"' don't match your environment
+  Ignoring numpy: markers 'python_version == "3.8" and platform_system == "AIX"' don't match your environment
+  Ignoring numpy: markers 'python_version >= "3.9"' don't match your environment
+  Collecting setuptools
+    Using cached https://files.pythonhosted.org/packages/aa/d4/0089d680a610c7b5afda26c1ae588eb363b9050ccf5f33a8c2d1164210f3/setuptools-51.1.2-py3-none-any.whl
+  Collecting wheel
+    Using cached https://files.pythonhosted.org/packages/65/63/39d04c74222770ed1589c0eaba06c05891801219272420b40311cd60c880/wheel-0.36.2-py2.py3-none-any.whl
+  Collecting Cython<3,>=0.29.21
+    Using cached https://files.pythonhosted.org/packages/ad/4b/9e53bcce3c959fd0db143626e573210bba07be810fe8d7296373948c4183/Cython-0.29.21-py2.py3-none-any.whl
+  Collecting numpy==1.16.5
+    Using cached https://files.pythonhosted.org/packages/db/ec/93ddd4696e9cce0ffb8429516a8ba0d0ee95911cbbadde2d23665b62ad39/numpy-1.16.5.zip
+  Building wheels for collected packages: numpy
+    Running setup.py bdist_wheel for numpy: started
+    Running setup.py bdist_wheel for numpy: finished with status 'error'
+    Complete output from command /usr/bin/python3 -u -c "import setuptools, tokenize;__file__='/tmp/pip-install-3gyei4on/numpy/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" bdist_wheel -d /tmp/pip-wheel-xmnomf6i --python-tag cp37:
+    Running from numpy source directory.
+    blas_opt_info:
+    blas_mkl_info:
+    customize UnixCCompiler
+      libraries mkl_rt not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+      NOT AVAILABLE
+  
+    blis_info:
+    customize UnixCCompiler
+      libraries blis not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+      NOT AVAILABLE
+  
+    openblas_info:
+    customize UnixCCompiler
+    customize UnixCCompiler
+      libraries openblas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+      NOT AVAILABLE
+  
+    atlas_3_10_blas_threads_info:
+    Setting PTATLAS=ATLAS
+    customize UnixCCompiler
+      libraries tatlas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+      NOT AVAILABLE
+  
+    atlas_3_10_blas_info:
+    customize UnixCCompiler
+      libraries satlas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+      NOT AVAILABLE
+  
+    atlas_blas_threads_info:
+    Setting PTATLAS=ATLAS
+    customize UnixCCompiler
+      libraries ptf77blas,ptcblas,atlas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+      NOT AVAILABLE
+  
+    atlas_blas_info:
+    customize UnixCCompiler
+      libraries f77blas,cblas,atlas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+      NOT AVAILABLE
+  
+    accelerate_info:
+      NOT AVAILABLE
+  
+    /tmp/pip-install-3gyei4on/numpy/numpy/distutils/system_info.py:639: UserWarning:
+        Atlas (http://math-atlas.sourceforge.net/) libraries not found.
+        Directories to search for the libraries can be specified in the
+        numpy/distutils/site.cfg file (section [atlas]) or by setting
+        the ATLAS environment variable.
+      self.calc_info()
+    blas_info:
+    customize UnixCCompiler
+      libraries blas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+      NOT AVAILABLE
+  
+    /tmp/pip-install-3gyei4on/numpy/numpy/distutils/system_info.py:639: UserWarning:
+        Blas (http://www.netlib.org/blas/) libraries not found.
+        Directories to search for the libraries can be specified in the
+        numpy/distutils/site.cfg file (section [blas]) or by setting
+        the BLAS environment variable.
+      self.calc_info()
+    blas_src_info:
+      NOT AVAILABLE
+  
+    /tmp/pip-install-3gyei4on/numpy/numpy/distutils/system_info.py:639: UserWarning:
+        Blas (http://www.netlib.org/blas/) sources not found.
+        Directories to search for the sources can be specified in the
+        numpy/distutils/site.cfg file (section [blas_src]) or by setting
+        the BLAS_SRC environment variable.
+      self.calc_info()
+      NOT AVAILABLE
+  
+    /bin/sh: 1: svnversion: not found
+    non-existing path in 'numpy/distutils': 'site.cfg'
+    lapack_opt_info:
+    lapack_mkl_info:
+    customize UnixCCompiler
+      libraries mkl_rt not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+      NOT AVAILABLE
+  
+    openblas_lapack_info:
+    customize UnixCCompiler
+    customize UnixCCompiler
+      libraries openblas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+      NOT AVAILABLE
+  
+    openblas_clapack_info:
+    customize UnixCCompiler
+    customize UnixCCompiler
+      libraries openblas,lapack not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+      NOT AVAILABLE
+  
+    atlas_3_10_threads_info:
+    Setting PTATLAS=ATLAS
+    customize UnixCCompiler
+      libraries lapack_atlas not found in /usr/local/lib
+    customize UnixCCompiler
+      libraries tatlas,tatlas not found in /usr/local/lib
+    customize UnixCCompiler
+      libraries lapack_atlas not found in /usr/lib
+    customize UnixCCompiler
+      libraries tatlas,tatlas not found in /usr/lib
+    customize UnixCCompiler
+      libraries lapack_atlas not found in /usr/lib/aarch64-linux-gnu
+    customize UnixCCompiler
+      libraries tatlas,tatlas not found in /usr/lib/aarch64-linux-gnu
+    <class 'numpy.distutils.system_info.atlas_3_10_threads_info'>
+      NOT AVAILABLE
+  
+    atlas_3_10_info:
+    customize UnixCCompiler
+      libraries lapack_atlas not found in /usr/local/lib
+    customize UnixCCompiler
+      libraries satlas,satlas not found in /usr/local/lib
+    customize UnixCCompiler
+      libraries lapack_atlas not found in /usr/lib
+    customize UnixCCompiler
+      libraries satlas,satlas not found in /usr/lib
+    customize UnixCCompiler
+      libraries lapack_atlas not found in /usr/lib/aarch64-linux-gnu
+    customize UnixCCompiler
+      libraries satlas,satlas not found in /usr/lib/aarch64-linux-gnu
+    <class 'numpy.distutils.system_info.atlas_3_10_info'>
+      NOT AVAILABLE
+  
+    atlas_threads_info:
+    Setting PTATLAS=ATLAS
+    customize UnixCCompiler
+      libraries lapack_atlas not found in /usr/local/lib
+    customize UnixCCompiler
+      libraries ptf77blas,ptcblas,atlas not found in /usr/local/lib
+    customize UnixCCompiler
+      libraries lapack_atlas not found in /usr/lib
+    customize UnixCCompiler
+      libraries ptf77blas,ptcblas,atlas not found in /usr/lib
+    customize UnixCCompiler
+      libraries lapack_atlas not found in /usr/lib/aarch64-linux-gnu
+    customize UnixCCompiler
+      libraries ptf77blas,ptcblas,atlas not found in /usr/lib/aarch64-linux-gnu
+    <class 'numpy.distutils.system_info.atlas_threads_info'>
+      NOT AVAILABLE
+  
+    atlas_info:
+    customize UnixCCompiler
+      libraries lapack_atlas not found in /usr/local/lib
+    customize UnixCCompiler
+      libraries f77blas,cblas,atlas not found in /usr/local/lib
+    customize UnixCCompiler
+      libraries lapack_atlas not found in /usr/lib
+    customize UnixCCompiler
+      libraries f77blas,cblas,atlas not found in /usr/lib
+    customize UnixCCompiler
+      libraries lapack_atlas not found in /usr/lib/aarch64-linux-gnu
+    customize UnixCCompiler
+      libraries f77blas,cblas,atlas not found in /usr/lib/aarch64-linux-gnu
+    <class 'numpy.distutils.system_info.atlas_info'>
+      NOT AVAILABLE
+  
+    lapack_info:
+    customize UnixCCompiler
+      libraries lapack not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+      NOT AVAILABLE
+  
+    /tmp/pip-install-3gyei4on/numpy/numpy/distutils/system_info.py:639: UserWarning:
+        Lapack (http://www.netlib.org/lapack/) libraries not found.
+        Directories to search for the libraries can be specified in the
+        numpy/distutils/site.cfg file (section [lapack]) or by setting
+        the LAPACK environment variable.
+      self.calc_info()
+    lapack_src_info:
+      NOT AVAILABLE
+  
+    /tmp/pip-install-3gyei4on/numpy/numpy/distutils/system_info.py:639: UserWarning:
+        Lapack (http://www.netlib.org/lapack/) sources not found.
+        Directories to search for the sources can be specified in the
+        numpy/distutils/site.cfg file (section [lapack_src]) or by setting
+        the LAPACK_SRC environment variable.
+      self.calc_info()
+      NOT AVAILABLE
+  
+    /usr/lib/python3.7/distutils/dist.py:274: UserWarning: Unknown distribution option: 'define_macros'
+      warnings.warn(msg)
+    running bdist_wheel
+    running build
+    running config_cc
+    unifing config_cc, config, build_clib, build_ext, build commands --compiler options
+    running config_fc
+    unifing config_fc, config, build_clib, build_ext, build commands --fcompiler options
+    running build_src
+    build_src
+    building py_modules sources
+    creating build
+    creating build/src.linux-aarch64-3.7
+    creating build/src.linux-aarch64-3.7/numpy
+    creating build/src.linux-aarch64-3.7/numpy/distutils
+    building library "npymath" sources
+    get_default_fcompiler: matching types: '['gnu95', 'intel', 'lahey', 'pg', 'absoft', 'nag', 'vast', 'compaq', 'intele', 'intelem', 'gnu', 'g95', 'pathf95', 'nagfor']'
+    customize Gnu95FCompiler
+    Could not locate executable gfortran
+    Could not locate executable f95
+    customize IntelFCompiler
+    Could not locate executable ifort
+    Could not locate executable ifc
+    customize LaheyFCompiler
+    Could not locate executable lf95
+    customize PGroupFCompiler
+    Could not locate executable pgfortran
+    customize AbsoftFCompiler
+    Could not locate executable f90
+    Could not locate executable f77
+    customize NAGFCompiler
+    customize VastFCompiler
+    customize CompaqFCompiler
+    Could not locate executable fort
+    customize IntelItaniumFCompiler
+    Could not locate executable efort
+    Could not locate executable efc
+    customize IntelEM64TFCompiler
+    customize GnuFCompiler
+    Could not locate executable g77
+    customize G95FCompiler
+    Could not locate executable g95
+    customize PathScaleFCompiler
+    Could not locate executable pathf95
+    customize NAGFORCompiler
+    Could not locate executable nagfor
+    don't know how to compile Fortran code on platform 'posix'
+    C compiler: aarch64-linux-gnu-gcc -pthread -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC
+  
+    compile options: '-Inumpy/core/src/common -Inumpy/core/src -Inumpy/core -Inumpy/core/src/npymath -Inumpy/core/src/multiarray -Inumpy/core/src/umath -Inumpy/core/src/npysort -I/usr/include/python3.7m -c'
+    aarch64-linux-gnu-gcc: _configtest.c
+    aarch64-linux-gnu-gcc -pthread _configtest.o -o _configtest
+    success!
+    removing: _configtest.c _configtest.o _configtest.o.d _configtest
+    C compiler: aarch64-linux-gnu-gcc -pthread -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC
+  
+    compile options: '-Inumpy/core/src/common -Inumpy/core/src -Inumpy/core -Inumpy/core/src/npymath -Inumpy/core/src/multiarray -Inumpy/core/src/umath -Inumpy/core/src/npysort -I/usr/include/python3.7m -c'
+    aarch64-linux-gnu-gcc: _configtest.c
+    _configtest.c:1:5: warning: conflicting types for built-in function ‘exp’ [-Wbuiltin-declaration-mismatch]
+     int exp (void);
+         ^~~
+    aarch64-linux-gnu-gcc -pthread _configtest.o -o _configtest
+    /usr/bin/ld: _configtest.o: in function `main':
+    /tmp/pip-install-3gyei4on/numpy/_configtest.c:6: undefined reference to `exp'
+    collect2: error: ld returned 1 exit status
+    failure.
+    removing: _configtest.c _configtest.o _configtest.o.d
+    C compiler: aarch64-linux-gnu-gcc -pthread -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC
+  
+    compile options: '-Inumpy/core/src/common -Inumpy/core/src -Inumpy/core -Inumpy/core/src/npymath -Inumpy/core/src/multiarray -Inumpy/core/src/umath -Inumpy/core/src/npysort -I/usr/include/python3.7m -c'
+    aarch64-linux-gnu-gcc: _configtest.c
+    _configtest.c:1:5: warning: conflicting types for built-in function ‘exp’ [-Wbuiltin-declaration-mismatch]
+     int exp (void);
+         ^~~
+    aarch64-linux-gnu-gcc -pthread _configtest.o -lm -o _configtest
+    success!
+    removing: _configtest.c _configtest.o _configtest.o.d _configtest
+    creating build/src.linux-aarch64-3.7/numpy/core
+    creating build/src.linux-aarch64-3.7/numpy/core/src
+    creating build/src.linux-aarch64-3.7/numpy/core/src/npymath
+    conv_template:> build/src.linux-aarch64-3.7/numpy/core/src/npymath/npy_math_internal.h
+      adding 'build/src.linux-aarch64-3.7/numpy/core/src/npymath' to include_dirs.
+    conv_template:> build/src.linux-aarch64-3.7/numpy/core/src/npymath/ieee754.c
+    conv_template:> build/src.linux-aarch64-3.7/numpy/core/src/npymath/npy_math_complex.c
+    None - nothing done with h_files = ['build/src.linux-aarch64-3.7/numpy/core/src/npymath/npy_math_internal.h']
+    building library "npysort" sources
+    creating build/src.linux-aarch64-3.7/numpy/core/src/common
+    conv_template:> build/src.linux-aarch64-3.7/numpy/core/src/common/npy_sort.h
+      adding 'build/src.linux-aarch64-3.7/numpy/core/src/common' to include_dirs.
+    creating build/src.linux-aarch64-3.7/numpy/core/src/npysort
+    conv_template:> build/src.linux-aarch64-3.7/numpy/core/src/npysort/quicksort.c
+    conv_template:> build/src.linux-aarch64-3.7/numpy/core/src/npysort/mergesort.c
+    conv_template:> build/src.linux-aarch64-3.7/numpy/core/src/npysort/heapsort.c
+    conv_template:> build/src.linux-aarch64-3.7/numpy/core/src/common/npy_partition.h
+    conv_template:> build/src.linux-aarch64-3.7/numpy/core/src/npysort/selection.c
+    conv_template:> build/src.linux-aarch64-3.7/numpy/core/src/common/npy_binsearch.h
+    conv_template:> build/src.linux-aarch64-3.7/numpy/core/src/npysort/binsearch.c
+    None - nothing done with h_files = ['build/src.linux-aarch64-3.7/numpy/core/src/common/npy_sort.h', 'build/src.linux-aarch64-3.7/numpy/core/src/common/npy_partition.h', 'build/src.linux-aarch64-3.7/numpy/core/src/common/npy_binsearch.h']
+    building extension "numpy.core._dummy" sources
+    Generating build/src.linux-aarch64-3.7/numpy/core/include/numpy/config.h
+    C compiler: aarch64-linux-gnu-gcc -pthread -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC
+  
+    compile options: '-Inumpy/core/src/common -Inumpy/core/src -Inumpy/core -Inumpy/core/src/npymath -Inumpy/core/src/multiarray -Inumpy/core/src/umath -Inumpy/core/src/npysort -I/usr/include/python3.7m -c'
+    aarch64-linux-gnu-gcc: _configtest.c
+    _configtest.c:1:10: fatal error: Python.h: No such file or directory
+     #include <Python.h>
+              ^~~~~~~~~~
+    compilation terminated.
+    failure.
+    removing: _configtest.c _configtest.o
+    Traceback (most recent call last):
+      File "<string>", line 1, in <module>
+      File "/tmp/pip-install-3gyei4on/numpy/setup.py", line 419, in <module>
+        setup_package()
+      File "/tmp/pip-install-3gyei4on/numpy/setup.py", line 411, in setup_package
+        setup(**metadata)
+      File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/core.py", line 171, in setup
+        return old_setup(**new_attr)
+      File "/usr/lib/python3/dist-packages/setuptools/__init__.py", line 145, in setup
+        return distutils.core.setup(**attrs)
+      File "/usr/lib/python3.7/distutils/core.py", line 148, in setup
+        dist.run_commands()
+      File "/usr/lib/python3.7/distutils/dist.py", line 966, in run_commands
+        self.run_command(cmd)
+      File "/usr/lib/python3.7/distutils/dist.py", line 985, in run_command
+        cmd_obj.run()
+      File "/usr/lib/python3/dist-packages/wheel/bdist_wheel.py", line 188, in run
+        self.run_command('build')
+      File "/usr/lib/python3.7/distutils/cmd.py", line 313, in run_command
+        self.distribution.run_command(command)
+      File "/usr/lib/python3.7/distutils/dist.py", line 985, in run_command
+        cmd_obj.run()
+      File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/command/build.py", line 47, in run
+        old_build.run(self)
+      File "/usr/lib/python3.7/distutils/command/build.py", line 135, in run
+        self.run_command(cmd_name)
+      File "/usr/lib/python3.7/distutils/cmd.py", line 313, in run_command
+        self.distribution.run_command(command)
+      File "/usr/lib/python3.7/distutils/dist.py", line 985, in run_command
+        cmd_obj.run()
+      File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/command/build_src.py", line 148, in run
+        self.build_sources()
+      File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/command/build_src.py", line 165, in build_sources
+        self.build_extension_sources(ext)
+      File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/command/build_src.py", line 322, in build_extension_sources
+        sources = self.generate_sources(sources, ext)
+      File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/command/build_src.py", line 375, in generate_sources
+        source = func(extension, build_dir)
+      File "numpy/core/setup.py", line 423, in generate_config_h
+        moredefs, ignored = cocache.check_types(config_cmd, ext, build_dir)
+      File "numpy/core/setup.py", line 47, in check_types
+        out = check_types(*a, **kw)
+      File "numpy/core/setup.py", line 281, in check_types
+        "install {0}-dev|{0}-devel.".format(python))
+    SystemError: Cannot compile 'Python.h'. Perhaps you need to install python-dev|python-devel.
+  
+    ----------------------------------------
+    Failed building wheel for numpy
+    Running setup.py clean for numpy
+    Complete output from command /usr/bin/python3 -u -c "import setuptools, tokenize;__file__='/tmp/pip-install-3gyei4on/numpy/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" clean --all:
+    Running from numpy source directory.
+  
+    `setup.py clean` is not supported, use one of the following instead:
+  
+      - `git clean -xdf` (cleans all files)
+      - `git clean -Xdf` (cleans all versioned files, doesn't touch
+                          files that aren't checked into the git repo)
+  
+    Add `--force` to your command to use it anyway if you must (unsupported).
+  
+  
+    ----------------------------------------
+    Failed cleaning build dir for numpy
+  Failed to build numpy
+  Installing collected packages: setuptools, wheel, Cython, numpy
+    Running setup.py install for numpy: started
+      Running setup.py install for numpy: finished with status 'error'
+      Complete output from command /usr/bin/python3 -u -c "import setuptools, tokenize;__file__='/tmp/pip-install-3gyei4on/numpy/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" install --record /tmp/pip-record-5dkgfjy7/install-record.txt --single-version-externally-managed --prefix /tmp/pip-build-env-1p9vdm64 --compile:
+      Running from numpy source directory.
+  
+      Note: if you need reliable uninstall behavior, then install
+      with pip instead of using `setup.py install`:
+  
+        - `pip install .`       (from a git repo or downloaded source
+                                 release)
+        - `pip install numpy`   (last NumPy release on PyPi)
+  
+  
+      blas_opt_info:
+      blas_mkl_info:
+      customize UnixCCompiler
+        libraries mkl_rt not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+        NOT AVAILABLE
+  
+      blis_info:
+      customize UnixCCompiler
+        libraries blis not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+        NOT AVAILABLE
+  
+      openblas_info:
+      customize UnixCCompiler
+      customize UnixCCompiler
+        libraries openblas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+        NOT AVAILABLE
+  
+      atlas_3_10_blas_threads_info:
+      Setting PTATLAS=ATLAS
+      customize UnixCCompiler
+        libraries tatlas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+        NOT AVAILABLE
+  
+      atlas_3_10_blas_info:
+      customize UnixCCompiler
+        libraries satlas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+        NOT AVAILABLE
+  
+      atlas_blas_threads_info:
+      Setting PTATLAS=ATLAS
+      customize UnixCCompiler
+        libraries ptf77blas,ptcblas,atlas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+        NOT AVAILABLE
+  
+      atlas_blas_info:
+      customize UnixCCompiler
+        libraries f77blas,cblas,atlas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+        NOT AVAILABLE
+  
+      accelerate_info:
+        NOT AVAILABLE
+  
+      /tmp/pip-install-3gyei4on/numpy/numpy/distutils/system_info.py:639: UserWarning:
+          Atlas (http://math-atlas.sourceforge.net/) libraries not found.
+          Directories to search for the libraries can be specified in the
+          numpy/distutils/site.cfg file (section [atlas]) or by setting
+          the ATLAS environment variable.
+        self.calc_info()
+      blas_info:
+      customize UnixCCompiler
+        libraries blas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+        NOT AVAILABLE
+  
+      /tmp/pip-install-3gyei4on/numpy/numpy/distutils/system_info.py:639: UserWarning:
+          Blas (http://www.netlib.org/blas/) libraries not found.
+          Directories to search for the libraries can be specified in the
+          numpy/distutils/site.cfg file (section [blas]) or by setting
+          the BLAS environment variable.
+        self.calc_info()
+      blas_src_info:
+        NOT AVAILABLE
+  
+      /tmp/pip-install-3gyei4on/numpy/numpy/distutils/system_info.py:639: UserWarning:
+          Blas (http://www.netlib.org/blas/) sources not found.
+          Directories to search for the sources can be specified in the
+          numpy/distutils/site.cfg file (section [blas_src]) or by setting
+          the BLAS_SRC environment variable.
+        self.calc_info()
+        NOT AVAILABLE
+  
+      /bin/sh: 1: svnversion: not found
+      non-existing path in 'numpy/distutils': 'site.cfg'
+      lapack_opt_info:
+      lapack_mkl_info:
+      customize UnixCCompiler
+        libraries mkl_rt not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+        NOT AVAILABLE
+  
+      openblas_lapack_info:
+      customize UnixCCompiler
+      customize UnixCCompiler
+        libraries openblas not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+        NOT AVAILABLE
+  
+      openblas_clapack_info:
+      customize UnixCCompiler
+      customize UnixCCompiler
+        libraries openblas,lapack not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+        NOT AVAILABLE
+  
+      atlas_3_10_threads_info:
+      Setting PTATLAS=ATLAS
+      customize UnixCCompiler
+        libraries lapack_atlas not found in /usr/local/lib
+      customize UnixCCompiler
+        libraries tatlas,tatlas not found in /usr/local/lib
+      customize UnixCCompiler
+        libraries lapack_atlas not found in /usr/lib
+      customize UnixCCompiler
+        libraries tatlas,tatlas not found in /usr/lib
+      customize UnixCCompiler
+        libraries lapack_atlas not found in /usr/lib/aarch64-linux-gnu
+      customize UnixCCompiler
+        libraries tatlas,tatlas not found in /usr/lib/aarch64-linux-gnu
+      <class 'numpy.distutils.system_info.atlas_3_10_threads_info'>
+        NOT AVAILABLE
+  
+      atlas_3_10_info:
+      customize UnixCCompiler
+        libraries lapack_atlas not found in /usr/local/lib
+      customize UnixCCompiler
+        libraries satlas,satlas not found in /usr/local/lib
+      customize UnixCCompiler
+        libraries lapack_atlas not found in /usr/lib
+      customize UnixCCompiler
+        libraries satlas,satlas not found in /usr/lib
+      customize UnixCCompiler
+        libraries lapack_atlas not found in /usr/lib/aarch64-linux-gnu
+      customize UnixCCompiler
+        libraries satlas,satlas not found in /usr/lib/aarch64-linux-gnu
+      <class 'numpy.distutils.system_info.atlas_3_10_info'>
+        NOT AVAILABLE
+  
+      atlas_threads_info:
+      Setting PTATLAS=ATLAS
+      customize UnixCCompiler
+        libraries lapack_atlas not found in /usr/local/lib
+      customize UnixCCompiler
+        libraries ptf77blas,ptcblas,atlas not found in /usr/local/lib
+      customize UnixCCompiler
+        libraries lapack_atlas not found in /usr/lib
+      customize UnixCCompiler
+        libraries ptf77blas,ptcblas,atlas not found in /usr/lib
+      customize UnixCCompiler
+        libraries lapack_atlas not found in /usr/lib/aarch64-linux-gnu
+      customize UnixCCompiler
+        libraries ptf77blas,ptcblas,atlas not found in /usr/lib/aarch64-linux-gnu
+      <class 'numpy.distutils.system_info.atlas_threads_info'>
+        NOT AVAILABLE
+  
+      atlas_info:
+      customize UnixCCompiler
+        libraries lapack_atlas not found in /usr/local/lib
+      customize UnixCCompiler
+        libraries f77blas,cblas,atlas not found in /usr/local/lib
+      customize UnixCCompiler
+        libraries lapack_atlas not found in /usr/lib
+      customize UnixCCompiler
+        libraries f77blas,cblas,atlas not found in /usr/lib
+      customize UnixCCompiler
+        libraries lapack_atlas not found in /usr/lib/aarch64-linux-gnu
+      customize UnixCCompiler
+        libraries f77blas,cblas,atlas not found in /usr/lib/aarch64-linux-gnu
+      <class 'numpy.distutils.system_info.atlas_info'>
+        NOT AVAILABLE
+  
+      lapack_info:
+      customize UnixCCompiler
+        libraries lapack not found in ['/usr/local/lib', '/usr/lib', '/usr/lib/aarch64-linux-gnu']
+        NOT AVAILABLE
+  
+      /tmp/pip-install-3gyei4on/numpy/numpy/distutils/system_info.py:639: UserWarning:
+          Lapack (http://www.netlib.org/lapack/) libraries not found.
+          Directories to search for the libraries can be specified in the
+          numpy/distutils/site.cfg file (section [lapack]) or by setting
+          the LAPACK environment variable.
+        self.calc_info()
+      lapack_src_info:
+        NOT AVAILABLE
+  
+      /tmp/pip-install-3gyei4on/numpy/numpy/distutils/system_info.py:639: UserWarning:
+          Lapack (http://www.netlib.org/lapack/) sources not found.
+          Directories to search for the sources can be specified in the
+          numpy/distutils/site.cfg file (section [lapack_src]) or by setting
+          the LAPACK_SRC environment variable.
+        self.calc_info()
+        NOT AVAILABLE
+  
+      /usr/lib/python3.7/distutils/dist.py:274: UserWarning: Unknown distribution option: 'define_macros'
+        warnings.warn(msg)
+      running install
+      running build
+      running config_cc
+      unifing config_cc, config, build_clib, build_ext, build commands --compiler options
+      running config_fc
+      unifing config_fc, config, build_clib, build_ext, build commands --fcompiler options
+      running build_src
+      build_src
+      building py_modules sources
+      building library "npymath" sources
+      get_default_fcompiler: matching types: '['gnu95', 'intel', 'lahey', 'pg', 'absoft', 'nag', 'vast', 'compaq', 'intele', 'intelem', 'gnu', 'g95', 'pathf95', 'nagfor']'
+      customize Gnu95FCompiler
+      Could not locate executable gfortran
+      Could not locate executable f95
+      customize IntelFCompiler
+      Could not locate executable ifort
+      Could not locate executable ifc
+      customize LaheyFCompiler
+      Could not locate executable lf95
+      customize PGroupFCompiler
+      Could not locate executable pgfortran
+      customize AbsoftFCompiler
+      Could not locate executable f90
+      Could not locate executable f77
+      customize NAGFCompiler
+      customize VastFCompiler
+      customize CompaqFCompiler
+      Could not locate executable fort
+      customize IntelItaniumFCompiler
+      Could not locate executable efort
+      Could not locate executable efc
+      customize IntelEM64TFCompiler
+      customize GnuFCompiler
+      Could not locate executable g77
+      customize G95FCompiler
+      Could not locate executable g95
+      customize PathScaleFCompiler
+      Could not locate executable pathf95
+      customize NAGFORCompiler
+      Could not locate executable nagfor
+      don't know how to compile Fortran code on platform 'posix'
+      C compiler: aarch64-linux-gnu-gcc -pthread -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC
+  
+      compile options: '-Inumpy/core/src/common -Inumpy/core/src -Inumpy/core -Inumpy/core/src/npymath -Inumpy/core/src/multiarray -Inumpy/core/src/umath -Inumpy/core/src/npysort -I/usr/include/python3.7m -c'
+      aarch64-linux-gnu-gcc: _configtest.c
+      aarch64-linux-gnu-gcc -pthread _configtest.o -o _configtest
+      success!
+      removing: _configtest.c _configtest.o _configtest.o.d _configtest
+      C compiler: aarch64-linux-gnu-gcc -pthread -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC
+  
+      compile options: '-Inumpy/core/src/common -Inumpy/core/src -Inumpy/core -Inumpy/core/src/npymath -Inumpy/core/src/multiarray -Inumpy/core/src/umath -Inumpy/core/src/npysort -I/usr/include/python3.7m -c'
+      aarch64-linux-gnu-gcc: _configtest.c
+      _configtest.c:1:5: warning: conflicting types for built-in function ‘exp’ [-Wbuiltin-declaration-mismatch]
+       int exp (void);
+           ^~~
+      aarch64-linux-gnu-gcc -pthread _configtest.o -o _configtest
+      /usr/bin/ld: _configtest.o: in function `main':
+      /tmp/pip-install-3gyei4on/numpy/_configtest.c:6: undefined reference to `exp'
+      collect2: error: ld returned 1 exit status
+      failure.
+      removing: _configtest.c _configtest.o _configtest.o.d
+      C compiler: aarch64-linux-gnu-gcc -pthread -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC
+  
+      compile options: '-Inumpy/core/src/common -Inumpy/core/src -Inumpy/core -Inumpy/core/src/npymath -Inumpy/core/src/multiarray -Inumpy/core/src/umath -Inumpy/core/src/npysort -I/usr/include/python3.7m -c'
+      aarch64-linux-gnu-gcc: _configtest.c
+      _configtest.c:1:5: warning: conflicting types for built-in function ‘exp’ [-Wbuiltin-declaration-mismatch]
+       int exp (void);
+           ^~~
+      aarch64-linux-gnu-gcc -pthread _configtest.o -lm -o _configtest
+      success!
+      removing: _configtest.c _configtest.o _configtest.o.d _configtest
+        adding 'build/src.linux-aarch64-3.7/numpy/core/src/npymath' to include_dirs.
+      None - nothing done with h_files = ['build/src.linux-aarch64-3.7/numpy/core/src/npymath/npy_math_internal.h']
+      building library "npysort" sources
+        adding 'build/src.linux-aarch64-3.7/numpy/core/src/common' to include_dirs.
+      None - nothing done with h_files = ['build/src.linux-aarch64-3.7/numpy/core/src/common/npy_sort.h', 'build/src.linux-aarch64-3.7/numpy/core/src/common/npy_partition.h', 'build/src.linux-aarch64-3.7/numpy/core/src/common/npy_binsearch.h']
+      building extension "numpy.core._dummy" sources
+      Generating build/src.linux-aarch64-3.7/numpy/core/include/numpy/config.h
+      C compiler: aarch64-linux-gnu-gcc -pthread -DNDEBUG -g -fwrapv -O2 -Wall -g -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -fPIC
+  
+      compile options: '-Inumpy/core/src/common -Inumpy/core/src -Inumpy/core -Inumpy/core/src/npymath -Inumpy/core/src/multiarray -Inumpy/core/src/umath -Inumpy/core/src/npysort -I/usr/include/python3.7m -c'
+      aarch64-linux-gnu-gcc: _configtest.c
+      _configtest.c:1:10: fatal error: Python.h: No such file or directory
+       #include <Python.h>
+                ^~~~~~~~~~
+      compilation terminated.
+      failure.
+      removing: _configtest.c _configtest.o
+      Traceback (most recent call last):
+        File "<string>", line 1, in <module>
+        File "/tmp/pip-install-3gyei4on/numpy/setup.py", line 419, in <module>
+          setup_package()
+        File "/tmp/pip-install-3gyei4on/numpy/setup.py", line 411, in setup_package
+          setup(**metadata)
+        File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/core.py", line 171, in setup
+          return old_setup(**new_attr)
+        File "/usr/lib/python3/dist-packages/setuptools/__init__.py", line 145, in setup
+          return distutils.core.setup(**attrs)
+        File "/usr/lib/python3.7/distutils/core.py", line 148, in setup
+          dist.run_commands()
+        File "/usr/lib/python3.7/distutils/dist.py", line 966, in run_commands
+          self.run_command(cmd)
+        File "/usr/lib/python3.7/distutils/dist.py", line 985, in run_command
+          cmd_obj.run()
+        File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/command/install.py", line 62, in run
+          r = self.setuptools_run()
+        File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/command/install.py", line 36, in setuptools_run
+          return distutils_install.run(self)
+        File "/usr/lib/python3.7/distutils/command/install.py", line 589, in run
+          self.run_command('build')
+        File "/usr/lib/python3.7/distutils/cmd.py", line 313, in run_command
+          self.distribution.run_command(command)
+        File "/usr/lib/python3.7/distutils/dist.py", line 985, in run_command
+          cmd_obj.run()
+        File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/command/build.py", line 47, in run
+          old_build.run(self)
+        File "/usr/lib/python3.7/distutils/command/build.py", line 135, in run
+          self.run_command(cmd_name)
+        File "/usr/lib/python3.7/distutils/cmd.py", line 313, in run_command
+          self.distribution.run_command(command)
+        File "/usr/lib/python3.7/distutils/dist.py", line 985, in run_command
+          cmd_obj.run()
+        File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/command/build_src.py", line 148, in run
+          self.build_sources()
+        File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/command/build_src.py", line 165, in build_sources
+          self.build_extension_sources(ext)
+        File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/command/build_src.py", line 322, in build_extension_sources
+          sources = self.generate_sources(sources, ext)
+        File "/tmp/pip-install-3gyei4on/numpy/numpy/distutils/command/build_src.py", line 375, in generate_sources
+          source = func(extension, build_dir)
+        File "numpy/core/setup.py", line 423, in generate_config_h
+          moredefs, ignored = cocache.check_types(config_cmd, ext, build_dir)
+        File "numpy/core/setup.py", line 47, in check_types
+          out = check_types(*a, **kw)
+        File "numpy/core/setup.py", line 281, in check_types
+          "install {0}-dev|{0}-devel.".format(python))
+      SystemError: Cannot compile 'Python.h'. Perhaps you need to install python-dev|python-devel.
+  
+      ----------------------------------------
+  Command "/usr/bin/python3 -u -c "import setuptools, tokenize;__file__='/tmp/pip-install-3gyei4on/numpy/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" install --record /tmp/pip-record-5dkgfjy7/install-record.txt --single-version-externally-managed --prefix /tmp/pip-build-env-1p9vdm64 --compile" failed with error code 1 in /tmp/pip-install-3gyei4on/numpy/
+  
+  ----------------------------------------
