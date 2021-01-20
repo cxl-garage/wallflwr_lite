@@ -1,5 +1,21 @@
-1##### Tyto AI: Conservation X Labs   #####
-## Author: Sam Kelly
+import utils
+from PIL import ImageChops
+import pandas as pd
+import cloud_data
+import shutil
+import sys
+import datetime as dt
+import re
+import csv
+from PIL import Image
+import os
+import numpy as np
+import time
+import argparse
+import datetime
+import logging
+1  # Tyto AI: Conservation X Labs   #####
+# Author: Sam Kelly
 
 # This code is currently proprietary, further licensing will be decided in the near future
 
@@ -8,19 +24,7 @@ This script processes data, and transforms the metadata into correct format for 
 """
 
 
-import logging
 logger = logging.getLogger('cnn')
-import datetime
-import argparse
-import time
-import numpy as np
-import os
-from PIL import Image
-import csv
-import re
-import datetime as dt
-import sys
-import shutil
 if os.environ.get('version').startswith('0'):
     import edgetpu
     from edgetpu.detection.engine import DetectionEngine
@@ -29,61 +33,63 @@ elif os.environ.get('version').startswith('1'):
     from pycoral.adapters import detect
     from pycoral.utils.dataset import read_label_file
     from pycoral.utils.edgetpu import make_interpreter
-import cloud_data
-import pandas as pd
-from PIL import Image
-from PIL import ImageChops
-import utils
-
 
 
 # Allows for localized training. Still in Development (CODE FROM GOOGLE UNDER APACHE 2.0)
-def do_training(results,last_results,top_k):
+def do_training(results, last_results, top_k):
     """Compares current model results to previous results and returns
     true if at least one label difference is detected. Used to collect
     images for training a custom model."""
     new_labels = [label[0] for label in results]
     old_labels = [label[0] for label in last_results]
-    shared_labels  = set(new_labels).intersection(old_labels)
+    shared_labels = set(new_labels).intersection(old_labels)
     if len(shared_labels) < top_k:
-      print('Difference detected')
-      return True
+        print('Difference detected')
+        return True
 
 # Util function from Google
+
+
 def load_labels(path):
-  """Loads the labels file. Supports files with or without index numbers."""
-  with open(path, 'r', encoding='utf-8') as f:
-    lines = f.readlines()
-    labels = {}
-    for row_number, content in enumerate(lines):
-      pair = re.split(r'[:\s]+', content.strip(), maxsplit=1)
-      if len(pair) == 2 and pair[0].strip().isdigit():
-        labels[int(pair[0])] = pair[1].strip()
-      else:
-        labels[row_number] = pair[0].strip()
-  return labels
+    """Loads the labels file. Supports files with or without index numbers."""
+    with open(path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        labels = {}
+        for row_number, content in enumerate(lines):
+            pair = re.split(r'[:\s]+', content.strip(), maxsplit=1)
+            if len(pair) == 2 and pair[0].strip().isdigit():
+                labels[int(pair[0])] = pair[1].strip()
+            else:
+                labels[row_number] = pair[0].strip()
+    return labels
 
 # Util function from Google
+
+
 def set_input_tensor(interpreter, image):
-  """Sets the input tensor."""
-  print('Interpreter:', interpreter)
-  tensor_index = interpreter.get_input_details()[0]['index']
-  input_tensor = interpreter.tensor(tensor_index)()[0]
-  input_tensor[:, :] = image
+    """Sets the input tensor."""
+    print('Interpreter:', interpreter)
+    tensor_index = interpreter.get_input_details()[0]['index']
+    input_tensor = interpreter.tensor(tensor_index)()[0]
+    input_tensor[:, :] = image
 
 # Util function from Google
+
+
 def get_output_tensor(interpreter, index):
-  """Returns the output tensor at the given index."""
-  output_details = interpreter.get_output_details()[index]
-  tensor = np.squeeze(interpreter.get_tensor(output_details['index']))
-  return tensor
+    """Returns the output tensor at the given index."""
+    output_details = interpreter.get_output_details()[index]
+    tensor = np.squeeze(interpreter.get_tensor(output_details['index']))
+    return tensor
+
 
 def group_confidence_calculation():
     # Load csv
     insights = pd.read_csv('../data/device_insights.csv')
 
     # Drop existing calculated confidences
-    alg_df = insights.loc[~insights.index.isin(insights.dropna(subset=['group_confidence']).index)]
+    alg_df = insights.loc[~insights.index.isin(
+        insights.dropna(subset=['group_confidence']).index)]
 
     # Find groups
     group_keys = alg_df.group_id.unique()
@@ -98,37 +104,42 @@ def group_confidence_calculation():
         # Resetting index
         group = group.reset_index(drop=True)
 
-
-        ### Scenario 1: No recorded classes
+        # Scenario 1: No recorded classes
         if len(group) == 0:
             group_confidence = 0
 
-        ### Scenario 2: Single Animal Class Detected within Group
+        # Scenario 2: Single Animal Class Detected within Group
         ##  Loop: (1-previous_confidence)*current_confidence
         elif len(group.class_id.unique()) == 1:
             group_confidence = 0
             m = 0
             while m < len(group):
-                group_confidence = group_confidence + (1-group_confidence)*group['confidence'][m]
+                group_confidence = group_confidence + \
+                    (1-group_confidence)*group['confidence'][m]
                 m = m + 1
 
-        ### Scenario 3: Multiple Animal Classes Detected within Group
+        # Scenario 3: Multiple Animal Classes Detected within Group
         else:
             group_confidence = 0
-        logger.info('Group {} Confidence: {}'.format(group_keys[k],group_confidence))
-        insights.loc[insights['group_id'] == group_keys[k],'group_confidence'] = group_confidence
+        logger.info('Group {} Confidence: {}'.format(
+            group_keys[k], group_confidence))
+        insights.loc[insights['group_id'] == group_keys[k],
+                     'group_confidence'] = group_confidence
         k = k + 1
 
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
-    insights = insights[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
+    insights = insights[['committed_sql', 'committed_images', 'committed_lora', 'insight_id', 'alg_id', 'time_stamp', 'class_id',
+                         'class', 'confidence', 'image_id', 'x_min', 'y_min', 'x_max', 'y_max', 'device_id', 'group_id', 'group_confidence']]
 
     # Saving insights to local DB (just a .csv for now)
     insights.to_csv('../data/device_insights.csv')
 
-### Function to Save Cropped Images
-def bb_crop(data_directory, file, aoi, result, classes, results_directory, insight_id,class_names):
+# Function to Save Cropped Images
 
-    ## Checking that the directory exists, and creating it if it doesn't
+
+def bb_crop(data_directory, file, aoi, result, classes, results_directory, insight_id, class_names):
+
+    # Checking that the directory exists, and creating it if it doesn't
     if not os.path.exists('{}'.format(data_directory)):
         os.makedirs('{}'.format(data_directory))
 
@@ -136,7 +147,7 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, insig
     crop_buffer = .15
 
     # open image
-    file_path = os.path.join(data_directory,file)
+    file_path = os.path.join(data_directory, file)
     im = Image.open(file_path)
 
     # Make sure image is in RGB format
@@ -150,7 +161,7 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, insig
     im.save(filename)
 
     # make sure bounding boxes are within bounds of image
-    #for j in range(0,4) :
+    # for j in range(0,4) :
     #    if aoi[j] >= .50 :
     #        aoi[j] = aoi[j] + crop_buffer
     #    else :
@@ -163,38 +174,41 @@ def bb_crop(data_directory, file, aoi, result, classes, results_directory, insig
     top = int(aoi[1] * im_height)
     right = int(aoi[2] * im_width)
     bottom = int(aoi[3] * im_height)
-    #logging.info([left,top,right,bottom])
+    # logging.info([left,top,right,bottom])
     height = bottom-top
     width = right-left
     # Saving image to file if the bounded box is sufficiently big
-    if height > 15 and width > 15 :
+    if height > 15 and width > 15:
         # this is all some funkiness to reshape everything to a pretty square without distorting (good for gui.py)
         #height = bottom-top
         #width =  right - left
         #cropped_im = im.crop((left, top, right, bottom))
         if height < width:
-            cropped_im = im.crop((left, (top+height/2)-(width/2), right, (top+height/2)+(width/2)))
+            cropped_im = im.crop(
+                (left, (top+height/2)-(width/2), right, (top+height/2)+(width/2)))
         if width <= height:
-            cropped_im = im.crop(((left+(width/2))-(height/2), top, (left+(width/2))+(height/2), bottom))
-        cropped_im = cropped_im.resize((150,150))
+            cropped_im = im.crop(
+                ((left+(width/2))-(height/2), top, (left+(width/2))+(height/2), bottom))
+        cropped_im = cropped_im.resize((150, 150))
 
         # Checking saving directory exists, and making it if necessary
-        if not os.path.exists('{}/{}/'.format(results_directory,class_names[0][classes])):
-            os.makedirs('{}/{}/'.format(results_directory,class_names[0][classes]))
+        if not os.path.exists('{}/{}/'.format(results_directory, class_names[0][classes])):
+            os.makedirs('{}/{}/'.format(results_directory,
+                                        class_names[0][classes]))
 
         # Saving the cropped image
-        filename = '{}/{}/{}.jpeg'.format(results_directory, class_names[0][classes],int(insight_id))
+        filename = '{}/{}/{}.jpeg'.format(results_directory,
+                                          class_names[0][classes], int(insight_id))
         cropped_im = cropped_im.save(filename)
-    else :
+    else:
         logger.error('ERROR: Bounded box is not large enough')
 
 
-
-### Function to actually process images with Tensorflow Lite on the Coral
-def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, threshold, results_directory,class_names):
+# Function to actually process images with Tensorflow Lite on the Coral
+def tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, data_directory, file, threshold, results_directory, class_names):
 
     # Define the file to be processed
-    file_path = os.path.join(data_directory,file)
+    file_path = os.path.join(data_directory, file)
 
     # Set up timer to check open time
     tic = time.process_time()
@@ -202,13 +216,14 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
     # Initalize a dataframe to save metadata to
     meta_df = pd.DataFrame()
 
-
     try:
         # Attempt to open the image and resize it to correct size.
         if os.environ.get('version').startswith('1'):
-            current_file = Image.open(file_path) #.resize((cnn_h, cnn_w), Image.NEAREST)
+            # .resize((cnn_h, cnn_w), Image.NEAREST)
+            current_file = Image.open(file_path)
         if os.environ.get('version').startswith('0'):
-            current_file = Image.open(file_path).resize((cnn_h,cnn_w), Image.NEAREST)
+            current_file = Image.open(file_path).resize(
+                (cnn_h, cnn_w), Image.NEAREST)
         # Make sure image is in RGB format
         if current_file.mode != 'RGB':
             current_file = current_file.convert('RGB')
@@ -217,15 +232,16 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
     except Exception as e:
         logger.error('Issue opening {}'.format(file_path))
         delete_command = 'sudo rm -f {}'.format(file_path)
-        os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), delete_command))
+        os.system(
+            'echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), delete_command))
         return meta_df
     if os.environ.get('version').startswith('0'):
         width, height = current_file.size
     if os.environ.get('version').startswith('1'):
-        _, scale = common.set_resized_input(interpreter, current_file.size, lambda size: current_file.resize(size, Image.ANTIALIAS))
+        _, scale = common.set_resized_input(
+            interpreter, current_file.size, lambda size: current_file.resize(size, Image.ANTIALIAS))
     toc = time.process_time()
     #logger.info('Time to resize image: {} seconds'.format(toc - tic))
-
 
     # Set up timer to check processing time
     tic = time.process_time()
@@ -233,9 +249,11 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
     # Run Tensorflow Lite on the Image
     if os.environ.get('version').startswith('1'):
         interpreter.invoke()
-        ans = detect.get_objects(interpreter,threshold,scale) #athreshold,keep_aspect_ratio =True, relative_coord=True,top_k=1)
+        # athreshold,keep_aspect_ratio =True, relative_coord=True,top_k=1)
+        ans = detect.get_objects(interpreter, threshold, scale)
     if os.environ.get('version').startswith('0'):
-        ans = interpreter.DetectWithImage(current_file,threshold=threshold,keep_aspect_ratio = True, relative_coord=True,top_k=1)
+        ans = interpreter.DetectWithImage(
+            current_file, threshold=threshold, keep_aspect_ratio=True, relative_coord=True, top_k=1)
     toc = time.process_time()
 
     #logger.info('Time to run algorithm: {} seconds'.format(toc - tic))
@@ -264,7 +282,8 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
 
             if os.environ.get('version').startswith('1'):
                 boxes = obj.bbox
-                boxes = [boxes[0]/width,boxes[1]/height,boxes[2]/width,boxes[3]/height]
+                boxes = [boxes[0]/width, boxes[1]/height,
+                         boxes[2]/width, boxes[3]/height]
                 classes = obj.id
             if os.environ.get('version').startswith('0'):
                 boxes = obj.bounding_box.flatten()
@@ -272,31 +291,35 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
             scores = obj.score
             insight_id = int(k)
             # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-            time_stamp = datetime.datetime.fromtimestamp(os.path.getmtime('{}'.format(file_path)))
+            time_stamp = datetime.datetime.fromtimestamp(
+                os.path.getmtime('{}'.format(file_path)))
             # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
 
-            logger.info('File: {}, Time: {}, Class: {}, Confidence: {}'.format(file,time_stamp,class_names[0][classes],scores))
+            logger.info('File: {}, Time: {}, Class: {}, Confidence: {}'.format(
+                file, time_stamp, class_names[0][classes], scores))
             #logger.info('Confidence: {}'.format(scores))
 
-            ## Processing outputs into the correct format for pandas DF
-            meta = {'committed_sql':0,'committed_images':0,
-            'committed_lora':0,'insight_id':insight_id,
-            'alg_id':alg['alg_id'][0],'time_stamp': time_stamp,
-            'class_id': classes,'class': class_names[0][classes],
-            'confidence':scores,'image_id':file,'x_min':boxes[0],
-            'y_min':boxes[1],'x_max':boxes[2],'y_max':boxes[3],
-            'device_id':os.environ.get('device_id'),
-            'device_name':os.environ.get('device_name')}
+            # Processing outputs into the correct format for pandas DF
+            meta = {'committed_sql': 0, 'committed_images': 0,
+                    'committed_lora': 0, 'insight_id': insight_id,
+                    'alg_id': alg['alg_id'][0], 'time_stamp': time_stamp,
+                    'is_from_lora': 0,
+                    'class_id': classes, 'class': class_names[0][classes],
+                    'confidence': scores, 'image_id': file, 'x_min': boxes[0],
+                    'y_min': boxes[1], 'x_max': boxes[2], 'y_max': boxes[3],
+                    'device_id': os.environ.get('device_id'),
+                    'device_name': os.environ.get('device_name')}
 
             # Appending data to pandas DF
-            meta_df = meta_df.append(meta,ignore_index=True)
+            meta_df = meta_df.append(meta, ignore_index=True)
 
             # Running bb_crop to save original image and cropped image to file
-            bb_crop(data_directory, file, boxes, meta, classes, results_directory, insight_id,class_names)
+            bb_crop(data_directory, file, boxes, meta, classes,
+                    results_directory, insight_id, class_names)
 
             k = k + 1
 
-    ## If there was no class detected, we still want to save the image to the device for safe keeping
+    # If there was no class detected, we still want to save the image to the device for safe keeping
     else:
 
         # Checking that the "blank" directory has bee
@@ -304,47 +327,44 @@ def tflite_im(alg,alg_df,format,interpreter, cnn_w, cnn_h, data_directory,file, 
             os.makedirs('{}/blank/'.format(results_directory))
 
         # Define the path to the processed "blank" image
-        file_path = os.path.join(data_directory,file)
+        file_path = os.path.join(data_directory, file)
         im = Image.open(file_path)
 
         # Save image to device
-        filename = '{}/blank/{}.jpeg'.format(results_directory,file)
+        filename = '{}/blank/{}.jpeg'.format(results_directory, file)
         im.save(filename)
 
         # Note: we still save the information about the image being processed, (negative data is still valuable) and thus it is still assigned an insight_id
         insight_id = int(k)
         # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        time_stamp = datetime.datetime.fromtimestamp(os.path.getmtime('{}'.format(file_path)))
+        time_stamp = datetime.datetime.fromtimestamp(
+            os.path.getmtime('{}'.format(file_path)))
 
         # time_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(os.path.getmtime('{}'.format(file_path)))))
-        meta = {'committed_sql':0,'committed_images':0,
-        'committed_lora': 0,'insight_id':insight_id,'alg_id':alg['alg_id'][0],
-        'time_stamp': time_stamp,'class_id':99,'class':'blank',
-        'device_id':os.environ.get('device_id'),
-        'device_name':os.environ.get('device_name'),'image_id':file}
+        meta = {'committed_sql': 0, 'committed_images': 0, 'is_from_lora': 0,
+                'committed_lora': 0, 'insight_id': insight_id, 'alg_id': alg['alg_id'][0],
+                'time_stamp': time_stamp, 'class_id': 99, 'class': 'blank',
+                'device_id': os.environ.get('device_id'),
+                'device_name': os.environ.get('device_name'), 'image_id': file}
 
         # Appending the "blank" image information to the local db (the csv)
-        meta_df = meta_df.append(meta,ignore_index=True)
-
+        meta_df = meta_df.append(meta, ignore_index=True)
 
     toc = time.process_time()
     #logger.info('Time to save images and metadata: {} seconds'.format(toc - tic))
 
-
     return meta_df
 
 
-
-
 # The main function script
-def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch = 10000, spacing = 10):
-
+def main(alg, data_directory, quantize_type, algorithm_type='detection', batch=10000, spacing=10):
 
     # Defining the results directory
-    results_directory   = '../data/results/{}'.format(alg['alg_id'][0])
+    results_directory = '../data/results/{}'.format(alg['alg_id'][0])
     try:
-    # Reading in the class names
-        class_names = pd.read_csv('../models/{}.txt'.format(alg['alg_id'][0]), header=None)
+        # Reading in the class names
+        class_names = pd.read_csv(
+            '../models/{}.txt'.format(alg['alg_id'][0]), header=None)
     except Exception as e:
         logger.error('Unable to load model label {}'.format(alg['alg_id'][0]))
 
@@ -353,8 +373,8 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         os.makedirs('{}'.format(results_directory))
 
     # Defining the path to the model
-    model = '../models/{}-{}.tflite'.format(alg['alg_id'][0],quantize_type)
-    #logger.info(model)
+    model = '../models/{}-{}.tflite'.format(alg['alg_id'][0], quantize_type)
+    # logger.info(model)
 
     # Defining the resolution of the images to be processed by the model
     cnn_w = int(alg['resolution'][0])
@@ -375,15 +395,15 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             break
         except Exception as e:
             logging.error('No TPU Found. Rebooting...')
-            #utils.shutdown(0)
+            # utils.shutdown(0)
         k = k + 1
 
-
     directories = os.listdir(data_directory)
-    directories = [data_directory + x for x in directories]  #[str(os.environ.get('data_directory'))]
+    # [str(os.environ.get('data_directory'))]
+    directories = [data_directory + x for x in directories]
     # Loading in the algorithm directory from file
     alg_df = pd.read_csv('../data/device_insights.csv')
-    tempalg_df= alg_df
+    tempalg_df = alg_df
 
     logger.info('Directories: {}'.format(directories))
     x = 0
@@ -392,43 +412,51 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
         list_of_files = []
         original_directory_list = os.listdir(directories[x])
         logger.info('Checking Directory: {}'.format(directories[x]))
-        logger.info('Directory Length: {}'.format(len(original_directory_list)))
-        #Renaming the photos
+        logger.info('Directory Length: {}'.format(
+            len(original_directory_list)))
+        # Renaming the photos
         i = 0
         while i < len(original_directory_list):
-            #Preserve the file type
+            # Preserve the file type
             fileExtension = original_directory_list[i].split(".")[1]
-            #Finds the time of creation
-            fileTime = time.strftime('%Y%m-%d%H-%M%S', time.localtime(int(os.path.getmtime('{}/{}'.format(directories[x], original_directory_list[i])))))
-            #Rename the file to TIME + DEVICE ID
-            os.rename('{}/{}'.format(directories[x],original_directory_list[i]),'{}/{}-{}.{}'.format(directories[x],fileTime,os.environ.get('device_id'),fileExtension))
+            # Finds the time of creation
+            fileTime = time.strftime('%Y%m-%d%H-%M%S', time.localtime(int(
+                os.path.getmtime('{}/{}'.format(directories[x], original_directory_list[i])))))
+            # Rename the file to TIME + DEVICE ID
+            os.rename('{}/{}'.format(directories[x], original_directory_list[i]), '{}/{}-{}.{}'.format(
+                directories[x], fileTime, os.environ.get('device_id'), fileExtension))
             i = i+1
 
         directory_list = os.listdir(directories[x])
-        directory_list = ['{}/{}'.format(directories[x],i) for i in directory_list]
+        directory_list = ['{}/{}'.format(directories[x], i)
+                          for i in directory_list]
         directory_list.sort(key=lambda x: os.path.getmtime(x))
 
         # initializing variables to enable grouping of files
         previous_confidence = 0
         previous_class = ''
         k = 0
-        ## Looping through all files on the SD Card
+        # Looping through all files on the SD Card
         while k < len(directory_list):
             # Specifying the specific file to be processed
             # Put back into base file name (no path-- just made things easier)
             file = os.path.basename(directory_list[k])
             previous_file = os.path.basename(directory_list[k-1])
             if k > 0:
-                timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
-                timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x],previous_file)))
+                timeFile = int(os.path.getmtime(
+                    '{}/{}'.format(directories[x], file)))
+                timeFileBefore = int(os.path.getmtime(
+                    '{}/{}'.format(directories[x], previous_file)))
             else:
-                timeFile = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
-                timeFileBefore = int(os.path.getmtime('{}/{}'.format(directories[x], file)))
+                timeFile = int(os.path.getmtime(
+                    '{}/{}'.format(directories[x], file)))
+                timeFileBefore = int(os.path.getmtime(
+                    '{}/{}'.format(directories[x], file)))
 
             #logger.info('Time Difference: {}'.format(timeFile - timeFileBefore))
 
-            #If it is the first photo in the directory, we can assume it is a new group
-            #If it is the first ever photo in the csv, we set the key to 1
+            # If it is the first photo in the directory, we can assume it is a new group
+            # If it is the first ever photo in the csv, we set the key to 1
             if k == 0:
                 try:
                     group_key = alg_df['group_id'].iloc[-1]+1
@@ -438,10 +466,10 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             elif alg_df['group_id'].iloc[-1] == np.nan:
                 group_keys = alg_df.group_id.unique()
                 group_key = group_keys[-1] + 1
-            #If the gap between photos after the first is smaller than 30 seconds, it is the same group
+            # If the gap between photos after the first is smaller than 30 seconds, it is the same group
             elif (timeFile - timeFileBefore) < 30:
                 group_key = alg_df['group_id'].iloc[-1]
-            #If the gap is larger than 30 seconds, then we define a new group key
+            # If the gap is larger than 30 seconds, then we define a new group key
             else:
                 group_key = alg_df['group_id'].iloc[-1] + 1
 
@@ -455,20 +483,21 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
                 if k == batch:
                     break
 
-
-            ## Check that the file is actually a processable photo
+            # Check that the file is actually a processable photo
             #  Feature: Add ability to process videos
             if file.endswith(".jpeg") or file.endswith(".JPG") or file.endswith(".jpg") or file.endswith(".JPEG") or file.endswith(".png") or file.endswith(".PNG"):
-                    if algorithm_type == 'detection':
-                        # Run the inference function, returns the bounded box metadata
-                        meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h, directories[x], file, ai_sensitivity, results_directory,class_names)
-                        # Appending the unique group key to the metadata
-                        meta_df['group_id'] = group_key
-                        # Appending to existing results from the while loop
-                        alg_df = alg_df.append(meta_df,ignore_index=True,sort=True)
-                        tempalg_df=alg_df
-                    else:
-                        logger.error('Type of algorithm not yet supported')
+                if algorithm_type == 'detection':
+                    # Run the inference function, returns the bounded box metadata
+                    meta_df = tflite_im(alg, alg_df, format, interpreter, cnn_w, cnn_h,
+                                        directories[x], file, ai_sensitivity, results_directory, class_names)
+                    # Appending the unique group key to the metadata
+                    meta_df['group_id'] = group_key
+                    # Appending to existing results from the while loop
+                    alg_df = alg_df.append(
+                        meta_df, ignore_index=True, sort=True)
+                    tempalg_df = alg_df
+                else:
+                    logger.error('Type of algorithm not yet supported')
             else:
                 logger.error('File Format not yet supported')
                 break
@@ -476,10 +505,10 @@ def main(alg,data_directory,quantize_type, algorithm_type = 'detection', batch =
             k = k + 1
         x = x + 1
 
-
     # Making sure that only the correct columns are saved to file (due to created columns when merging dfs)
-    alg_df = tempalg_df[['committed_sql','committed_images','committed_lora','insight_id','alg_id','time_stamp','class_id','class','confidence','image_id','x_min','y_min','x_max','y_max','device_id','group_id', 'group_confidence']]
-    #logger.info(alg_df)
+    alg_df = tempalg_df[['committed_sql', 'committed_images', 'committed_lora', 'insight_id', 'alg_id', 'time_stamp', 'is_from_lora',
+                         'class_id', 'class', 'confidence', 'image_id', 'x_min', 'y_min', 'x_max', 'y_max', 'device_id', 'group_id', 'group_confidence']]
+    # logger.info(alg_df)
     # Saving insights to local DB (just a .csv for now)
     alg_df.to_csv('../data/device_insights.csv')
 
