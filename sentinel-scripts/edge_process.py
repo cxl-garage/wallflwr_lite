@@ -383,6 +383,8 @@ def main(alg, data_directory, quantize_type, algorithm_type='detection', batch=1
     # Defining the minimum confidence required
     ai_sensitivity = alg['sensitivity'][0]
 
+    logger.info('HELKLOLOLO')
+    logger.info(os.environ.get('version'))
     k = 0
     while k < 3:
         try:
