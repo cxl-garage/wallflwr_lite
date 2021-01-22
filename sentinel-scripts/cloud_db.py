@@ -329,9 +329,11 @@ def upload_insights():
         insightIdsString = ','.join(str(e) for e in insightIds)
         print(insightIdsString)
         # Query to delete the entries to prevent issues in inserting
-        query = "DELETE FROM insights WHERE device_id = \'{}\' AND insight_id IN ({}) ".format(
-            8, insightIdsString)
-        engine.execute(query)
+
+        if insightIdsString
+            query = "DELETE FROM insights WHERE device_id = \'{}\' AND insight_id IN ({}) ".format(
+                8, insightIdsString)
+            engine.execute(query)
 
         x = x[['insight_id', 'device_id', 'alg_id', 'image_id', 'time_stamp', 'class_id', 'class',
                'confidence', 'x_min', 'y_min', 'x_max', 'y_max', 'group_id', 'group_confidence', 'is_from_lora']]
