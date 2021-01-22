@@ -70,7 +70,7 @@ def initialize(opt):
     if not os.path.exists('../data/device_insights.csv'):
         logger.info('Device Insights Table Initializing!')
         x = pd.DataFrame(columns=['committed_sql', 'committed_images', 'committed_lora', 'insight_id', 'alg_id', 'time_stamp', 'class_id',
-                                  'class', 'confidence', 'image_id', 'x_min', 'y_min', 'x_max', 'y_max', 'device_id', 'group_id', 'group_confidence'])
+                                  'class', 'confidence', 'image_id', 'x_min', 'y_min', 'x_max', 'y_max', 'device_id', 'group_id', 'group_confidence', 'is_from_lora'])
         x.to_csv('../data/device_insights.csv')
     if not os.path.exists('../models'):
         os.makedirs('../models')
@@ -158,15 +158,18 @@ def initialize(opt):
         while 1:
             m = 0
             while m < len(list_of_devices):
-                mount_command = 'sudo mount {} ../data/camera'.format(list_of_devices[m])
+                mount_command = 'sudo mount {} ../data/camera'.format(
+                    list_of_devices[m])
                 # logger.info(mount_command)
-                os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), mount_command))
+                os.system(
+                    'echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), mount_command))
                 if os.path.isdir('../data/camera/DCIM') == True:
                     logger.info('SD Card Mounted')
                     break
                 else:
                     unmount_command = 'sudo umount ../data/camera'
-                    os.system('echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), unmount_command))
+                    os.system(
+                        'echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), unmount_command))
                 m = m + 1
             if k == 3:
                 logger.error('SD Card Not Found')
@@ -198,13 +201,15 @@ def delete_files():
     while k < len(insights):
         try:
             #logger.info('Searching for file: {}'.format(insights['image_id'][k]))
-            file = glob.glob("{}/**/{}".format(os.environ.get('data_directory'), insights['image_id'][k]), recursive = True)
+            file = glob.glob("{}/**/{}".format(os.environ.get('data_directory'),
+                                               insights['image_id'][k]), recursive=True)
             if len(file) != 0:
-                logger.info('Deleting File: {}'.format(insights['image_id'][k]))
+                logger.info('Deleting File: {}'.format(
+                    insights['image_id'][k]))
                 delete_command = 'sudo rm -f {}'.format(file[0])
                 os.system(
                     'echo {}|sudo -S {}'.format(os.environ.get('sudoPW'), delete_command))
-            #else:
+            # else:
                 #logger.info('File not found')
         except Exception as e:
             logger.warning('Issue deleting file')
@@ -224,10 +229,9 @@ def shutdown(cycle_time=5):
     import board
     from digitalio import DigitalInOut, Direction, Pull
 
-    ### STEP 1
+    # STEP 1
 
-
-    ## STEP 2: Defining sleep time
+    # STEP 2: Defining sleep time
     shutdown_pin = DigitalInOut(board.D14)
     shutdown_pin.direction = Direction.OUTPUT
     # Pull the M0 Pin low to communicate sleep length...
