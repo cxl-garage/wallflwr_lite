@@ -334,7 +334,7 @@ def upload_insights():
         engine.execute(query)
 
         x = x[['insight_id', 'device_id', 'alg_id', 'image_id', 'time_stamp', 'class_id', 'class',
-               'confidence', 'x_min', 'y_min', 'x_max', 'y_max', 'group_id', 'group_confidence']]
+               'confidence', 'x_min', 'y_min', 'x_max', 'y_max', 'group_id', 'group_confidence', 'is_from_lora']]
         x.to_sql('insights', con=engine, if_exists='append', index=False)
 
         # Changing the local db to reflect that these insights are now on the cloud
