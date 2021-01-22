@@ -322,6 +322,17 @@ def upload_insights():
 
     # Committing the insights to SQL
     try:
+
+        # Gather the insight Ids
+        # LOOK AT THIS: https://stackoverflow.com/questions/42461959/how-do-i-perform-an-update-of-existing-rows-of-a-db-table-using-a-pandas-datafra
+        insightIds = x['insight_id'].values
+        insightIdsString = ','.join(str(e) for e in insightIds)
+        print(insightIdsString)
+        # Query to delete the entries to prevent issues in inserting
+        query = "DELETE FROM insights WHERE device_id = \'{}\' AND insight_id IN ({}) ".format(
+            8, insightIdsString)
+        engine.execute(query)
+
         x = x[['insight_id', 'device_id', 'alg_id', 'image_id', 'time_stamp', 'class_id', 'class',
                'confidence', 'x_min', 'y_min', 'x_max', 'y_max', 'group_id', 'group_confidence']]
         x.to_sql('insights', con=engine, if_exists='append', index=False)
