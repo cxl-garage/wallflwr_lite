@@ -97,7 +97,7 @@ while 1:
 data_directory = utils.initialize(opt)
 
 k = 0
-while 1:
+while k < 2:
     try:
         import edge_process
         break
@@ -107,8 +107,8 @@ while 1:
         if connect() == True and opt.wilderness != True:
             os.system('pip3 install -r requirements.txt')
         else:
-            k = 2
-    if k == 2:
+            k = 99
+    if k == 99:
         logger.error('Critical Error!! Unable to install packages')
     k = k + 1
 
