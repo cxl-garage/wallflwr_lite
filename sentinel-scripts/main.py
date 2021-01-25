@@ -102,6 +102,8 @@ while 1:
         import edge_process
         break
     except Exception as e:
+        logger.info("Error loading edge process")
+        logger.info(e)
         if connect() == True and opt.wilderness != True:
             os.system('pip3 install -r requirements.txt')
         else:
