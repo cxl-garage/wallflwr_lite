@@ -330,7 +330,7 @@ def upload_insights():
         print(insightIdsString)
         # Query to delete the entries to prevent issues in inserting
 
-        if insightIdsString
+        if insightIdsString:
             query = "DELETE FROM insights WHERE device_id = \'{}\' AND insight_id IN ({}) ".format(
                 8, insightIdsString)
             engine.execute(query)
