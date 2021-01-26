@@ -33,7 +33,7 @@ done
 
 #If the device is connected to the internet, try to connect to the proxy
 #You may ask why this is so logic heavy, it is becuase I hate bash and had to do this convoluted way for it to work
-if [ $INTERNET=1 ]
+if [ $INTERNET -eq 1 ]
 then
     sudo timedatectl set-ntp true
     #This will start the cloud proxy ONLY if there is internet
@@ -49,7 +49,7 @@ then
             break 
         else
             let COUNTER2=COUNTER2+1 
-            sleep 2
+            sleep 3
             echo Connecting...
             
             # #This is just in case run.sh runs again with the proxy already running
