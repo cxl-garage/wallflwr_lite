@@ -2,7 +2,7 @@ Adafruit-Blinka==4.2.0
 adafruit-circuitpython-busdevice==4.3.0
 adafruit-circuitpython-rfm69==2.1.0
 adafruit-circuitpython-tinylora==2.1.0
-Adafruit-PlatformDetect==2.24.0
+Adafruit-PlatformDetect==2.5.0
 Adafruit-PureIO==1.1.8
 aenum==2.2.6
 beautifulsoup4==4.5.3
