@@ -385,21 +385,21 @@ def main(alg, data_directory, quantize_type, algorithm_type='detection', batch=1
 
     k = 0
 
-    interpreter = DetectionEngine(model)
-    # while k < 3:
-    #     try:
-    #         # Loading the model into tensorflow engine
-    #         if os.environ.get('version').startswith('0'):
-    #             interpreter = DetectionEngine(model)
-    #             break
-    #         elif os.environ.get('version').startswith('1'):
-    #             interpreter = make_interpreter(model)
-    #             interpreter.allocate_tensors()
-    #             break
-    #     except Exception as e:
-    #         logging.error('No TPU Found. Rebooting...')
-    #         # utils.shutdown(0)
-    #     k = k + 1
+    while k < 3:
+        try:
+            # Loading the model into tensorflow engine
+            if os.environ.get('version').startswith('0'):
+                interpreter = DetectionEngine(model)
+                break
+            elif os.environ.get('version').startswith('1'):
+                interpreter = make_interpreter(model)
+                interpreter.allocate_tensors()
+                break
+        except Exception as e:
+            logger.info(e)
+            logging.error('No TPU Found. Rebooting...')
+            # utils.shutdown(0)
+        k = k + 1
 
     directories = os.listdir(data_directory)
     # [str(os.environ.get('data_directory'))]
