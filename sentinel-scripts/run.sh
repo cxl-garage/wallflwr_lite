@@ -72,16 +72,16 @@ then
     done
 
     if [ $COUNTER2 -eq 999 ]
-        then
-            #This is the case where there is internet AND Cloudy proxy connects
-            #Run main.py
-            python3 main.py 
-            #Uploading and shutting down
-            python3 upload_log.py 
-        else
-            #This is the case where there is internet AND Cloudy proxy DOES NOT connect
-            #Uploading and shutting down
-            python3 upload_log.py 
+    then
+        #This is the case where there is internet AND Cloudy proxy connects
+        #Run main.py
+        python3 main.py 
+        #Uploading and shutting down
+        python3 upload_log.py 
+    else
+        #This is the case where there is internet AND Cloudy proxy DOES NOT connect
+        #Uploading and shutting down
+        python3 upload_log.py 
     fi
 
 else 
