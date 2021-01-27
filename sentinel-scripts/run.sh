@@ -45,7 +45,7 @@ then
         if [ $COUNTER2 -eq 59 ]
         then
             echo SQL Timed Out
-            let COUNTER2=999
+            let COUNTER2=888
             break 
         else
             let COUNTER2=COUNTER2+1 
@@ -68,14 +68,24 @@ then
                 break
             fi
 
-        fi
-        
+        fi    
     done
-    #Run main.py
-    python3 main.py 
-    #Uploading and shutting down
-    python3 upload_log.py 
+
+    if [ $COUNTER2 -eq 999 ]
+        then
+            #This is the case where there is internet AND Cloudy proxy connects
+            #Run main.py
+            python3 main.py 
+            #Uploading and shutting down
+            python3 upload_log.py 
+        else
+            #This is the case where there is internet AND Cloudy proxy DOES NOT connect
+            #Uploading and shutting down
+            python3 upload_log.py 
+    fi
+
 else 
+    #This is the case where no internet is provided, here we run LORA
     python3 main.py --wilderness
     python3 upload_log.py --wilderness
 
