@@ -1,6 +1,14 @@
 #!/bin/bash
+
+
 cd /
 cd /home/pi/wallflwr_lite/sentinel-scripts
+
+#PULL RANDOM IMAGES FROM FOLDER
+ranNum=$[RANDOM%83+1]
+echo $ranNum
+sudo gsutil -m cp -r gs://sentinel_test_data/sentinel_squirrel_test_data/REDSQUIRREL$ranNum/ ../data/camera/DCIM
+
 
 #Make directory for logs
 if [ ! -d /home/pi/wallflwr_lite/sentinel-scripts/logs ]; then
@@ -93,6 +101,7 @@ else
     python3 upload_log.py --wilderness
 
 fi
+
 
 
 
